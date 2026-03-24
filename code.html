@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BALTAZAR CUSTOMS | Pranchas Artesanais</title>
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Newsreader:ital,opsz,wght@1,6..72,200..800&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "on-surface-variant":"#474747","background":"#f9f9f9",
+        "surface":"#f9f9f9","surface-container-low":"#f3f3f3",
+        "surface-container":"#eeeeee","primary":"#000000",
+        "on-background":"#1a1c1c","on-surface":"#1a1c1c"
+      },
+      fontFamily: { "headline":["Newsreader"], "body":["Work Sans"], "label":["Work Sans"] },
+      borderRadius: {"DEFAULT":"0px","lg":"0px","xl":"0px","full":"9999px"},
+    },
+  },
+}
+</script>
+<style>
+body { font-family: 'Work Sans', sans-serif; }
+.font-serif { font-family: 'Newsreader', serif; }
+.grain-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 9999;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.04;
+}
+/* Bottom sheet animation */
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.bottom-sheet-enter { animation: slideUp 0.3s ease-out; }
+.modal-fade { animation: fadeIn 0.2s ease-out; }
+/* Mobile hamburger */
+.hamburger span { display: block; width: 20px; height: 1.5px; background: #000; margin: 4px 0; transition: all 0.3s; }
+.hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(4px,4px); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(4px,-4px); }
+</style>
+</head>
+<body class="bg-background text-on-background selection:bg-primary selection:text-on-primary">
+<div class="grain-overlay"></div>
+
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl">
+<nav class="flex justify-between items-center w-full px-5 md:px-10 py-4 md:py-6">
+<div class="text-lg md:text-2xl font-serif italic text-black tracking-tighter">BALTAZAR CUSTOMS</div>
+<ul class="hidden md:flex gap-10 items-center">
+<li><a class="text-neutral-500 font-sans uppercase text-[10px] tracking-widest hover:text-black transition-colors" href="#boards">Custom Boards</a></li>
+<li><a class="text-neutral-500 font-sans uppercase text-[10px] tracking-widest hover:text-black transition-colors" href="#reels">Reels</a></li>
+<li><a class="text-neutral-500 font-sans uppercase text-[10px] tracking-widest hover:text-black transition-colors" href="#contact">Contact</a></li>
+</ul>
+<div class="flex items-center gap-4">
+<button onclick="openOrderModal()" class="text-black hover:opacity-70 transition-opacity" aria-label="Faca sua prancha">
+<svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+<path d="M16 2C14.5 2 12 4 11.5 8C11 12 11.5 18 12 22C12.5 26 14 30 16 30C18 30 19.5 26 20 22C20.5 18 21 12 20.5 8C20 4 17.5 2 16 2Z"/>
+<path d="M13.5 28C14 29 15 30 16 30"/>
+<path d="M18.5 28C18 29 17 30 16 30"/>
+<line x1="16" y1="4" x2="16" y2="28" stroke-dasharray="2 2" opacity="0.4"/>
+<circle cx="16" cy="14" r="1.2" fill="currentColor" stroke="none"/>
+</svg>
+</button>
+<!-- Mobile hamburger -->
+<button class="hamburger md:hidden" onclick="this.classList.toggle('active');document.getElementById('mobileMenu').classList.toggle('hidden')" aria-label="Menu">
+<span></span><span></span><span></span>
+</button>
+</div>
+</nav>
+<!-- Mobile menu -->
+<div id="mobileMenu" class="hidden md:hidden bg-white/95 backdrop-blur-xl border-t border-black/5 px-5 pb-6">
+<a class="block py-3 font-sans uppercase text-[11px] tracking-widest text-neutral-600" href="#boards" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Custom Boards</a>
+<a class="block py-3 font-sans uppercase text-[11px] tracking-widest text-neutral-600" href="#reels" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Reels</a>
+<a class="block py-3 font-sans uppercase text-[11px] tracking-widest text-neutral-600" href="#contact" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Contact</a>
+</div>
+</header>
+
+<main>
+<!-- Hero Section -->
+<section class="relative h-screen w-full flex items-center justify-center overflow-hidden bg-black">
+<div class="absolute inset-0 opacity-60">
+<img alt="Shaper at work" class="w-full h-full object-cover object-top grayscale brightness-75 contrast-125" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArRAlUBR_Hvsuo6Z63Q1_rvFblOG-E2VHBwxdoElSKySu-3RUKeEzj1tuNvO7A6CpzJoHWFR9jskjYlRAwiciaeMEV2WKAYPMOy5JB-VHRJBq79-INLEFUm7VskXZkS0TOpeC3MKBPUXo1s3lsk812fkNL2Jqjk50HWpuBKQ4TIwWjlONzl1DGe019WAUmIzkfr087I690yS7hOSczy5o-eWJq0m6aswbS_z0LI0ZlhVmAztOknYoJzpLdxJM3AK-2hwxtxcVjRx0"/>
+</div>
+<div class="relative z-10 text-center px-4 md:px-6">
+<h1 class="text-4xl sm:text-6xl md:text-[8rem] text-white leading-none tracking-wider mb-4" style="font-family:'Permanent Marker',cursive;">BALTAZAR CUSTOMS</h1>
+<p class="font-sans uppercase tracking-[0.2em] md:tracking-[0.3em] text-[9px] md:text-xs text-white/80 max-w-xl mx-auto">Pranchas artesanais feitas a mao. Rio de Janeiro.</p>
+<div class="mt-10 md:mt-16">
+<button onclick="openOrderModal()" class="bg-white text-black px-8 md:px-12 py-4 md:py-5 font-sans uppercase tracking-widest text-[9px] md:text-[10px] hover:bg-neutral-200 transition-colors">Faca Sua Prancha</button>
+</div>
+</div>
+</section>
+
+<!-- Showcase Section: Custom Boards -->
+<section id="boards" class="py-16 md:py-32 px-5 md:px-10 bg-surface">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 md:mb-20 gap-4 md:gap-8">
+<div class="max-w-2xl">
+<span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-2 md:mb-4 block">The Fleet</span>
+<h2 class="font-serif italic text-3xl md:text-7xl leading-tight">Hand-tooled silhouettes for the discerning wave rider.</h2>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-2 gap-4 md:gap-16">
+
+<!-- Board 1 -->
+<div class="group cursor-pointer" onclick="openBoardModal(0)">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container mb-3 md:mb-8 relative">
+<img alt="Since the Apocalypse" class="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" src="images/board-apocalypse.png"/>
+<div class="absolute top-3 left-3 md:top-6 md:left-6 bg-black text-white px-2 py-0.5 md:px-3 md:py-1 font-sans text-[7px] md:text-[8px] tracking-widest uppercase">Twin Fin</div>
+</div>
+<h3 class="font-serif italic text-lg md:text-3xl mb-1 md:mb-3">Since the Apocalypse</h3>
+<p class="font-sans text-[11px] md:text-sm text-on-surface-variant leading-relaxed hidden md:block">Twin fin com borda artesanal em vermelho. Shape classico para ondas de praia.</p>
+</div>
+
+<!-- Board 2 -->
+<div class="group cursor-pointer md:mt-16" onclick="openBoardModal(1)">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container mb-3 md:mb-8 relative">
+<img alt="The Tiger" class="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" src="images/board-tiger.png"/>
+<div class="absolute top-3 left-3 md:top-6 md:left-6 bg-black text-white px-2 py-0.5 md:px-3 md:py-1 font-sans text-[7px] md:text-[8px] tracking-widest uppercase">Mid-Length</div>
+</div>
+<h3 class="font-serif italic text-lg md:text-3xl mb-1 md:mb-3">The Tiger</h3>
+<p class="font-sans text-[11px] md:text-sm text-on-surface-variant leading-relaxed hidden md:block">Mid-length versatil com outline suave. Perfeita para sessoes longas.</p>
+</div>
+
+<!-- Board 3 -->
+<div class="group cursor-pointer" onclick="openBoardModal(2)">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container mb-3 md:mb-8 relative">
+<img alt="Ride Fast Forever Young" class="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" src="images/board-ridefast.png"/>
+<div class="absolute top-3 left-3 md:top-6 md:left-6 bg-black text-white px-2 py-0.5 md:px-3 md:py-1 font-sans text-[7px] md:text-[8px] tracking-widest uppercase">Performance</div>
+</div>
+<h3 class="font-serif italic text-lg md:text-3xl mb-1 md:mb-3">Ride Fast Forever Young</h3>
+<p class="font-sans text-[11px] md:text-sm text-on-surface-variant leading-relaxed hidden md:block">Shape de performance com 5 quilhas. Velocidade e radicalidade.</p>
+</div>
+
+<!-- Board 4 -->
+<div class="group cursor-pointer md:mt-16" onclick="openBoardModal(3)">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container mb-3 md:mb-8 relative">
+<img alt="Jimi Hendrix Edition" class="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" src="images/board-hendrix-full.png"/>
+<div class="absolute top-3 left-3 md:top-6 md:left-6 bg-black text-white px-2 py-0.5 md:px-3 md:py-1 font-sans text-[7px] md:text-[8px] tracking-widest uppercase">Art Edition</div>
+</div>
+<h3 class="font-serif italic text-lg md:text-3xl mb-1 md:mb-3">Jimi Hendrix Edition</h3>
+<p class="font-sans text-[11px] md:text-sm text-on-surface-variant leading-relaxed hidden md:block">Arte Jimi Hendrix laminada no blank. Peca unica de arte funcional.</p>
+</div>
+
+</div>
+</div>
+</section>
+
+<!-- Reels Section -->
+<section id="reels" class="py-16 md:py-32 bg-surface-container">
+<div class="max-w-7xl mx-auto px-5 md:px-10">
+<div class="text-center mb-12 md:mb-24">
+<span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-2 md:mb-4 block">The Motion</span>
+<h2 class="font-serif italic text-3xl md:text-6xl mb-4 md:mb-6">Analog Captured</h2>
+<p class="font-sans text-xs md:text-sm text-neutral-600 max-w-lg mx-auto leading-relaxed">O processo artesanal de shape e laminacao capturado em video.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-32 max-w-5xl mx-auto">
+<!-- Reel 1 -->
+<div class="relative group">
+<blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/Cz7bjQpy306/" data-instgrm-version="14" style="background:#FFF; border:0; margin:0; padding:0; width:100%;"></blockquote>
+<div class="mt-4 md:mt-8 text-left">
+<p class="font-serif italic text-xl md:text-3xl mb-1 md:mb-2">Volume I: The Planer</p>
+<p class="font-sans text-[9px] md:text-[10px] uppercase tracking-widest text-neutral-500">O processo detalhado de shape de um mestre artesao.</p>
+</div>
+</div>
+<!-- Reel 2 -->
+<div class="relative group md:mt-32">
+<blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/DMKv4UMuBsq/" data-instgrm-version="14" style="background:#FFF; border:0; margin:0; padding:0; width:100%;"></blockquote>
+<div class="mt-4 md:mt-8 text-left">
+<p class="font-serif italic text-xl md:text-3xl mb-1 md:mb-2">Volume II: The Glass</p>
+<p class="font-sans text-[9px] md:text-[10px] uppercase tracking-widest text-neutral-500">A alquimia da resina e fibra de vidro.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Newsletter -->
+<section id="contact" class="py-20 md:py-40 bg-surface px-5 md:px-10 border-t border-black/5">
+<div class="max-w-4xl mx-auto text-center">
+<h3 class="font-serif italic text-2xl md:text-5xl mb-6 md:mb-10 leading-tight">"Uma prancha deve ser tanto uma obra de arte na parede quanto uma ferramenta na agua."</h3>
+<div class="flex flex-col sm:flex-row gap-0 max-w-md mx-auto">
+<input class="w-full bg-surface-container-low border-b border-black py-3 md:py-4 px-4 md:px-6 font-sans text-[10px] tracking-widest focus:outline-none placeholder:text-neutral-400" placeholder="SEU EMAIL" type="email"/>
+<button class="bg-black text-white px-6 md:px-8 py-3 md:py-4 font-sans text-[10px] tracking-widest uppercase hover:opacity-80 transition-opacity">Assinar</button>
+</div>
+</div>
+</section>
+</main>
+
+<!-- Footer -->
+<footer class="w-full border-t border-black/5 bg-neutral-100">
+<div class="flex flex-col md:flex-row justify-between items-center w-full px-5 md:px-10 py-8 md:py-16 gap-4 md:gap-8">
+<div class="font-serif italic text-base md:text-lg text-black">BALTAZAR CUSTOMS</div>
+<div class="flex gap-6 md:gap-8 items-center">
+<a class="font-sans text-[10px] uppercase tracking-[0.2em] text-neutral-400 hover:text-black transition-colors" href="#">Instagram</a>
+<a class="font-sans text-[10px] uppercase tracking-[0.2em] text-neutral-400 hover:text-black transition-colors" href="#">WhatsApp</a>
+</div>
+<div class="font-sans text-[9px] md:text-[10px] uppercase tracking-[0.15em] md:tracking-[0.2em] text-neutral-500 text-center md:text-right">
+&copy; 2024 BALTAZAR CUSTOMS. FEITO A MAO NO RIO.
+</div>
+</div>
+</footer>
+
+<!-- BOARD MODAL / BOTTOM SHEET -->
+<div id="boardModal" class="fixed inset-0 z-[100] hidden bg-black/90 backdrop-blur-sm modal-fade" onclick="if(event.target===this)closeBoardModal()">
+<!-- Desktop: centered | Mobile: bottom sheet -->
+<div class="absolute inset-0 hidden md:flex items-center justify-center">
+<button onclick="closeBoardModal()" class="absolute top-6 right-8 text-white text-3xl hover:opacity-60 z-[110]">&times;</button>
+<button onclick="prevSlide()" class="absolute left-10 top-1/2 -translate-y-1/2 text-white text-5xl hover:opacity-60 z-[110]">&#8249;</button>
+<button onclick="nextSlide()" class="absolute right-10 top-1/2 -translate-y-1/2 text-white text-5xl hover:opacity-60 z-[110]">&#8250;</button>
+<div class="flex flex-col items-center max-w-2xl w-full px-6">
+<img id="modalImgDesktop" class="max-h-[80vh] object-contain" src="" alt=""/>
+<p id="modalTitleDesktop" class="font-serif italic text-2xl text-white mt-6"></p>
+<div class="flex gap-2 mt-4" id="modalDotsDesktop"></div>
+</div>
+</div>
+<!-- Mobile: bottom sheet -->
+<div class="md:hidden absolute bottom-0 left-0 right-0 bg-white bottom-sheet-enter" style="max-height:85vh; border-radius:16px 16px 0 0;">
+<div class="flex justify-center pt-3 pb-1"><div class="w-10 h-1 bg-neutral-300 rounded-full"></div></div>
+<button onclick="closeBoardModal()" class="absolute top-3 right-4 text-black text-2xl hover:opacity-60">&times;</button>
+<div class="px-5 pb-6 pt-2">
+<div class="relative">
+<img id="modalImgMobile" class="w-full aspect-[3/4] object-cover" src="" alt=""/>
+<button onclick="prevSlide()" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white w-8 h-8 flex items-center justify-center text-lg">&#8249;</button>
+<button onclick="nextSlide()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white w-8 h-8 flex items-center justify-center text-lg">&#8250;</button>
+</div>
+<p id="modalTitleMobile" class="font-serif italic text-xl mt-4 text-center"></p>
+<div class="flex gap-2 mt-3 justify-center" id="modalDotsMobile"></div>
+<button onclick="closeBoardModal();openOrderModal();" class="w-full mt-4 bg-black text-white py-3 font-sans uppercase tracking-widest text-[10px]">Encomendar Esta Prancha</button>
+</div>
+</div>
+</div>
+
+<!-- ORDER MODAL / BOTTOM SHEET -->
+<div id="orderModal" class="fixed inset-0 z-[100] hidden bg-black/90 backdrop-blur-sm modal-fade" onclick="if(event.target===this)closeOrderModal()">
+<!-- Desktop: centered -->
+<div class="hidden md:flex items-center justify-center h-full">
+<div class="bg-white max-w-lg w-full mx-4 p-10 max-h-[90vh] overflow-y-auto">
+<div class="flex justify-between items-center mb-8">
+<h2 class="font-serif italic text-3xl">Faca Sua Prancha</h2>
+<button onclick="closeOrderModal()" class="text-2xl hover:opacity-60">&times;</button>
+</div>
+<form onsubmit="event.preventDefault();alert('Pedido enviado! Entraremos em contato.');closeOrderModal();">
+<div class="mb-6">
+<label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-3">Inspiracao</label>
+<div class="grid grid-cols-2 gap-3">
+<label class="cursor-pointer"><input type="radio" name="board" value="apocalypse" class="peer hidden"/><div class="peer-checked:ring-2 peer-checked:ring-black p-2 border border-neutral-200 hover:border-black transition-colors"><img src="images/board-apocalypse.png" class="w-full aspect-square object-cover" alt=""/><p class="font-sans text-[10px] mt-2 text-center">Since the Apocalypse</p></div></label>
+<label class="cursor-pointer"><input type="radio" name="board" value="tiger" class="peer hidden"/><div class="peer-checked:ring-2 peer-checked:ring-black p-2 border border-neutral-200 hover:border-black transition-colors"><img src="images/board-tiger.png" class="w-full aspect-square object-cover" alt=""/><p class="font-sans text-[10px] mt-2 text-center">The Tiger</p></div></label>
+<label class="cursor-pointer"><input type="radio" name="board" value="ridefast" class="peer hidden"/><div class="peer-checked:ring-2 peer-checked:ring-black p-2 border border-neutral-200 hover:border-black transition-colors"><img src="images/board-ridefast.png" class="w-full aspect-square object-cover" alt=""/><p class="font-sans text-[10px] mt-2 text-center">Ride Fast Forever Young</p></div></label>
+<label class="cursor-pointer"><input type="radio" name="board" value="hendrix" class="peer hidden"/><div class="peer-checked:ring-2 peer-checked:ring-black p-2 border border-neutral-200 hover:border-black transition-colors"><img src="images/board-hendrix-full.png" class="w-full aspect-square object-cover" alt=""/><p class="font-sans text-[10px] mt-2 text-center">Jimi Hendrix Edition</p></div></label>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div><label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Altura (cm)</label><input type="number" placeholder="175" class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none" required/></div>
+<div><label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Peso (kg)</label><input type="number" placeholder="75" class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none" required/></div>
+</div>
+<div class="mb-6"><label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Nivel de Surf</label><select class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none appearance-none cursor-pointer" required><option value="">Selecione...</option><option value="iniciante">Iniciante</option><option value="intermediario">Intermediario</option><option value="avancado">Avancado</option><option value="profissional">Profissional</option></select></div>
+<div class="mb-6"><label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Nome</label><input type="text" placeholder="Seu nome" class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none" required/></div>
+<div class="mb-6"><label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">WhatsApp</label><input type="tel" placeholder="(21) 99999-9999" class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none" required/></div>
+<div class="mb-8"><label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Detalhes extras</label><textarea rows="3" placeholder="Tipo de onda, preferencias, medidas especificas..." class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none resize-none"></textarea></div>
+<button type="submit" class="w-full bg-black text-white py-4 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Enviar Pedido</button>
+</form>
+</div>
+</div>
+<!-- Mobile: bottom sheet -->
+<div class="md:hidden absolute bottom-0 left-0 right-0 bg-white bottom-sheet-enter overflow-y-auto" style="max-height:90vh; border-radius:16px 16px 0 0;">
+<div class="sticky top-0 bg-white z-10 flex justify-center pt-3 pb-1"><div class="w-10 h-1 bg-neutral-300 rounded-full"></div></div>
+<div class="px-5 pb-8 pt-2">
+<div class="flex justify-between items-center mb-6">
+<h2 class="font-serif italic text-2xl">Faca Sua Prancha</h2>
+<button onclick="closeOrderModal()" class="text-xl hover:opacity-60">&times;</button>
+</div>
+<form onsubmit="event.preventDefault();alert('Pedido enviado! Entraremos em contato.');closeOrderModal();">
+<div class="mb-5">
+<label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Inspiracao</label>
+<div class="grid grid-cols-4 gap-2">
+<label class="cursor-pointer"><input type="radio" name="boardm" value="apocalypse" class="peer hidden"/><div class="peer-checked:ring-2 peer-checked:ring-black p-1 border border-neutral-200"><img src="images/board-apocalypse.png" class="w-full aspect-square object-cover" alt=""/></div></label>
+<label class="cursor-pointer"><input type="radio" name="boardm" value="tiger" class="peer hidden"/><div class="peer-checked:ring-2 peer-checked:ring-black p-1 border border-neutral-200"><img src="images/board-tiger.png" class="w-full aspect-square object-cover" alt=""/></div></label>
+<label class="cursor-pointer"><input type="radio" name="boardm" value="ridefast" class="peer hidden"/><div class="peer-checked:ring-2 peer-checked:ring-black p-1 border border-neutral-200"><img src="images/board-ridefast.png" class="w-full aspect-square object-cover" alt=""/></div></label>
+<label class="cursor-pointer"><input type="radio" name="boardm" value="hendrix" class="peer hidden"/><div class="peer-checked:ring-2 peer-checked:ring-black p-1 border border-neutral-200"><img src="images/board-hendrix-full.png" class="w-full aspect-square object-cover" alt=""/></div></label>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3 mb-4">
+<div><label class="block font-sans uppercase text-[9px] tracking-widest text-neutral-500 mb-1">Altura (cm)</label><input type="number" placeholder="175" class="w-full border-b border-black py-2 px-0 font-sans text-sm bg-transparent focus:outline-none" required/></div>
+<div><label class="block font-sans uppercase text-[9px] tracking-widest text-neutral-500 mb-1">Peso (kg)</label><input type="number" placeholder="75" class="w-full border-b border-black py-2 px-0 font-sans text-sm bg-transparent focus:outline-none" required/></div>
+</div>
+<div class="mb-4"><label class="block font-sans uppercase text-[9px] tracking-widest text-neutral-500 mb-1">Nivel de Surf</label><select class="w-full border-b border-black py-2 px-0 font-sans text-sm bg-transparent focus:outline-none appearance-none" required><option value="">Selecione...</option><option value="iniciante">Iniciante</option><option value="intermediario">Intermediario</option><option value="avancado">Avancado</option><option value="profissional">Profissional</option></select></div>
+<div class="mb-4"><label class="block font-sans uppercase text-[9px] tracking-widest text-neutral-500 mb-1">Nome</label><input type="text" placeholder="Seu nome" class="w-full border-b border-black py-2 px-0 font-sans text-sm bg-transparent focus:outline-none" required/></div>
+<div class="mb-4"><label class="block font-sans uppercase text-[9px] tracking-widest text-neutral-500 mb-1">WhatsApp</label><input type="tel" placeholder="(21) 99999-9999" class="w-full border-b border-black py-2 px-0 font-sans text-sm bg-transparent focus:outline-none" required/></div>
+<div class="mb-5"><label class="block font-sans uppercase text-[9px] tracking-widest text-neutral-500 mb-1">Detalhes</label><textarea rows="2" placeholder="Tipo de onda, medidas..." class="w-full border-b border-black py-2 px-0 font-sans text-sm bg-transparent focus:outline-none resize-none"></textarea></div>
+<button type="submit" class="w-full bg-black text-white py-3.5 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Enviar Pedido</button>
+</form>
+</div>
+</div>
+</div>
+
+<!-- Instagram Embed Script -->
+<script async defer src="https://www.instagram.com/embed.js"></script>
+
+<script>
+const boards = [
+  { name: 'Since the Apocalypse', images: ['images/board-apocalypse.png','images/board-tiger.png','images/board-ridefast.png','images/board-hendrix-full.png'] },
+  { name: 'The Tiger', images: ['images/board-tiger.png','images/board-apocalypse.png','images/board-hendrix-detail.png','images/board-ridefast.png'] },
+  { name: 'Ride Fast Forever Young', images: ['images/board-ridefast.png','images/board-tiger.png','images/board-hendrix-closeup.png','images/board-apocalypse.png'] },
+  { name: 'Jimi Hendrix Edition', images: ['images/board-hendrix-full.png','images/board-hendrix-detail.png','images/board-hendrix-closeup.png','images/board-apocalypse.png'] },
+];
+let currentBoard = 0, currentSlide = 0;
+
+function openBoardModal(i) {
+  currentBoard = i; currentSlide = 0;
+  renderModalSlide();
+  const m = document.getElementById('boardModal');
+  m.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+function closeBoardModal() {
+  document.getElementById('boardModal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+function renderModalSlide() {
+  const b = boards[currentBoard];
+  const src = b.images[currentSlide];
+  // Desktop
+  const dImg = document.getElementById('modalImgDesktop');
+  if (dImg) { dImg.src = src; }
+  const dTitle = document.getElementById('modalTitleDesktop');
+  if (dTitle) dTitle.textContent = b.name;
+  const dDots = document.getElementById('modalDotsDesktop');
+  if (dDots) dDots.innerHTML = b.images.map((_, i) => `<button onclick="goToSlide(${i})" class="w-2 h-2 rounded-full ${i===currentSlide?'bg-white':'bg-white/40'}"></button>`).join('');
+  // Mobile
+  const mImg = document.getElementById('modalImgMobile');
+  if (mImg) mImg.src = src;
+  const mTitle = document.getElementById('modalTitleMobile');
+  if (mTitle) mTitle.textContent = b.name;
+  const mDots = document.getElementById('modalDotsMobile');
+  if (mDots) mDots.innerHTML = b.images.map((_, i) => `<button onclick="goToSlide(${i})" class="w-2 h-2 rounded-full ${i===currentSlide?'bg-black':'bg-black/30'}"></button>`).join('');
+}
+function nextSlide() { currentSlide = (currentSlide+1) % boards[currentBoard].images.length; renderModalSlide(); }
+function prevSlide() { currentSlide = (currentSlide-1+boards[currentBoard].images.length) % boards[currentBoard].images.length; renderModalSlide(); }
+function goToSlide(i) { currentSlide = i; renderModalSlide(); }
+
+function openOrderModal() {
+  document.getElementById('orderModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+function closeOrderModal() {
+  document.getElementById('orderModal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('boardModal').classList.contains('hidden')) {
+    if (e.key==='ArrowRight') nextSlide();
+    if (e.key==='ArrowLeft') prevSlide();
+    if (e.key==='Escape') closeBoardModal();
+  }
+  if (!document.getElementById('orderModal').classList.contains('hidden')) {
+    if (e.key==='Escape') closeOrderModal();
+  }
+});
+
+// Swipe support for mobile
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  if (document.getElementById('boardModal').classList.contains('hidden')) return;
+  const diff = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(diff) > 50) { diff > 0 ? prevSlide() : nextSlide(); }
+});
+</script>
+</body></html>
