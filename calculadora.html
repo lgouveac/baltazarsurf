@@ -102,17 +102,13 @@ input[type="range"]::-moz-range-thumb {
 
 <!-- Inputs -->
 <div>
-<span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-6 md:mb-10 block">Parametros</span>
+<span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-6 md:mb-10 block">Pranchas</span>
 
-<div class="mb-6 md:mb-8">
-<label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Preco de Venda (R$)</label>
-<input id="preco" type="number" placeholder="3500" value="3500" class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none" oninput="calcular()"/>
-</div>
+<div id="pranchasContainer"></div>
 
-<div class="mb-6 md:mb-8">
-<label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Custo por Prancha (R$)</label>
-<input id="custo" type="number" placeholder="1800" value="1800" class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none" oninput="calcular()"/>
-</div>
+<button onclick="adicionarPrancha()" class="w-full py-3 mt-2 mb-8 md:mb-10 font-sans uppercase text-[10px] tracking-widest border border-black/15 hover:border-black/40 transition-colors">+ Adicionar Prancha</button>
+
+<span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-6 md:mb-8 block">Custos Globais</span>
 
 <div class="mb-6 md:mb-8">
 <label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Custo de Aquisicao por Prancha — Meta Ads (R$)</label>
@@ -130,11 +126,6 @@ input[type="range"]::-moz-range-thumb {
 </div>
 <span id="participacaoLabel" class="font-sans text-sm font-medium min-w-[3rem] text-right">50%</span>
 </div>
-</div>
-
-<div class="mb-6 md:mb-8">
-<label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Pranchas Vendidas</label>
-<input id="quantidade" type="number" placeholder="10" value="10" class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none" oninput="calcular()"/>
 </div>
 </div>
 
@@ -189,35 +180,84 @@ input[type="range"]::-moz-range-thumb {
 </footer>
 
 <script>
+let pranchas = [
+  { nome: 'Custom Board', preco: 3500, custo: 1800, qtd: 10 }
+];
+
 function formatBRL(value) {
   return 'R$ ' + value.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 }
 
+function renderPranchas() {
+  const container = document.getElementById('pranchasContainer');
+  container.innerHTML = pranchas.map((p, i) => `
+    <div class="pb-6 mb-6 border-b border-black/10">
+      <div class="flex justify-between items-center mb-4">
+        <span class="font-serif italic text-lg">${i + 1}.</span>
+        ${pranchas.length > 1 ? `<button onclick="removerPrancha(${i})" class="text-neutral-400 hover:text-black text-lg transition-colors" title="Remover">&times;</button>` : ''}
+      </div>
+      <div class="mb-4">
+        <label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Nome</label>
+        <input type="text" value="${p.nome}" class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none" oninput="pranchas[${i}].nome=this.value"/>
+      </div>
+      <div class="grid grid-cols-3 gap-3 md:gap-4">
+        <div>
+          <label class="block font-sans uppercase text-[9px] md:text-[10px] tracking-widest text-neutral-500 mb-2">Venda (R$)</label>
+          <input type="number" value="${p.preco}" placeholder="3500" class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none" oninput="pranchas[${i}].preco=parseFloat(this.value)||0;calcular()"/>
+        </div>
+        <div>
+          <label class="block font-sans uppercase text-[9px] md:text-[10px] tracking-widest text-neutral-500 mb-2">Custo (R$)</label>
+          <input type="number" value="${p.custo}" placeholder="1800" class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none" oninput="pranchas[${i}].custo=parseFloat(this.value)||0;calcular()"/>
+        </div>
+        <div>
+          <label class="block font-sans uppercase text-[9px] md:text-[10px] tracking-widest text-neutral-500 mb-2">Qtd</label>
+          <input type="number" value="${p.qtd}" placeholder="10" class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none" oninput="pranchas[${i}].qtd=parseFloat(this.value)||0;calcular()"/>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function adicionarPrancha() {
+  pranchas.push({ nome: '', preco: 0, custo: 0, qtd: 0 });
+  renderPranchas();
+  calcular();
+}
+
+function removerPrancha(index) {
+  if (pranchas.length <= 1) return;
+  pranchas.splice(index, 1);
+  renderPranchas();
+  calcular();
+}
+
 function calcular() {
-  const preco = parseFloat(document.getElementById('preco').value) || 0;
-  const custo = parseFloat(document.getElementById('custo').value) || 0;
   const marketing = parseFloat(document.getElementById('marketing').value) || 0;
   const participacao = parseFloat(document.getElementById('participacao').value) || 0;
-  const quantidade = parseFloat(document.getElementById('quantidade').value) || 0;
 
-  const receita = preco * quantidade;
-  const custoTotal = (custo * quantidade) + (marketing * quantidade);
-  const lucro = receita - custoTotal;
+  let receitaTotal = 0;
+  let custoTotal = 0;
+
+  pranchas.forEach(p => {
+    receitaTotal += p.preco * p.qtd;
+    custoTotal += (p.custo * p.qtd) + (marketing * p.qtd);
+  });
+
+  const lucro = receitaTotal - custoTotal;
   const retorno = lucro * (participacao / 100);
   const retornoBaltazar = lucro * ((100 - participacao) / 100);
 
-  document.getElementById('receita').textContent = formatBRL(receita);
+  document.getElementById('receita').textContent = formatBRL(receitaTotal);
   document.getElementById('custoTotal').textContent = formatBRL(custoTotal);
   document.getElementById('lucro').textContent = formatBRL(lucro);
   document.getElementById('retorno').textContent = formatBRL(retorno);
   document.getElementById('retornoBaltazar').textContent = formatBRL(retornoBaltazar);
 
-  // Update progress bar
   document.getElementById('progressFill').style.width = participacao + '%';
   document.getElementById('participacaoLabel').textContent = participacao + '%';
 }
 
-// Initial calculation
+renderPranchas();
 calcular();
 </script>
 </body></html>
