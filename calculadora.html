@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BALTAZAR CUSTOMS | Calculadora de Parceria</title>
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Newsreader:ital,opsz,wght@1,6..72,200..800&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "on-surface-variant":"#474747","background":"#f9f9f9",
+        "surface":"#f9f9f9","surface-container-low":"#f3f3f3",
+        "surface-container":"#eeeeee","primary":"#000000",
+        "on-background":"#1a1c1c","on-surface":"#1a1c1c"
+      },
+      fontFamily: { "headline":["Newsreader"], "body":["Work Sans"], "label":["Work Sans"] },
+      borderRadius: {"DEFAULT":"0px","lg":"0px","xl":"0px","full":"9999px"},
+    },
+  },
+}
+</script>
+<style>
+body { font-family: 'Work Sans', sans-serif; }
+.font-serif { font-family: 'Newsreader', serif; }
+.grain-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 9999;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.04;
+}
+/* Hamburger */
+.hamburger span { display: block; width: 20px; height: 1.5px; background: #000; margin: 4px 0; transition: all 0.3s; }
+.hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(4px,4px); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(4px,-4px); }
+/* Range slider */
+input[type="range"] {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 2px; background: #ddd; outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 18px; height: 18px; background: #000; cursor: pointer;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 18px; height: 18px; background: #000; cursor: pointer; border: none;
+}
+/* Progress bar fill */
+.progress-track {
+  position: relative; width: 100%; height: 2px; background: #ddd;
+}
+.progress-fill {
+  position: absolute; top: 0; left: 0; height: 100%; background: #000;
+  transition: width 0.1s ease;
+}
+</style>
+</head>
+<body class="bg-background text-on-background selection:bg-primary selection:text-on-primary">
+<div class="grain-overlay"></div>
+
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl">
+<nav class="flex justify-between items-center w-full px-5 md:px-10 py-4 md:py-6">
+<a href="index.html" class="text-lg md:text-2xl font-serif italic text-black tracking-tighter">BALTAZAR CUSTOMS</a>
+<ul class="hidden md:flex gap-10 items-center">
+<li><a class="text-neutral-500 font-sans uppercase text-[10px] tracking-widest hover:text-black transition-colors" href="index.html#boards">Custom Boards</a></li>
+<li><a class="text-neutral-500 font-sans uppercase text-[10px] tracking-widest hover:text-black transition-colors" href="index.html#reels">Reels</a></li>
+<li><a class="text-neutral-500 font-sans uppercase text-[10px] tracking-widest hover:text-black transition-colors" href="index.html#contact">Contact</a></li>
+<li><a class="text-black font-sans uppercase text-[10px] tracking-widest" href="calculadora.html">Calculadora</a></li>
+</ul>
+<div class="flex items-center gap-4">
+<button class="hamburger md:hidden" onclick="this.classList.toggle('active');document.getElementById('mobileMenu').classList.toggle('hidden')" aria-label="Menu">
+<span></span><span></span><span></span>
+</button>
+</div>
+</nav>
+<!-- Mobile menu -->
+<div id="mobileMenu" class="hidden md:hidden bg-white/95 backdrop-blur-xl border-t border-black/5 px-5 pb-6">
+<a class="block py-3 font-sans uppercase text-[11px] tracking-widest text-neutral-600" href="index.html#boards" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Custom Boards</a>
+<a class="block py-3 font-sans uppercase text-[11px] tracking-widest text-neutral-600" href="index.html#reels" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Reels</a>
+<a class="block py-3 font-sans uppercase text-[11px] tracking-widest text-neutral-600" href="index.html#contact" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Contact</a>
+<a class="block py-3 font-sans uppercase text-[11px] tracking-widest text-black" href="calculadora.html">Calculadora</a>
+</div>
+</header>
+
+<main class="pt-24 md:pt-32">
+<!-- Hero -->
+<section class="px-5 md:px-10 pb-10 md:pb-16 bg-surface">
+<div class="max-w-5xl mx-auto">
+<span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-2 md:mb-4 block">Parceria FlowCode</span>
+<h1 class="font-serif italic text-3xl md:text-6xl leading-tight max-w-3xl">Calculadora de Retorno</h1>
+<p class="font-sans text-xs md:text-sm text-on-surface-variant mt-4 max-w-xl leading-relaxed">Simule o retorno financeiro da parceria com a FlowCode. Investimos em marketing, site, atendimento e links de pagamento.</p>
+</div>
+</section>
+
+<!-- Calculator -->
+<section class="px-5 md:px-10 py-10 md:py-20 bg-surface-container">
+<div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20">
+
+<!-- Inputs -->
+<div>
+<span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-6 md:mb-10 block">Parametros</span>
+
+<div class="mb-6 md:mb-8">
+<label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Preco de Venda (R$)</label>
+<input id="preco" type="number" placeholder="3500" value="3500" class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none" oninput="calcular()"/>
+</div>
+
+<div class="mb-6 md:mb-8">
+<label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Custo por Prancha (R$)</label>
+<input id="custo" type="number" placeholder="1800" value="1800" class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none" oninput="calcular()"/>
+</div>
+
+<div class="mb-6 md:mb-8">
+<label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Investimento em Marketing (R$)</label>
+<input id="marketing" type="number" placeholder="2000" value="2000" class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none" oninput="calcular()"/>
+</div>
+
+<div class="mb-6 md:mb-8">
+<label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Participacao FlowCode</label>
+<div class="flex items-center gap-4 mt-3">
+<div class="flex-1 relative">
+<div class="progress-track">
+<div id="progressFill" class="progress-fill" style="width:50%"></div>
+</div>
+<input id="participacao" type="range" min="0" max="100" value="50" class="absolute top-1/2 -translate-y-1/2 left-0 w-full" oninput="calcular()"/>
+</div>
+<span id="participacaoLabel" class="font-sans text-sm font-medium min-w-[3rem] text-right">50%</span>
+</div>
+</div>
+
+<div class="mb-6 md:mb-8">
+<label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Pranchas Vendidas</label>
+<input id="quantidade" type="number" placeholder="10" value="10" class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none" oninput="calcular()"/>
+</div>
+</div>
+
+<!-- Results -->
+<div>
+<span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-6 md:mb-10 block">Resultado</span>
+
+<div class="space-y-6 md:space-y-8">
+<div class="pb-6 border-b border-black/10">
+<span class="font-sans uppercase text-[9px] tracking-[0.15em] text-neutral-500 block mb-1">Receita Total</span>
+<span id="receita" class="font-serif italic text-2xl md:text-3xl">R$ 35.000</span>
+</div>
+
+<div class="pb-6 border-b border-black/10">
+<span class="font-sans uppercase text-[9px] tracking-[0.15em] text-neutral-500 block mb-1">Custo Total</span>
+<span id="custoTotal" class="font-serif italic text-2xl md:text-3xl">R$ 20.000</span>
+</div>
+
+<div class="pb-6 border-b border-black/10">
+<span class="font-sans uppercase text-[9px] tracking-[0.15em] text-neutral-500 block mb-1">Lucro Liquido</span>
+<span id="lucro" class="font-serif italic text-2xl md:text-3xl">R$ 15.000</span>
+</div>
+
+<div class="pb-6 border-b border-black/10 bg-surface-container-low -mx-4 px-4 py-5 md:-mx-6 md:px-6 md:py-6">
+<span class="font-sans uppercase text-[9px] tracking-[0.15em] text-neutral-500 block mb-1">Retorno FlowCode</span>
+<span id="retorno" class="font-serif italic text-3xl md:text-5xl">R$ 7.500</span>
+</div>
+
+<div>
+<span class="font-sans uppercase text-[9px] tracking-[0.15em] text-neutral-500 block mb-1">ROI FlowCode</span>
+<span id="roi" class="font-serif italic text-2xl md:text-3xl">375%</span>
+</div>
+</div>
+</div>
+
+</div>
+</section>
+</main>
+
+<!-- Footer -->
+<footer class="w-full border-t border-black/5 bg-neutral-100">
+<div class="flex flex-col md:flex-row justify-between items-center w-full px-5 md:px-10 py-8 md:py-16 gap-4 md:gap-8">
+<a href="index.html" class="font-serif italic text-base md:text-lg text-black">BALTAZAR CUSTOMS</a>
+<div class="flex gap-6 md:gap-8 items-center">
+<a class="font-sans text-[10px] uppercase tracking-[0.2em] text-neutral-400 hover:text-black transition-colors" href="#">Instagram</a>
+<a class="font-sans text-[10px] uppercase tracking-[0.2em] text-neutral-400 hover:text-black transition-colors" href="#">WhatsApp</a>
+</div>
+<div class="font-sans text-[9px] md:text-[10px] uppercase tracking-[0.15em] md:tracking-[0.2em] text-neutral-500 text-center md:text-right">
+&copy; 2024 BALTAZAR CUSTOMS. FEITO A MAO NO RIO.
+</div>
+</div>
+</footer>
+
+<script>
+function formatBRL(value) {
+  return 'R$ ' + value.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+
+function calcular() {
+  const preco = parseFloat(document.getElementById('preco').value) || 0;
+  const custo = parseFloat(document.getElementById('custo').value) || 0;
+  const marketing = parseFloat(document.getElementById('marketing').value) || 0;
+  const participacao = parseFloat(document.getElementById('participacao').value) || 0;
+  const quantidade = parseFloat(document.getElementById('quantidade').value) || 0;
+
+  const receita = preco * quantidade;
+  const custoTotal = (custo * quantidade) + marketing;
+  const lucro = receita - custoTotal;
+  const retorno = lucro * (participacao / 100);
+  const roi = marketing > 0 ? (retorno / marketing) * 100 : 0;
+
+  document.getElementById('receita').textContent = formatBRL(receita);
+  document.getElementById('custoTotal').textContent = formatBRL(custoTotal);
+  document.getElementById('lucro').textContent = formatBRL(lucro);
+  document.getElementById('retorno').textContent = formatBRL(retorno);
+  document.getElementById('roi').textContent = roi.toFixed(0) + '%';
+
+  // Update progress bar
+  document.getElementById('progressFill').style.width = participacao + '%';
+  document.getElementById('participacaoLabel').textContent = participacao + '%';
+}
+
+// Initial calculation
+calcular();
+</script>
+</body></html>
