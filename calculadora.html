@@ -115,8 +115,8 @@ input[type="range"]::-moz-range-thumb {
 </div>
 
 <div class="mb-6 md:mb-8">
-<label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Investimento em Marketing (R$)</label>
-<input id="marketing" type="number" placeholder="2000" value="2000" class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none" oninput="calcular()"/>
+<label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Custo de Aquisicao por Prancha — Meta Ads (R$)</label>
+<input id="marketing" type="number" placeholder="200" value="200" class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none" oninput="calcular()"/>
 </div>
 
 <div class="mb-6 md:mb-8">
@@ -163,9 +163,9 @@ input[type="range"]::-moz-range-thumb {
 <span id="retorno" class="font-serif italic text-3xl md:text-5xl">R$ 7.500</span>
 </div>
 
-<div>
-<span class="font-sans uppercase text-[9px] tracking-[0.15em] text-neutral-500 block mb-1">ROI FlowCode</span>
-<span id="roi" class="font-serif italic text-2xl md:text-3xl">375%</span>
+<div class="pb-6 border-b border-black/10">
+<span class="font-sans uppercase text-[9px] tracking-[0.15em] text-neutral-500 block mb-1">Retorno Baltazar</span>
+<span id="retornoBaltazar" class="font-serif italic text-3xl md:text-5xl">R$ 7.500</span>
 </div>
 </div>
 </div>
@@ -201,16 +201,16 @@ function calcular() {
   const quantidade = parseFloat(document.getElementById('quantidade').value) || 0;
 
   const receita = preco * quantidade;
-  const custoTotal = (custo * quantidade) + marketing;
+  const custoTotal = (custo * quantidade) + (marketing * quantidade);
   const lucro = receita - custoTotal;
   const retorno = lucro * (participacao / 100);
-  const roi = marketing > 0 ? (retorno / marketing) * 100 : 0;
+  const retornoBaltazar = lucro * ((100 - participacao) / 100);
 
   document.getElementById('receita').textContent = formatBRL(receita);
   document.getElementById('custoTotal').textContent = formatBRL(custoTotal);
   document.getElementById('lucro').textContent = formatBRL(lucro);
   document.getElementById('retorno').textContent = formatBRL(retorno);
-  document.getElementById('roi').textContent = roi.toFixed(0) + '%';
+  document.getElementById('retornoBaltazar').textContent = formatBRL(retornoBaltazar);
 
   // Update progress bar
   document.getElementById('progressFill').style.width = participacao + '%';
