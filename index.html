@@ -51,10 +51,9 @@ body { font-family: 'Work Sans', sans-serif; }
 <a href="#top" class="text-lg md:text-2xl font-serif italic text-black tracking-tighter">BALTAZAR CUSTOMS</a>
 <ul class="hidden md:flex gap-10 items-center">
 <li><a class="text-neutral-500 font-sans uppercase text-[10px] tracking-widest hover:text-black transition-colors" href="#boards">A Coleção</a></li>
+<li><a class="text-neutral-500 font-sans uppercase text-[10px] tracking-widest hover:text-black transition-colors" href="#como">Como Funciona</a></li>
 <li><a class="text-neutral-500 font-sans uppercase text-[10px] tracking-widest hover:text-black transition-colors" href="#baltazar">Baltazar</a></li>
 <li><a class="text-neutral-500 font-sans uppercase text-[10px] tracking-widest hover:text-black transition-colors" href="#reels">Processo</a></li>
-<li><a class="text-neutral-500 font-sans uppercase text-[10px] tracking-widest hover:text-black transition-colors" href="#contact">Contato</a></li>
-<li><a class="text-neutral-500 font-sans uppercase text-[10px] tracking-widest hover:text-black transition-colors" href="calculadora.html">Calculadora</a></li>
 </ul>
 <div class="flex items-center gap-4">
 <button onclick="openChat()" class="hidden sm:block bg-black text-white px-5 py-2.5 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Quero Prancha</button>
@@ -71,10 +70,9 @@ body { font-family: 'Work Sans', sans-serif; }
 </nav>
 <div id="mobileMenu" class="hidden md:hidden bg-white/95 backdrop-blur-xl border-t border-black/5 px-5 pb-6">
 <a class="block py-3 font-sans uppercase text-[11px] tracking-widest text-neutral-600" href="#boards" onclick="document.getElementById('mobileMenu').classList.add('hidden')">A Coleção</a>
+<a class="block py-3 font-sans uppercase text-[11px] tracking-widest text-neutral-600" href="#como" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Como Funciona</a>
 <a class="block py-3 font-sans uppercase text-[11px] tracking-widest text-neutral-600" href="#baltazar" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Baltazar</a>
 <a class="block py-3 font-sans uppercase text-[11px] tracking-widest text-neutral-600" href="#reels" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Processo</a>
-<a class="block py-3 font-sans uppercase text-[11px] tracking-widest text-neutral-600" href="#contact" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Contato</a>
-<a class="block py-3 font-sans uppercase text-[11px] tracking-widest text-neutral-600" href="calculadora.html">Calculadora</a>
 </div>
 </header>
 
@@ -87,7 +85,8 @@ body { font-family: 'Work Sans', sans-serif; }
 <div class="relative z-10 text-center px-4 md:px-6">
 <h1 class="text-4xl sm:text-6xl md:text-[8rem] text-white leading-none tracking-wider mb-4" style="font-family:'Permanent Marker',cursive;">BALTAZAR CUSTOMS</h1>
 <p class="font-sans uppercase tracking-[0.2em] md:tracking-[0.3em] text-[9px] md:text-xs text-white/80 max-w-xl mx-auto">Pranchas artesanais feitas à mão. Rio de Janeiro.</p>
-<div class="mt-10 md:mt-16 flex flex-col sm:flex-row gap-3 justify-center items-center">
+<p class="font-serif italic text-white/70 text-base md:text-2xl mt-5 md:mt-7 max-w-2xl mx-auto">Cada prancha é única. Você se inspira — a gente faz a sua.</p>
+<div class="mt-10 md:mt-14 flex flex-col sm:flex-row gap-3 justify-center items-center">
 <button onclick="openChat()" class="bg-white text-black px-8 md:px-12 py-4 md:py-5 font-sans uppercase tracking-widest text-[9px] md:text-[10px] hover:bg-neutral-200 transition-colors">Quero Minha Prancha</button>
 <a href="#boards" class="text-white/80 underline font-sans uppercase tracking-widest text-[9px] md:text-[10px] hover:text-white transition-colors">Ver a Coleção</a>
 </div>
@@ -97,23 +96,52 @@ body { font-family: 'Work Sans', sans-serif; }
 <!-- Showcase Section: A Coleção -->
 <section id="boards" class="py-16 md:py-32 px-5 md:px-10 bg-surface">
 <div class="max-w-7xl mx-auto">
-<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-14 gap-4 md:gap-8">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 md:mb-10 gap-4 md:gap-8">
 <div class="max-w-2xl">
 <span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-2 md:mb-4 block">A Coleção</span>
-<h2 class="font-serif italic text-3xl md:text-7xl leading-tight">Silhuetas talhadas à mão para quem entende de onda.</h2>
+<h2 class="font-serif italic text-3xl md:text-7xl leading-tight">Modelos que já saíram do atelier.</h2>
+<p class="font-sans text-sm md:text-base text-on-surface-variant mt-4 md:mt-6 leading-relaxed">Use como inspiração — não repetimos pranchas. Você escolhe um modelo com a sua cara e a gente shapeia a sua, do seu jeito. Cada prancha à mão: <span class="text-black font-medium">R$ 2.600</span> <span class="text-neutral-400">(valor base; arte e acabamentos sob consulta)</span>.</p>
 </div>
 </div>
-<!-- Filtros por tipo -->
-<div id="boardFilters" class="flex flex-wrap gap-2 mb-8 md:mb-14">
+<!-- Filtros por categoria -->
+<div id="boardFilters" class="flex flex-wrap gap-2 mb-8 md:mb-12">
 <button class="filter-chip active border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Todas">Todas</button>
-<button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Fish">Fish</button>
-<button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Shortboard">Shortboard</button>
+<button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="High Performance">High Performance</button>
+<button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Twin Fin">Twin Fin</button>
 <button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Mid-Length">Mid-Length</button>
 <button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Longboard">Longboard</button>
+<button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Quad">Quad</button>
 </div>
-<div id="boardGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-10"></div>
+<div id="boardGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6"></div>
 <div class="text-center mt-12 md:mt-20">
 <button onclick="openChat()" class="bg-black text-white px-10 py-4 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Não sei qual escolher? Fale com o Atelier</button>
+</div>
+</div>
+</section>
+
+<!-- Como Funciona -->
+<section id="como" class="py-16 md:py-32 bg-surface-container-low px-5 md:px-10">
+<div class="max-w-6xl mx-auto">
+<div class="text-center mb-12 md:mb-20">
+<span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-2 md:mb-4 block">Como Funciona</span>
+<h2 class="font-serif italic text-3xl md:text-6xl">Da inspiração à sua prancha.</h2>
+</div>
+<div class="grid md:grid-cols-3 gap-10 md:gap-16">
+<div>
+<p class="font-serif italic text-5xl md:text-6xl text-neutral-300 mb-4">01</p>
+<h3 class="font-serif italic text-xl md:text-2xl mb-3">Inspire-se</h3>
+<p class="font-sans text-sm text-on-surface-variant leading-relaxed">Navegue pela coleção e escolha um modelo com a sua cara. Cada peça é única — nunca repetimos uma prancha.</p>
+</div>
+<div>
+<p class="font-serif italic text-5xl md:text-6xl text-neutral-300 mb-4">02</p>
+<h3 class="font-serif italic text-xl md:text-2xl mb-3">Conte sobre você</h3>
+<p class="font-sans text-sm text-on-surface-variant leading-relaxed">No Atelier, passe altura, peso, nível e o tipo de onda que você surfa. A gente sugere a litragem e a quilha ideais.</p>
+</div>
+<div>
+<p class="font-serif italic text-5xl md:text-6xl text-neutral-300 mb-4">03</p>
+<h3 class="font-serif italic text-xl md:text-2xl mb-3">Reserve e receba a sua</h3>
+<p class="font-sans text-sm text-on-surface-variant leading-relaxed">Feche pelo site. Depois, o Baltazar acerta os detalhes finais com você e shapeia a sua prancha — à mão, sob medida.</p>
+</div>
 </div>
 </div>
 </section>
@@ -128,14 +156,17 @@ body { font-family: 'Work Sans', sans-serif; }
 <div>
 <span class="font-sans uppercase text-[10px] tracking-[0.2em] text-white/50 mb-3 md:mb-5 block">O Shaper</span>
 <h2 class="font-serif italic text-4xl md:text-6xl leading-tight mb-6 md:mb-8">César Baltazar</h2>
-<!-- TODO: substituir pelo texto real da história do César Baltazar (o cliente vai enviar) -->
+<!-- TODO: substituir pelo texto OFICIAL do César (rascunho provisório abaixo) -->
 <p class="font-sans text-sm md:text-base text-white/70 leading-relaxed mb-4">
-Surfista antes de ser shaper. Cada prancha que sai do atelier carrega décadas de leitura de onda, mão calejada de planer e o respeito pelo ofício artesanal que se aprende no chão da oficina, no Rio de Janeiro.
+Antes de ser shaper, o César Baltazar é surfista. Foi lendo o mar do Rio de Janeiro que ele entrou na oficina pela primeira vez — atrás da prancha exata que a onda pedia e que não existia na prateleira.
+</p>
+<p class="font-sans text-sm md:text-base text-white/70 leading-relaxed mb-4">
+Desde então transforma blocos de espuma em pranchas, uma de cada vez, à mão, do shape à laminação. Não trabalha com linha de produção e praticamente nunca repete um modelo: cada prancha nasce única, pensada pro corpo, o nível e o surfe de quem vai remar nela.
 </p>
 <p class="font-sans text-sm md:text-base text-white/70 leading-relaxed mb-8">
-Do blank de espuma à laminação final, é tudo feito à mão — uma prancha por vez, pensada pro corpo e pro surfe de quem vai remar nela.
+Do planer à resina, o que sai do atelier é parte ferramenta, parte obra de arte — feito pra performar na água e durar como uma peça que conta uma história.
 </p>
-<p class="font-sans text-[11px] uppercase tracking-widest text-white/40">[ História completa em breve ]</p>
+<p class="font-sans text-[11px] uppercase tracking-widest text-white/40">[ Rascunho — história oficial em breve ]</p>
 </div>
 </div>
 <!-- Galeria de ação -->
@@ -191,7 +222,7 @@ Do blank de espuma à laminação final, é tudo feito à mão — uma prancha p
 <div class="font-serif italic text-base md:text-lg text-black">BALTAZAR CUSTOMS</div>
 <div class="flex gap-6 md:gap-8 items-center">
 <a class="font-sans text-[10px] uppercase tracking-[0.2em] text-neutral-400 hover:text-black transition-colors" href="#">Instagram</a>
-<a class="font-sans text-[10px] uppercase tracking-[0.2em] text-neutral-400 hover:text-black transition-colors" href="#">WhatsApp</a>
+<button onclick="openChat()" class="font-sans text-[10px] uppercase tracking-[0.2em] text-neutral-400 hover:text-black transition-colors">Quero Prancha</button>
 </div>
 <div class="font-sans text-[9px] md:text-[10px] uppercase tracking-[0.15em] md:tracking-[0.2em] text-neutral-500 text-center md:text-right">
 &copy; 2024 BALTAZAR CUSTOMS. FEITO À MÃO NO RIO.
@@ -199,18 +230,17 @@ Do blank de espuma à laminação final, é tudo feito à mão — uma prancha p
 </div>
 </footer>
 
-<!-- BOARD MODAL / BOTTOM SHEET -->
+<!-- LIGHTBOX / BOARD MODAL -->
 <div id="boardModal" class="fixed inset-0 z-[100] hidden bg-black/90 backdrop-blur-sm modal-fade" onclick="if(event.target===this)closeBoardModal()">
 <div class="absolute inset-0 hidden md:flex items-center justify-center">
 <button onclick="closeBoardModal()" class="absolute top-6 right-8 text-white text-3xl hover:opacity-60 z-[110]">&times;</button>
 <button onclick="prevSlide()" class="absolute left-10 top-1/2 -translate-y-1/2 text-white text-5xl hover:opacity-60 z-[110]">&#8249;</button>
 <button onclick="nextSlide()" class="absolute right-10 top-1/2 -translate-y-1/2 text-white text-5xl hover:opacity-60 z-[110]">&#8250;</button>
 <div class="flex flex-col items-center max-w-2xl w-full px-6">
-<img id="modalImgDesktop" class="max-h-[72vh] object-contain" src="" alt=""/>
+<img id="modalImgDesktop" class="max-h-[70vh] object-contain" src="" alt=""/>
 <p id="modalTitleDesktop" class="font-serif italic text-2xl text-white mt-6"></p>
-<p id="modalDescDesktop" class="font-sans text-sm text-white/60 mt-2 text-center max-w-md"></p>
-<div class="flex gap-2 mt-4" id="modalDotsDesktop"></div>
-<button onclick="closeBoardModal();openChat();" class="mt-6 bg-white text-black px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:bg-neutral-200 transition-colors">Encomendar Esta Prancha</button>
+<p id="modalDescDesktop" class="font-sans text-[10px] uppercase tracking-widest text-white/60 mt-2"></p>
+<button onclick="wantThis()" class="mt-6 bg-white text-black px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:bg-neutral-200 transition-colors">Quero uma assim</button>
 </div>
 </div>
 <div class="md:hidden absolute bottom-0 left-0 right-0 bg-white bottom-sheet-enter rounded-t-2xl" style="max-height:88vh;">
@@ -223,9 +253,8 @@ Do blank de espuma à laminação final, é tudo feito à mão — uma prancha p
 <button onclick="nextSlide()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white w-8 h-8 flex items-center justify-center text-lg">&#8250;</button>
 </div>
 <p id="modalTitleMobile" class="font-serif italic text-xl mt-4 text-center"></p>
-<p id="modalDescMobile" class="font-sans text-xs text-neutral-500 mt-1 text-center"></p>
-<div class="flex gap-2 mt-3 justify-center" id="modalDotsMobile"></div>
-<button onclick="closeBoardModal();openChat();" class="w-full mt-4 bg-black text-white py-3 font-sans uppercase tracking-widest text-[10px]">Encomendar Esta Prancha</button>
+<p id="modalDescMobile" class="font-sans text-[10px] uppercase tracking-widest text-neutral-500 mt-1 text-center"></p>
+<button onclick="wantThis()" class="w-full mt-4 bg-black text-white py-3 font-sans uppercase tracking-widest text-[10px]">Quero uma assim</button>
 </div>
 </div>
 </div>
@@ -250,48 +279,73 @@ Do blank de espuma à laminação final, é tudo feito à mão — uma prancha p
 
 <script>
 const IMG = 'images/';
+const PRECO = 'R$ 2.600';            // valor base por prancha (pagamento integral)
+const LINK_PAGAMENTO = '';           // TODO: Lucas vai criar o link de pagamento e colar aqui
 
-// ===================== CATÁLOGO (fotos reais) =====================
-// type: Fish | Shortboard | Mid-Length | Longboard  (usado no filtro)
-// NOTA: nomes/descrições são provisórios — ajustar quando o Baltazar
-// enviar os tipos e nomes oficiais das pranchas que ele faz.
-const boards = [
-  { name:'Since the Apocalypse', type:'Fish', fin:'Twin', desc:'Fish twin com nose preto. Solta e veloz em ondas de praia.', photos:['IMG_6873.jpeg','IMG_6867.jpeg'] },
-  { name:'Ride Fast Forever Young', type:'Fish', fin:'Twin Keel', desc:'Twin keel clássica. Velocidade e flow em ondas pequenas.', photos:['IMG_6837.jpeg','IMG_6852.jpeg'] },
-  { name:'The Tiger', type:'Fish', fin:'Single', desc:'Arte tigre laminada na fibra. Pegada retrô single fin.', photos:['IMG_6844.jpeg','IMG_6877.jpeg'] },
-  { name:'Fast Machines', type:'Shortboard', fin:'Thruster', desc:'Performance thruster para surfe progressivo.', photos:['IMG_6853.jpeg'] },
-  { name:'Pegasus Five', type:'Shortboard', fin:'5 Caixas', desc:'Cinco caixas: rode thruster ou quad. Arte Ride Fast.', photos:['IMG_6858.jpeg'] },
-  { name:'Black Scribble', type:'Fish', fin:'Twin', desc:'Arte rabisco em fibra e bordas artesanais pretas.', photos:['IMG_6835.jpeg','IMG_6856.jpeg'] },
-  { name:'Photo Collage', type:'Fish', fin:'Twin', desc:'Deck em colagem fotográfica. Peça única.', photos:['IMG_6838.jpeg','IMG_6839.jpeg'] },
-  { name:'Camo Twin', type:'Fish', fin:'Twin', desc:'Camuflagem cinza/preto. Twin bem solta.', photos:['IMG_6868.jpeg'] },
-  { name:'Red Rail Fish', type:'Fish', fin:'Twin', desc:'Bordas vermelhas, fundo branco. Twin fish.', photos:['IMG_6875.jpeg','IMG_6874.jpeg'] },
-  { name:'Tie-Dye', type:'Fish', fin:'Thruster', desc:'Resin tint tie-dye em azul e roxo.', photos:['IMG_6849.jpeg'] },
-  { name:'Teal Twin', type:'Fish', fin:'Twin', desc:'Verde-água com bordas brancas.', photos:['IMG_6883.jpeg','IMG_6884.jpeg'] },
-  { name:'Performance White', type:'Shortboard', fin:'Thruster', desc:'Shortboard limpa para manobras.', photos:['IMG_6876.jpeg','IMG_6846.jpeg'] },
-  { name:'Quad Cross', type:'Shortboard', fin:'Quad', desc:'Quad rápida em ondas ocas e tubulares.', photos:['IMG_6880.jpeg','IMG_6865.jpeg'] },
-  { name:'Egg Sunset', type:'Mid-Length', fin:'Single', desc:'Egg com gradiente laranja. Versátil e fluida.', photos:['IMG_6857.jpeg'] },
-  { name:'Lightning Longboard', type:'Longboard', fin:'Single', desc:'Longboard amarela, stringer raio. Glide clássico.', photos:['IMG_6845.jpeg'] },
-  { name:'Neon Flame', type:'Fish', fin:'Twin', desc:'Amarelo neon com arte de chamas e xadrez.', photos:['IMG_6841.jpeg'] },
+// ===================== CATÁLOGO (fotos reais, por categoria) =====================
+// Categorias do Baltazar: High Performance | Twin Fin | Mid-Length | Longboard | Quad
+// Sem nomes de modelo — ele quase nunca repete. As fotos servem de inspiração.
+// (Novos modelos que o Baltazar está finalizando entram aqui depois.)
+const gallery = [
+  { p:'IMG_6839.jpeg', c:'Twin Fin',         f:'Twin' },
+  { p:'IMG_6846.jpeg', c:'High Performance', f:'Thruster' },
+  { p:'IMG_6845.jpeg', c:'Longboard',        f:'Single' },
+  { p:'IMG_6873.jpeg', c:'Twin Fin',         f:'Twin' },
+  { p:'IMG_6857.jpeg', c:'Mid-Length',       f:'Single + Estab.' },
+  { p:'IMG_6880.jpeg', c:'Quad',             f:'Quad' },
+  { p:'IMG_6837.jpeg', c:'Twin Fin',         f:'Twin Keel' },
+  { p:'IMG_6853.jpeg', c:'High Performance', f:'Thruster' },
+  { p:'IMG_6844.jpeg', c:'Twin Fin',         f:'Twin' },
+  { p:'IMG_6868.jpeg', c:'Twin Fin',         f:'Twin' },
+  { p:'IMG_6876.jpeg', c:'High Performance', f:'Thruster' },
+  { p:'IMG_6883.jpeg', c:'Twin Fin',         f:'Twin' },
+  { p:'IMG_6858.jpeg', c:'High Performance', f:'5 Caixas' },
+  { p:'IMG_6852.jpeg', c:'Twin Fin',         f:'Twin Keel' },
+  { p:'IMG_6865.jpeg', c:'Quad',             f:'Quad' },
+  { p:'IMG_6841.jpeg', c:'Twin Fin',         f:'Twin' },
+  { p:'IMG_6849.jpeg', c:'High Performance', f:'Thruster' },
+  { p:'IMG_6835.jpeg', c:'Twin Fin',         f:'Twin' },
+  { p:'IMG_6884.jpeg', c:'Twin Fin',         f:'Twin' },
+  { p:'IMG_6856.jpeg', c:'Twin Fin',         f:'Twin' },
+  { p:'IMG_6874.jpeg', c:'High Performance', f:'Thruster' },
+  { p:'IMG_6875.jpeg', c:'Twin Fin',         f:'Twin' },
+  { p:'IMG_6832.jpeg', c:'Twin Fin',         f:'Twin' },
+  { p:'IMG_6836.jpeg', c:'Twin Fin',         f:'Twin' },
+  { p:'IMG_6838.jpeg', c:'Twin Fin',         f:'Twin' },
+  { p:'IMG_6840.jpeg', c:'Twin Fin',         f:'Twin' },
+  { p:'IMG_6847.jpeg', c:'Twin Fin',         f:'Twin' },
+  { p:'IMG_6848.jpeg', c:'Twin Fin',         f:'Twin' },
+  { p:'IMG_6855.jpeg', c:'Twin Fin',         f:'Twin' },
+  { p:'IMG_6859.jpeg', c:'Twin Fin',         f:'Twin' },
+  { p:'IMG_6872.jpeg', c:'Twin Fin',         f:'Twin' },
+  { p:'IMG_6885.jpeg', c:'Twin Fin',         f:'Twin' },
 ];
 
 const actionPhotos = ['IMG_6889.jpeg','IMG_6890.jpeg','IMG_6862.jpeg','IMG_6863.jpeg','IMG_6887.jpeg','IMG_6888.jpeg','IMG_6861.jpeg','IMG_6842.jpeg'];
 
+// categorias que o cliente pode escolher no chat
+const CATEGORIAS = ['High Performance','Twin Fin','Mid-Length','Longboard','Quad'];
+
 // ===================== RENDER CATÁLOGO + FILTRO =====================
-function renderBoards(type) {
+let currentFilter = 'Todas';
+function renderGallery(filter) {
+  currentFilter = filter;
   const g = document.getElementById('boardGrid');
   g.innerHTML = '';
-  boards.forEach((b, i) => {
-    if (type && type !== 'Todas' && b.type !== type) return;
+  gallery.forEach((b, i) => {
+    if (filter !== 'Todas' && b.c !== filter) return;
     const card = document.createElement('div');
     card.className = 'group cursor-pointer';
-    card.onclick = () => openBoardModal(i);
+    card.onclick = () => openLightbox(i);
     card.innerHTML =
-      '<div class="aspect-[3/4] overflow-hidden bg-surface-container mb-3 md:mb-5 relative">' +
-        '<img src="' + IMG + b.photos[0] + '" alt="' + b.name + '" loading="lazy" class="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"/>' +
-        '<div class="absolute top-3 left-3 bg-black text-white px-2 py-0.5 font-sans text-[7px] md:text-[8px] tracking-widest uppercase">' + b.fin + '</div>' +
-      '</div>' +
-      '<h3 class="font-serif italic text-lg md:text-2xl mb-1">' + b.name + '</h3>' +
-      '<p class="font-sans text-[11px] md:text-sm text-on-surface-variant leading-relaxed hidden md:block">' + b.desc + '</p>';
+      '<div class="aspect-[3/4] overflow-hidden bg-surface-container relative">' +
+        '<img src="' + IMG + b.p + '" alt="Prancha ' + b.c + '" loading="lazy" class="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"/>' +
+        '<div class="absolute top-2 left-2 bg-black text-white px-2 py-0.5 font-sans text-[7px] md:text-[8px] tracking-widest uppercase">' + b.c + '</div>' +
+        '<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 flex justify-between items-end opacity-0 group-hover:opacity-100 transition-opacity">' +
+          '<span class="font-sans text-[8px] md:text-[9px] tracking-widest uppercase text-white/80">' + b.f + '</span>' +
+          '<span class="font-sans text-[8px] md:text-[9px] tracking-widest uppercase text-white">' + PRECO + '</span>' +
+        '</div>' +
+      '</div>';
     g.appendChild(card);
   });
 }
@@ -300,23 +354,27 @@ document.getElementById('boardFilters').addEventListener('click', e => {
   if (!btn) return;
   document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
   btn.classList.add('active');
-  renderBoards(btn.dataset.type);
+  renderGallery(btn.dataset.type);
 });
 
 function renderActionGrid() {
-  const g = document.getElementById('actionGrid');
-  g.innerHTML = actionPhotos.map(p =>
+  document.getElementById('actionGrid').innerHTML = actionPhotos.map(p =>
     '<div class="aspect-square overflow-hidden">' +
     '<img src="' + IMG + p + '" alt="César Baltazar surfando" loading="lazy" class="w-full h-full object-cover grayscale contrast-110 hover:grayscale-0 transition-all duration-700"/>' +
     '</div>'
   ).join('');
 }
 
-// ===================== BOARD MODAL (carrossel) =====================
-let currentBoard = 0, currentSlide = 0;
-function openBoardModal(i) {
-  currentBoard = i; currentSlide = 0;
-  renderModalSlide();
+// ===================== LIGHTBOX (navega na lista filtrada) =====================
+let lbList = [], lbPos = 0;
+function visibleIndices() {
+  return gallery.map((_, i) => i).filter(i => currentFilter === 'Todas' || gallery[i].c === currentFilter);
+}
+function openLightbox(galleryIndex) {
+  lbList = visibleIndices();
+  lbPos = lbList.indexOf(galleryIndex);
+  if (lbPos < 0) lbPos = 0;
+  renderLightbox();
   document.getElementById('boardModal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
 }
@@ -324,71 +382,74 @@ function closeBoardModal() {
   document.getElementById('boardModal').classList.add('hidden');
   document.body.style.overflow = '';
 }
-function renderModalSlide() {
-  const b = boards[currentBoard];
-  const src = IMG + b.photos[currentSlide];
+function renderLightbox() {
+  const item = gallery[lbList[lbPos]];
+  const src = IMG + item.p;
+  const sub = item.c + ' · ' + item.f + ' · ' + PRECO;
   const set = (id, fn) => { const el = document.getElementById(id); if (el) fn(el); };
   set('modalImgDesktop', el => el.src = src);
-  set('modalTitleDesktop', el => el.textContent = b.name);
-  set('modalDescDesktop', el => el.textContent = b.desc);
   set('modalImgMobile', el => el.src = src);
-  set('modalTitleMobile', el => el.textContent = b.name);
-  set('modalDescMobile', el => el.textContent = b.desc);
-  const dots = b.photos.map((_, i) => i === currentSlide).map((on, i) =>
-    '<button onclick="goToSlide(' + i + ')" class="w-2 h-2 rounded-full ' + (on ? 'bg-white' : 'bg-white/40') + '"></button>').join('');
-  const dotsM = b.photos.map((_, i) => i === currentSlide).map((on, i) =>
-    '<button onclick="goToSlide(' + i + ')" class="w-2 h-2 rounded-full ' + (on ? 'bg-black' : 'bg-black/30') + '"></button>').join('');
-  set('modalDotsDesktop', el => el.innerHTML = dots);
-  set('modalDotsMobile', el => el.innerHTML = dotsM);
+  set('modalTitleDesktop', el => el.textContent = item.c);
+  set('modalTitleMobile', el => el.textContent = item.c);
+  set('modalDescDesktop', el => el.textContent = sub);
+  set('modalDescMobile', el => el.textContent = sub);
 }
-function nextSlide() { currentSlide = (currentSlide + 1) % boards[currentBoard].photos.length; renderModalSlide(); }
-function prevSlide() { currentSlide = (currentSlide - 1 + boards[currentBoard].photos.length) % boards[currentBoard].photos.length; renderModalSlide(); }
-function goToSlide(i) { currentSlide = i; renderModalSlide(); }
+function nextSlide() { if (!lbList.length) return; lbPos = (lbPos + 1) % lbList.length; renderLightbox(); }
+function prevSlide() { if (!lbList.length) return; lbPos = (lbPos - 1 + lbList.length) % lbList.length; renderLightbox(); }
+function wantThis() {
+  const item = gallery[lbList[lbPos]];
+  closeBoardModal();
+  openChat(item.c);
+}
 
 // ===================== CHAT GUIADO (Atelier) =====================
 // >>> PRONTO PARA IA: hoje o fluxo segue os passos fixos de chatSteps.
-// Para plugar uma IA de verdade (Claude) no futuro, troque askStep()/answer()
+// Para plugar uma IA de verdade (Claude) depois, troque askStep()/answer()
 // por uma chamada a um backend, ex.:
 //   async function askAI(history){ const r = await fetch('/api/chat',{method:'POST',body:JSON.stringify(history)}); return (await r.json()).reply; }
 // e renderize a resposta com addMsg(reply,'bot'). O resto da UI já está pronto.
-const WHATSAPP = '5521999999999'; // TODO: trocar pelo WhatsApp real do Baltazar (formato 55 + DDD + número)
-
 const chatSteps = [
-  { key:'modelo',   bot:'Fala! Sou o assistente do atelier. Qual tipo de prancha te interessa?', type:'choice', options:['Fish','Shortboard','Mid-Length','Longboard','Me ajude a decidir'] },
+  { key:'modelo',   bot:'Fala! Sou o assistente do atelier. Que tipo de prancha tem a sua cara?', type:'choice', options:['High Performance','Twin Fin','Mid-Length','Longboard','Quad','Me ajude a decidir'] },
   { key:'altura',   bot:'Beleza. Qual a sua altura? (em cm)', type:'number', placeholder:'175' },
   { key:'peso',     bot:'E o seu peso? (em kg)', type:'number', placeholder:'75' },
   { key:'nivel',    bot:'Como você descreve seu nível no surfe?', type:'choice', options:['Iniciante','Intermediário','Avançado','Profissional'] },
   { key:'onda',     bot:'Que tipo de onda você mais surfa?', type:'choice', options:['Pequena/fraca','Média','Grande/forte','Tubular'] },
-  { key:'quilhas',  bot:'Qual configuração de quilhas você prefere?', type:'choice', options:['Single','Twin','Thruster','Quad','Não sei'] },
+  { key:'quilhas',  bot:'Configuração de quilhas que você prefere?', type:'choice', options:['Single','Twin','Thruster','Quad','Não sei'] },
   { key:'copinho',  bot:'E o sistema de quilha (o "copinho")?', type:'choice', options:['FCS II','Futures','Caixa de single','Não sei'] },
   { key:'nome',     bot:'Show! Como é o seu nome?', type:'text', placeholder:'Seu nome' },
-  { key:'whatsapp', bot:'Por último: qual seu WhatsApp pra gente te chamar?', type:'tel', placeholder:'(21) 99999-9999' },
+  { key:'contato',  bot:'Por último: um e-mail ou telefone pro Baltazar acertar os detalhes depois.', type:'text', placeholder:'email ou telefone' },
 ];
 let chatState = {}, chatIdx = 0;
 
-function openChat() {
+function openChat(preCat) {
   document.getElementById('chatModal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
-  startChat();
+  startChat(preCat);
 }
 function closeChat() {
   document.getElementById('chatModal').classList.add('hidden');
   document.body.style.overflow = '';
 }
-function startChat() {
+function startChat(preCat) {
   chatState = {}; chatIdx = 0;
   document.getElementById('chatBody').innerHTML = '';
   document.getElementById('chatInput').innerHTML = '';
-  askStep();
+  if (preCat && CATEGORIAS.indexOf(preCat) !== -1) {
+    chatState.modelo = preCat;
+    chatIdx = 1; // pula a pergunta do modelo
+    addMsg('Boa escolha — uma ' + preCat + '. Vamos personalizar a sua.', 'bot');
+    setTimeout(askStep, 300);
+  } else {
+    askStep();
+  }
 }
 function addMsg(text, who) {
   const body = document.getElementById('chatBody');
   const wrap = document.createElement('div');
   wrap.className = who === 'user' ? 'flex justify-end' : 'flex justify-start';
   const bub = document.createElement('div');
-  bub.className = (who === 'user'
-    ? 'bg-black text-white'
-    : 'bg-surface-container text-on-surface') + ' px-4 py-2.5 max-w-[82%] text-sm font-sans whitespace-pre-line leading-relaxed';
+  bub.className = (who === 'user' ? 'bg-black text-white' : 'bg-surface-container text-on-surface') +
+    ' px-4 py-2.5 max-w-[82%] text-sm font-sans whitespace-pre-line leading-relaxed';
   bub.textContent = text;
   wrap.appendChild(bub);
   body.appendChild(wrap);
@@ -425,7 +486,7 @@ function buildInput(step) {
     const form = document.createElement('form');
     form.className = 'flex gap-2 items-end';
     const inp = document.createElement('input');
-    inp.type = step.type === 'number' ? 'number' : (step.type === 'tel' ? 'tel' : 'text');
+    inp.type = step.type === 'number' ? 'number' : 'text';
     inp.placeholder = step.placeholder || '';
     inp.className = 'flex-1 border-b border-black bg-transparent py-2 text-sm focus:outline-none';
     const sub = document.createElement('button');
@@ -440,7 +501,7 @@ function buildInput(step) {
   }
 }
 
-// --- Lógica de recomendação / litragem ---
+// --- Recomendação / litragem ---
 function guildFactor(nivel) {
   // Fator x peso(kg) = litragem sugerida (ponto de partida; o shaper refina).
   return { 'Iniciante':0.55, 'Intermediário':0.40, 'Avançado':0.36, 'Profissional':0.34 }[nivel] || 0.40;
@@ -449,14 +510,14 @@ function calcVolume() {
   const peso = parseFloat(chatState.peso);
   if (!peso || peso <= 0) return null;
   let f = guildFactor(chatState.nivel);
-  if (chatState.onda === 'Pequena/fraca') f += 0.02;   // mais flutuação em ondas fracas
+  if (chatState.onda === 'Pequena/fraca') f += 0.02;
   if (chatState.onda === 'Grande/forte' || chatState.onda === 'Tubular') f -= 0.01;
   return Math.round(peso * f);
 }
 function recModel() {
   if (chatState.nivel === 'Iniciante') return 'Longboard ou Mid-Length (estável e fácil de remar)';
-  if (chatState.onda === 'Pequena/fraca') return 'Fish (flutua e ganha velocidade em ondas fracas)';
-  if (chatState.nivel === 'Profissional' || chatState.nivel === 'Avançado') return 'Shortboard de performance';
+  if (chatState.onda === 'Pequena/fraca') return 'Twin Fin (solta e veloz em ondas fracas)';
+  if (chatState.nivel === 'Profissional' || chatState.nivel === 'Avançado') return 'High Performance';
   return 'Mid-Length (versátil para o dia a dia)';
 }
 function recFin() {
@@ -471,40 +532,46 @@ function finishChat() {
   const vol = calcVolume();
   const modelo = chatState.modelo === 'Me ajude a decidir' ? recModel() : chatState.modelo;
   const finRec = chatState.quilhas === 'Não sei' ? recFin() : chatState.quilhas;
-  const copinho = chatState.copinho === 'Não sei' ? 'A definir com o shaper' : chatState.copinho;
+  const copinho = chatState.copinho === 'Não sei' ? 'a definir com o shaper' : chatState.copinho;
 
   const resumo =
-    'Fechou' + (firstName(chatState.nome) ? ', ' + firstName(chatState.nome) : '') + '! Aqui vai o resumo:\n\n' +
-    '• Modelo: ' + modelo + '\n' +
+    'Fechou' + (firstName(chatState.nome) ? ', ' + firstName(chatState.nome) : '') + '! Resumo da sua prancha:\n\n' +
+    '• Categoria: ' + modelo + '\n' +
     '• Litragem sugerida: ' + (vol ? '~' + vol + ' L' : 'a calcular') + '\n' +
     '• Quilhas: ' + finRec + '\n' +
     '• Copinho: ' + copinho + '\n' +
     '• Perfil: ' + chatState.altura + 'cm · ' + chatState.peso + 'kg · ' + chatState.nivel + '\n' +
-    '• Onda: ' + chatState.onda + '\n\n' +
-    'Toque no botão abaixo pra enviar pro Baltazar pelo WhatsApp.';
+    '• Onda: ' + chatState.onda + '\n' +
+    '• Valor: ' + PRECO + ' (pagamento integral)\n\n' +
+    'Cada prancha é única e feita à mão. Depois do pagamento, o Baltazar acerta com você os detalhes finais (arte, cor e medidas).';
   addMsg(resumo, 'bot');
 
-  const msg =
-    'Olá Baltazar! Quero encomendar uma prancha.\n' +
-    'Modelo: ' + modelo + '\n' +
-    'Litragem sugerida: ' + (vol ? '~' + vol + ' L' : 'a calcular') + '\n' +
-    'Quilhas: ' + finRec + ' | Copinho: ' + copinho + '\n' +
-    'Altura: ' + chatState.altura + 'cm | Peso: ' + chatState.peso + 'kg\n' +
-    'Nível: ' + chatState.nivel + ' | Onda: ' + chatState.onda + '\n' +
-    'Nome: ' + chatState.nome;
-  const link = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(msg);
-
+  const ref = modelo + (vol ? ' ~' + vol + 'L' : '') + ' / ' + finRec + ' / ' + copinho + ' / ' + chatState.altura + 'cm ' + chatState.peso + 'kg';
   const c = document.getElementById('chatInput');
   c.innerHTML = '';
-  const a = document.createElement('a');
-  a.href = link; a.target = '_blank'; a.rel = 'noopener';
-  a.className = 'block bg-black text-white text-center py-3 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity';
-  a.textContent = 'Enviar pelo WhatsApp';
-  c.appendChild(a);
+
+  if (LINK_PAGAMENTO) {
+    const a = document.createElement('a');
+    a.href = LINK_PAGAMENTO + (LINK_PAGAMENTO.indexOf('?') !== -1 ? '&' : '?') + 'ref=' + encodeURIComponent(ref);
+    a.target = '_blank'; a.rel = 'noopener';
+    a.className = 'block bg-black text-white text-center py-3 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity';
+    a.textContent = 'Pagar ' + PRECO + ' e reservar';
+    c.appendChild(a);
+  } else {
+    const b = document.createElement('button');
+    b.className = 'block w-full bg-black text-white text-center py-3 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity';
+    b.textContent = 'Finalizar pedido — ' + PRECO;
+    b.onclick = () => addMsg('O link de pagamento está sendo configurado. Em breve você fecha tudo por aqui!', 'bot');
+    c.appendChild(b);
+    const note = document.createElement('p');
+    note.className = 'mt-2 font-sans text-[10px] text-neutral-500 text-center';
+    note.textContent = 'Pagamento online em configuração.';
+    c.appendChild(note);
+  }
   const again = document.createElement('button');
   again.className = 'w-full mt-2 font-sans text-[10px] uppercase tracking-widest text-neutral-500 underline';
   again.textContent = 'Recomeçar';
-  again.onclick = startChat;
+  again.onclick = () => startChat();
   c.appendChild(again);
 }
 
@@ -526,7 +593,7 @@ document.addEventListener('touchend', e => {
 });
 
 // ===================== INIT =====================
-renderBoards('Todas');
+renderGallery('Todas');
 renderActionGrid();
 </script>
 </body></html>
