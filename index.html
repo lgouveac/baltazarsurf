@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="light" lang="en"><head>
+<html class="light" lang="pt-BR"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>BALTAZAR CUSTOMS | Pranchas Artesanais</title>
@@ -31,16 +31,15 @@ body { font-family: 'Work Sans', sans-serif; }
   background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   opacity: 0.04;
 }
-/* Bottom sheet animation */
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 .bottom-sheet-enter { animation: slideUp 0.3s ease-out; }
 .modal-fade { animation: fadeIn 0.2s ease-out; }
-/* Mobile hamburger */
 .hamburger span { display: block; width: 20px; height: 1.5px; background: #000; margin: 4px 0; transition: all 0.3s; }
 .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(4px,4px); }
 .hamburger.active span:nth-child(2) { opacity: 0; }
 .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(4px,-4px); }
+.filter-chip.active { background:#000; color:#fff; }
 </style>
 </head>
 <body class="bg-background text-on-background selection:bg-primary selection:text-on-primary">
@@ -49,126 +48,120 @@ body { font-family: 'Work Sans', sans-serif; }
 <!-- TopAppBar -->
 <header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl">
 <nav class="flex justify-between items-center w-full px-5 md:px-10 py-4 md:py-6">
-<div class="text-lg md:text-2xl font-serif italic text-black tracking-tighter">BALTAZAR CUSTOMS</div>
+<a href="#top" class="text-lg md:text-2xl font-serif italic text-black tracking-tighter">BALTAZAR CUSTOMS</a>
 <ul class="hidden md:flex gap-10 items-center">
-<li><a class="text-neutral-500 font-sans uppercase text-[10px] tracking-widest hover:text-black transition-colors" href="#boards">Custom Boards</a></li>
-<li><a class="text-neutral-500 font-sans uppercase text-[10px] tracking-widest hover:text-black transition-colors" href="#reels">Reels</a></li>
-<li><a class="text-neutral-500 font-sans uppercase text-[10px] tracking-widest hover:text-black transition-colors" href="#contact">Contact</a></li>
+<li><a class="text-neutral-500 font-sans uppercase text-[10px] tracking-widest hover:text-black transition-colors" href="#boards">A Coleção</a></li>
+<li><a class="text-neutral-500 font-sans uppercase text-[10px] tracking-widest hover:text-black transition-colors" href="#baltazar">Baltazar</a></li>
+<li><a class="text-neutral-500 font-sans uppercase text-[10px] tracking-widest hover:text-black transition-colors" href="#reels">Processo</a></li>
+<li><a class="text-neutral-500 font-sans uppercase text-[10px] tracking-widest hover:text-black transition-colors" href="#contact">Contato</a></li>
 <li><a class="text-neutral-500 font-sans uppercase text-[10px] tracking-widest hover:text-black transition-colors" href="calculadora.html">Calculadora</a></li>
 </ul>
 <div class="flex items-center gap-4">
-<button onclick="openOrderModal()" class="text-black hover:opacity-70 transition-opacity" aria-label="Faca sua prancha">
-<svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+<button onclick="openChat()" class="hidden sm:block bg-black text-white px-5 py-2.5 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Quero Prancha</button>
+<button onclick="openChat()" class="sm:hidden text-black hover:opacity-70 transition-opacity" aria-label="Quero prancha">
+<svg width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
 <path d="M16 2C14.5 2 12 4 11.5 8C11 12 11.5 18 12 22C12.5 26 14 30 16 30C18 30 19.5 26 20 22C20.5 18 21 12 20.5 8C20 4 17.5 2 16 2Z"/>
-<path d="M13.5 28C14 29 15 30 16 30"/>
-<path d="M18.5 28C18 29 17 30 16 30"/>
 <line x1="16" y1="4" x2="16" y2="28" stroke-dasharray="2 2" opacity="0.4"/>
-<circle cx="16" cy="14" r="1.2" fill="currentColor" stroke="none"/>
 </svg>
 </button>
-<!-- Mobile hamburger -->
 <button class="hamburger md:hidden" onclick="this.classList.toggle('active');document.getElementById('mobileMenu').classList.toggle('hidden')" aria-label="Menu">
 <span></span><span></span><span></span>
 </button>
 </div>
 </nav>
-<!-- Mobile menu -->
 <div id="mobileMenu" class="hidden md:hidden bg-white/95 backdrop-blur-xl border-t border-black/5 px-5 pb-6">
-<a class="block py-3 font-sans uppercase text-[11px] tracking-widest text-neutral-600" href="#boards" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Custom Boards</a>
-<a class="block py-3 font-sans uppercase text-[11px] tracking-widest text-neutral-600" href="#reels" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Reels</a>
-<a class="block py-3 font-sans uppercase text-[11px] tracking-widest text-neutral-600" href="#contact" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Contact</a>
+<a class="block py-3 font-sans uppercase text-[11px] tracking-widest text-neutral-600" href="#boards" onclick="document.getElementById('mobileMenu').classList.add('hidden')">A Coleção</a>
+<a class="block py-3 font-sans uppercase text-[11px] tracking-widest text-neutral-600" href="#baltazar" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Baltazar</a>
+<a class="block py-3 font-sans uppercase text-[11px] tracking-widest text-neutral-600" href="#reels" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Processo</a>
+<a class="block py-3 font-sans uppercase text-[11px] tracking-widest text-neutral-600" href="#contact" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Contato</a>
 <a class="block py-3 font-sans uppercase text-[11px] tracking-widest text-neutral-600" href="calculadora.html">Calculadora</a>
 </div>
 </header>
 
-<main>
+<main id="top">
 <!-- Hero Section -->
 <section class="relative h-screen w-full flex items-center justify-center overflow-hidden bg-black">
 <div class="absolute inset-0 opacity-60">
-<img alt="Shaper at work" class="w-full h-full object-cover object-top grayscale brightness-75 contrast-125" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArRAlUBR_Hvsuo6Z63Q1_rvFblOG-E2VHBwxdoElSKySu-3RUKeEzj1tuNvO7A6CpzJoHWFR9jskjYlRAwiciaeMEV2WKAYPMOy5JB-VHRJBq79-INLEFUm7VskXZkS0TOpeC3MKBPUXo1s3lsk812fkNL2Jqjk50HWpuBKQ4TIwWjlONzl1DGe019WAUmIzkfr087I690yS7hOSczy5o-eWJq0m6aswbS_z0LI0ZlhVmAztOknYoJzpLdxJM3AK-2hwxtxcVjRx0"/>
+<img alt="César Baltazar surfando" class="w-full h-full object-cover grayscale brightness-75 contrast-125" src="images/IMG_6863.jpeg"/>
 </div>
 <div class="relative z-10 text-center px-4 md:px-6">
 <h1 class="text-4xl sm:text-6xl md:text-[8rem] text-white leading-none tracking-wider mb-4" style="font-family:'Permanent Marker',cursive;">BALTAZAR CUSTOMS</h1>
-<p class="font-sans uppercase tracking-[0.2em] md:tracking-[0.3em] text-[9px] md:text-xs text-white/80 max-w-xl mx-auto">Pranchas artesanais feitas a mao. Rio de Janeiro.</p>
-<div class="mt-10 md:mt-16">
-<button onclick="openOrderModal()" class="bg-white text-black px-8 md:px-12 py-4 md:py-5 font-sans uppercase tracking-widest text-[9px] md:text-[10px] hover:bg-neutral-200 transition-colors">Faca Sua Prancha</button>
+<p class="font-sans uppercase tracking-[0.2em] md:tracking-[0.3em] text-[9px] md:text-xs text-white/80 max-w-xl mx-auto">Pranchas artesanais feitas à mão. Rio de Janeiro.</p>
+<div class="mt-10 md:mt-16 flex flex-col sm:flex-row gap-3 justify-center items-center">
+<button onclick="openChat()" class="bg-white text-black px-8 md:px-12 py-4 md:py-5 font-sans uppercase tracking-widest text-[9px] md:text-[10px] hover:bg-neutral-200 transition-colors">Quero Minha Prancha</button>
+<a href="#boards" class="text-white/80 underline font-sans uppercase tracking-widest text-[9px] md:text-[10px] hover:text-white transition-colors">Ver a Coleção</a>
 </div>
 </div>
 </section>
 
-<!-- Showcase Section: Custom Boards -->
+<!-- Showcase Section: A Coleção -->
 <section id="boards" class="py-16 md:py-32 px-5 md:px-10 bg-surface">
 <div class="max-w-7xl mx-auto">
-<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 md:mb-20 gap-4 md:gap-8">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-14 gap-4 md:gap-8">
 <div class="max-w-2xl">
-<span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-2 md:mb-4 block">The Fleet</span>
-<h2 class="font-serif italic text-3xl md:text-7xl leading-tight">Hand-tooled silhouettes for the discerning wave rider.</h2>
+<span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-2 md:mb-4 block">A Coleção</span>
+<h2 class="font-serif italic text-3xl md:text-7xl leading-tight">Silhuetas talhadas à mão para quem entende de onda.</h2>
 </div>
 </div>
-<div class="grid grid-cols-2 md:grid-cols-2 gap-4 md:gap-16">
-
-<!-- Board 1 -->
-<div class="group cursor-pointer" onclick="openBoardModal(0)">
-<div class="aspect-[3/4] overflow-hidden bg-surface-container mb-3 md:mb-8 relative">
-<img alt="Since the Apocalypse" class="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" src="images/board-apocalypse.png"/>
-<div class="absolute top-3 left-3 md:top-6 md:left-6 bg-black text-white px-2 py-0.5 md:px-3 md:py-1 font-sans text-[7px] md:text-[8px] tracking-widest uppercase">Twin Fin</div>
+<!-- Filtros por tipo -->
+<div id="boardFilters" class="flex flex-wrap gap-2 mb-8 md:mb-14">
+<button class="filter-chip active border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Todas">Todas</button>
+<button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Fish">Fish</button>
+<button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Shortboard">Shortboard</button>
+<button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Mid-Length">Mid-Length</button>
+<button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Longboard">Longboard</button>
 </div>
-<h3 class="font-serif italic text-lg md:text-3xl mb-1 md:mb-3">Since the Apocalypse</h3>
-<p class="font-sans text-[11px] md:text-sm text-on-surface-variant leading-relaxed hidden md:block">Twin fin com borda artesanal em vermelho. Shape classico para ondas de praia.</p>
-</div>
-
-<!-- Board 2 -->
-<div class="group cursor-pointer md:mt-16" onclick="openBoardModal(1)">
-<div class="aspect-[3/4] overflow-hidden bg-surface-container mb-3 md:mb-8 relative">
-<img alt="The Tiger" class="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" src="images/board-tiger.png"/>
-<div class="absolute top-3 left-3 md:top-6 md:left-6 bg-black text-white px-2 py-0.5 md:px-3 md:py-1 font-sans text-[7px] md:text-[8px] tracking-widest uppercase">Mid-Length</div>
-</div>
-<h3 class="font-serif italic text-lg md:text-3xl mb-1 md:mb-3">The Tiger</h3>
-<p class="font-sans text-[11px] md:text-sm text-on-surface-variant leading-relaxed hidden md:block">Mid-length versatil com outline suave. Perfeita para sessoes longas.</p>
-</div>
-
-<!-- Board 3 -->
-<div class="group cursor-pointer" onclick="openBoardModal(2)">
-<div class="aspect-[3/4] overflow-hidden bg-surface-container mb-3 md:mb-8 relative">
-<img alt="Ride Fast Forever Young" class="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" src="images/board-ridefast.png"/>
-<div class="absolute top-3 left-3 md:top-6 md:left-6 bg-black text-white px-2 py-0.5 md:px-3 md:py-1 font-sans text-[7px] md:text-[8px] tracking-widest uppercase">Performance</div>
-</div>
-<h3 class="font-serif italic text-lg md:text-3xl mb-1 md:mb-3">Ride Fast Forever Young</h3>
-<p class="font-sans text-[11px] md:text-sm text-on-surface-variant leading-relaxed hidden md:block">Shape de performance com 5 quilhas. Velocidade e radicalidade.</p>
-</div>
-
-<!-- Board 4 -->
-<div class="group cursor-pointer md:mt-16" onclick="openBoardModal(3)">
-<div class="aspect-[3/4] overflow-hidden bg-surface-container mb-3 md:mb-8 relative">
-<img alt="Jimi Hendrix Edition" class="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" src="images/board-hendrix-full.png"/>
-<div class="absolute top-3 left-3 md:top-6 md:left-6 bg-black text-white px-2 py-0.5 md:px-3 md:py-1 font-sans text-[7px] md:text-[8px] tracking-widest uppercase">Art Edition</div>
-</div>
-<h3 class="font-serif italic text-lg md:text-3xl mb-1 md:mb-3">Jimi Hendrix Edition</h3>
-<p class="font-sans text-[11px] md:text-sm text-on-surface-variant leading-relaxed hidden md:block">Arte Jimi Hendrix laminada no blank. Peca unica de arte funcional.</p>
-</div>
-
+<div id="boardGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-10"></div>
+<div class="text-center mt-12 md:mt-20">
+<button onclick="openChat()" class="bg-black text-white px-10 py-4 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Não sei qual escolher? Fale com o Atelier</button>
 </div>
 </div>
 </section>
 
-<!-- Reels Section -->
+<!-- César Baltazar Section -->
+<section id="baltazar" class="py-16 md:py-32 bg-black text-white px-5 md:px-10">
+<div class="max-w-7xl mx-auto">
+<div class="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
+<div class="aspect-[3/4] overflow-hidden">
+<img src="images/IMG_6889.jpeg" alt="César Baltazar surfando" class="w-full h-full object-cover grayscale contrast-110"/>
+</div>
+<div>
+<span class="font-sans uppercase text-[10px] tracking-[0.2em] text-white/50 mb-3 md:mb-5 block">O Shaper</span>
+<h2 class="font-serif italic text-4xl md:text-6xl leading-tight mb-6 md:mb-8">César Baltazar</h2>
+<!-- TODO: substituir pelo texto real da história do César Baltazar (o cliente vai enviar) -->
+<p class="font-sans text-sm md:text-base text-white/70 leading-relaxed mb-4">
+Surfista antes de ser shaper. Cada prancha que sai do atelier carrega décadas de leitura de onda, mão calejada de planer e o respeito pelo ofício artesanal que se aprende no chão da oficina, no Rio de Janeiro.
+</p>
+<p class="font-sans text-sm md:text-base text-white/70 leading-relaxed mb-8">
+Do blank de espuma à laminação final, é tudo feito à mão — uma prancha por vez, pensada pro corpo e pro surfe de quem vai remar nela.
+</p>
+<p class="font-sans text-[11px] uppercase tracking-widest text-white/40">[ História completa em breve ]</p>
+</div>
+</div>
+<!-- Galeria de ação -->
+<div class="mt-10 md:mt-20">
+<span class="font-sans uppercase text-[10px] tracking-[0.2em] text-white/50 mb-5 md:mb-8 block">Na Água</span>
+<div id="actionGrid" class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4"></div>
+</div>
+</div>
+</section>
+
+<!-- Processo / Reels Section -->
 <section id="reels" class="py-16 md:py-32 bg-surface-container">
 <div class="max-w-7xl mx-auto px-5 md:px-10">
 <div class="text-center mb-12 md:mb-24">
-<span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-2 md:mb-4 block">The Motion</span>
+<span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-2 md:mb-4 block">O Processo</span>
 <h2 class="font-serif italic text-3xl md:text-6xl mb-4 md:mb-6">Analog Captured</h2>
-<p class="font-sans text-xs md:text-sm text-neutral-600 max-w-lg mx-auto leading-relaxed">O processo artesanal de shape e laminacao capturado em video.</p>
+<p class="font-sans text-xs md:text-sm text-neutral-600 max-w-lg mx-auto leading-relaxed">O processo artesanal de shape e laminação capturado em vídeo.</p>
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-32 max-w-5xl mx-auto">
-<!-- Reel 1 -->
 <div class="relative group">
 <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/Cz7bjQpy306/" data-instgrm-version="14" style="background:#FFF; border:0; margin:0; padding:0; width:100%;"></blockquote>
 <div class="mt-4 md:mt-8 text-left">
 <p class="font-serif italic text-xl md:text-3xl mb-1 md:mb-2">Volume I: The Planer</p>
-<p class="font-sans text-[9px] md:text-[10px] uppercase tracking-widest text-neutral-500">O processo detalhado de shape de um mestre artesao.</p>
+<p class="font-sans text-[9px] md:text-[10px] uppercase tracking-widest text-neutral-500">O processo detalhado de shape de um mestre artesão.</p>
 </div>
 </div>
-<!-- Reel 2 -->
 <div class="relative group md:mt-32">
 <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/DMKv4UMuBsq/" data-instgrm-version="14" style="background:#FFF; border:0; margin:0; padding:0; width:100%;"></blockquote>
 <div class="mt-4 md:mt-8 text-left">
@@ -183,7 +176,7 @@ body { font-family: 'Work Sans', sans-serif; }
 <!-- Newsletter -->
 <section id="contact" class="py-20 md:py-40 bg-surface px-5 md:px-10 border-t border-black/5">
 <div class="max-w-4xl mx-auto text-center">
-<h3 class="font-serif italic text-2xl md:text-5xl mb-6 md:mb-10 leading-tight">"Uma prancha deve ser tanto uma obra de arte na parede quanto uma ferramenta na agua."</h3>
+<h3 class="font-serif italic text-2xl md:text-5xl mb-6 md:mb-10 leading-tight">"Uma prancha deve ser tanto uma obra de arte na parede quanto uma ferramenta na água."</h3>
 <div class="flex flex-col sm:flex-row gap-0 max-w-md mx-auto">
 <input class="w-full bg-surface-container-low border-b border-black py-3 md:py-4 px-4 md:px-6 font-sans text-[10px] tracking-widest focus:outline-none placeholder:text-neutral-400" placeholder="SEU EMAIL" type="email"/>
 <button class="bg-black text-white px-6 md:px-8 py-3 md:py-4 font-sans text-[10px] tracking-widest uppercase hover:opacity-80 transition-opacity">Assinar</button>
@@ -201,26 +194,26 @@ body { font-family: 'Work Sans', sans-serif; }
 <a class="font-sans text-[10px] uppercase tracking-[0.2em] text-neutral-400 hover:text-black transition-colors" href="#">WhatsApp</a>
 </div>
 <div class="font-sans text-[9px] md:text-[10px] uppercase tracking-[0.15em] md:tracking-[0.2em] text-neutral-500 text-center md:text-right">
-&copy; 2024 BALTAZAR CUSTOMS. FEITO A MAO NO RIO.
+&copy; 2024 BALTAZAR CUSTOMS. FEITO À MÃO NO RIO.
 </div>
 </div>
 </footer>
 
 <!-- BOARD MODAL / BOTTOM SHEET -->
 <div id="boardModal" class="fixed inset-0 z-[100] hidden bg-black/90 backdrop-blur-sm modal-fade" onclick="if(event.target===this)closeBoardModal()">
-<!-- Desktop: centered | Mobile: bottom sheet -->
 <div class="absolute inset-0 hidden md:flex items-center justify-center">
 <button onclick="closeBoardModal()" class="absolute top-6 right-8 text-white text-3xl hover:opacity-60 z-[110]">&times;</button>
 <button onclick="prevSlide()" class="absolute left-10 top-1/2 -translate-y-1/2 text-white text-5xl hover:opacity-60 z-[110]">&#8249;</button>
 <button onclick="nextSlide()" class="absolute right-10 top-1/2 -translate-y-1/2 text-white text-5xl hover:opacity-60 z-[110]">&#8250;</button>
 <div class="flex flex-col items-center max-w-2xl w-full px-6">
-<img id="modalImgDesktop" class="max-h-[80vh] object-contain" src="" alt=""/>
+<img id="modalImgDesktop" class="max-h-[72vh] object-contain" src="" alt=""/>
 <p id="modalTitleDesktop" class="font-serif italic text-2xl text-white mt-6"></p>
+<p id="modalDescDesktop" class="font-sans text-sm text-white/60 mt-2 text-center max-w-md"></p>
 <div class="flex gap-2 mt-4" id="modalDotsDesktop"></div>
+<button onclick="closeBoardModal();openChat();" class="mt-6 bg-white text-black px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:bg-neutral-200 transition-colors">Encomendar Esta Prancha</button>
 </div>
 </div>
-<!-- Mobile: bottom sheet -->
-<div class="md:hidden absolute bottom-0 left-0 right-0 bg-white bottom-sheet-enter" style="max-height:85vh; border-radius:16px 16px 0 0;">
+<div class="md:hidden absolute bottom-0 left-0 right-0 bg-white bottom-sheet-enter rounded-t-2xl" style="max-height:88vh;">
 <div class="flex justify-center pt-3 pb-1"><div class="w-10 h-1 bg-neutral-300 rounded-full"></div></div>
 <button onclick="closeBoardModal()" class="absolute top-3 right-4 text-black text-2xl hover:opacity-60">&times;</button>
 <div class="px-5 pb-6 pt-2">
@@ -230,72 +223,25 @@ body { font-family: 'Work Sans', sans-serif; }
 <button onclick="nextSlide()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white w-8 h-8 flex items-center justify-center text-lg">&#8250;</button>
 </div>
 <p id="modalTitleMobile" class="font-serif italic text-xl mt-4 text-center"></p>
+<p id="modalDescMobile" class="font-sans text-xs text-neutral-500 mt-1 text-center"></p>
 <div class="flex gap-2 mt-3 justify-center" id="modalDotsMobile"></div>
-<button onclick="closeBoardModal();openOrderModal();" class="w-full mt-4 bg-black text-white py-3 font-sans uppercase tracking-widest text-[10px]">Encomendar Esta Prancha</button>
+<button onclick="closeBoardModal();openChat();" class="w-full mt-4 bg-black text-white py-3 font-sans uppercase tracking-widest text-[10px]">Encomendar Esta Prancha</button>
 </div>
 </div>
 </div>
 
-<!-- ORDER MODAL / BOTTOM SHEET -->
-<div id="orderModal" class="fixed inset-0 z-[100] hidden bg-black/90 backdrop-blur-sm modal-fade" onclick="if(event.target===this)closeOrderModal()">
-<!-- Desktop: centered -->
-<div class="hidden md:flex items-center justify-center h-full">
-<div class="bg-white max-w-lg w-full mx-4 p-10 max-h-[90vh] overflow-y-auto">
-<div class="flex justify-between items-center mb-8">
-<h2 class="font-serif italic text-3xl">Faca Sua Prancha</h2>
-<button onclick="closeOrderModal()" class="text-2xl hover:opacity-60">&times;</button>
+<!-- CHAT / ATELIER MODAL -->
+<div id="chatModal" class="fixed inset-0 z-[100] hidden bg-black/90 backdrop-blur-sm modal-fade flex items-end md:items-center justify-center" onclick="if(event.target===this)closeChat()">
+<div class="bg-white w-full md:max-w-md h-[90vh] md:h-[80vh] md:max-h-[660px] flex flex-col bottom-sheet-enter rounded-t-2xl md:rounded-none overflow-hidden">
+<div class="flex items-center justify-between px-5 py-4 border-b border-black/10">
+<div>
+<p class="font-serif italic text-lg leading-none">Atelier Baltazar</p>
+<p class="font-sans text-[9px] uppercase tracking-widest text-neutral-500 mt-1">Monte sua prancha</p>
 </div>
-<form onsubmit="event.preventDefault();alert('Pedido enviado! Entraremos em contato.');closeOrderModal();">
-<div class="mb-6">
-<label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-3">Inspiracao</label>
-<div class="grid grid-cols-2 gap-3">
-<label class="cursor-pointer"><input type="radio" name="board" value="apocalypse" class="peer hidden"/><div class="peer-checked:ring-2 peer-checked:ring-black p-2 border border-neutral-200 hover:border-black transition-colors"><img src="images/board-apocalypse.png" class="w-full aspect-square object-cover" alt=""/><p class="font-sans text-[10px] mt-2 text-center">Since the Apocalypse</p></div></label>
-<label class="cursor-pointer"><input type="radio" name="board" value="tiger" class="peer hidden"/><div class="peer-checked:ring-2 peer-checked:ring-black p-2 border border-neutral-200 hover:border-black transition-colors"><img src="images/board-tiger.png" class="w-full aspect-square object-cover" alt=""/><p class="font-sans text-[10px] mt-2 text-center">The Tiger</p></div></label>
-<label class="cursor-pointer"><input type="radio" name="board" value="ridefast" class="peer hidden"/><div class="peer-checked:ring-2 peer-checked:ring-black p-2 border border-neutral-200 hover:border-black transition-colors"><img src="images/board-ridefast.png" class="w-full aspect-square object-cover" alt=""/><p class="font-sans text-[10px] mt-2 text-center">Ride Fast Forever Young</p></div></label>
-<label class="cursor-pointer"><input type="radio" name="board" value="hendrix" class="peer hidden"/><div class="peer-checked:ring-2 peer-checked:ring-black p-2 border border-neutral-200 hover:border-black transition-colors"><img src="images/board-hendrix-full.png" class="w-full aspect-square object-cover" alt=""/><p class="font-sans text-[10px] mt-2 text-center">Jimi Hendrix Edition</p></div></label>
+<button onclick="closeChat()" class="text-2xl hover:opacity-60">&times;</button>
 </div>
-</div>
-<div class="grid grid-cols-2 gap-4 mb-6">
-<div><label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Altura (cm)</label><input type="number" placeholder="175" class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none" required/></div>
-<div><label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Peso (kg)</label><input type="number" placeholder="75" class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none" required/></div>
-</div>
-<div class="mb-6"><label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Nivel de Surf</label><select class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none appearance-none cursor-pointer" required><option value="">Selecione...</option><option value="iniciante">Iniciante</option><option value="intermediario">Intermediario</option><option value="avancado">Avancado</option><option value="profissional">Profissional</option></select></div>
-<div class="mb-6"><label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Nome</label><input type="text" placeholder="Seu nome" class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none" required/></div>
-<div class="mb-6"><label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">WhatsApp</label><input type="tel" placeholder="(21) 99999-9999" class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none" required/></div>
-<div class="mb-8"><label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Detalhes extras</label><textarea rows="3" placeholder="Tipo de onda, preferencias, medidas especificas..." class="w-full border-b border-black py-3 px-0 font-sans text-sm bg-transparent focus:outline-none resize-none"></textarea></div>
-<button type="submit" class="w-full bg-black text-white py-4 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Enviar Pedido</button>
-</form>
-</div>
-</div>
-<!-- Mobile: bottom sheet -->
-<div class="md:hidden absolute bottom-0 left-0 right-0 bg-white bottom-sheet-enter overflow-y-auto" style="max-height:90vh; border-radius:16px 16px 0 0;">
-<div class="sticky top-0 bg-white z-10 flex justify-center pt-3 pb-1"><div class="w-10 h-1 bg-neutral-300 rounded-full"></div></div>
-<div class="px-5 pb-8 pt-2">
-<div class="flex justify-between items-center mb-6">
-<h2 class="font-serif italic text-2xl">Faca Sua Prancha</h2>
-<button onclick="closeOrderModal()" class="text-xl hover:opacity-60">&times;</button>
-</div>
-<form onsubmit="event.preventDefault();alert('Pedido enviado! Entraremos em contato.');closeOrderModal();">
-<div class="mb-5">
-<label class="block font-sans uppercase text-[10px] tracking-widest text-neutral-500 mb-2">Inspiracao</label>
-<div class="grid grid-cols-4 gap-2">
-<label class="cursor-pointer"><input type="radio" name="boardm" value="apocalypse" class="peer hidden"/><div class="peer-checked:ring-2 peer-checked:ring-black p-1 border border-neutral-200"><img src="images/board-apocalypse.png" class="w-full aspect-square object-cover" alt=""/></div></label>
-<label class="cursor-pointer"><input type="radio" name="boardm" value="tiger" class="peer hidden"/><div class="peer-checked:ring-2 peer-checked:ring-black p-1 border border-neutral-200"><img src="images/board-tiger.png" class="w-full aspect-square object-cover" alt=""/></div></label>
-<label class="cursor-pointer"><input type="radio" name="boardm" value="ridefast" class="peer hidden"/><div class="peer-checked:ring-2 peer-checked:ring-black p-1 border border-neutral-200"><img src="images/board-ridefast.png" class="w-full aspect-square object-cover" alt=""/></div></label>
-<label class="cursor-pointer"><input type="radio" name="boardm" value="hendrix" class="peer hidden"/><div class="peer-checked:ring-2 peer-checked:ring-black p-1 border border-neutral-200"><img src="images/board-hendrix-full.png" class="w-full aspect-square object-cover" alt=""/></div></label>
-</div>
-</div>
-<div class="grid grid-cols-2 gap-3 mb-4">
-<div><label class="block font-sans uppercase text-[9px] tracking-widest text-neutral-500 mb-1">Altura (cm)</label><input type="number" placeholder="175" class="w-full border-b border-black py-2 px-0 font-sans text-sm bg-transparent focus:outline-none" required/></div>
-<div><label class="block font-sans uppercase text-[9px] tracking-widest text-neutral-500 mb-1">Peso (kg)</label><input type="number" placeholder="75" class="w-full border-b border-black py-2 px-0 font-sans text-sm bg-transparent focus:outline-none" required/></div>
-</div>
-<div class="mb-4"><label class="block font-sans uppercase text-[9px] tracking-widest text-neutral-500 mb-1">Nivel de Surf</label><select class="w-full border-b border-black py-2 px-0 font-sans text-sm bg-transparent focus:outline-none appearance-none" required><option value="">Selecione...</option><option value="iniciante">Iniciante</option><option value="intermediario">Intermediario</option><option value="avancado">Avancado</option><option value="profissional">Profissional</option></select></div>
-<div class="mb-4"><label class="block font-sans uppercase text-[9px] tracking-widest text-neutral-500 mb-1">Nome</label><input type="text" placeholder="Seu nome" class="w-full border-b border-black py-2 px-0 font-sans text-sm bg-transparent focus:outline-none" required/></div>
-<div class="mb-4"><label class="block font-sans uppercase text-[9px] tracking-widest text-neutral-500 mb-1">WhatsApp</label><input type="tel" placeholder="(21) 99999-9999" class="w-full border-b border-black py-2 px-0 font-sans text-sm bg-transparent focus:outline-none" required/></div>
-<div class="mb-5"><label class="block font-sans uppercase text-[9px] tracking-widest text-neutral-500 mb-1">Detalhes</label><textarea rows="2" placeholder="Tipo de onda, medidas..." class="w-full border-b border-black py-2 px-0 font-sans text-sm bg-transparent focus:outline-none resize-none"></textarea></div>
-<button type="submit" class="w-full bg-black text-white py-3.5 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Enviar Pedido</button>
-</form>
-</div>
+<div id="chatBody" class="flex-1 overflow-y-auto px-5 py-4 space-y-3"></div>
+<div id="chatInput" class="border-t border-black/10 p-4"></div>
 </div>
 </div>
 
@@ -303,19 +249,75 @@ body { font-family: 'Work Sans', sans-serif; }
 <script async defer src="https://www.instagram.com/embed.js"></script>
 
 <script>
-const boards = [
-  { name: 'Since the Apocalypse', images: ['images/board-apocalypse.png','images/board-tiger.png','images/board-ridefast.png','images/board-hendrix-full.png'] },
-  { name: 'The Tiger', images: ['images/board-tiger.png','images/board-apocalypse.png','images/board-hendrix-detail.png','images/board-ridefast.png'] },
-  { name: 'Ride Fast Forever Young', images: ['images/board-ridefast.png','images/board-tiger.png','images/board-hendrix-closeup.png','images/board-apocalypse.png'] },
-  { name: 'Jimi Hendrix Edition', images: ['images/board-hendrix-full.png','images/board-hendrix-detail.png','images/board-hendrix-closeup.png','images/board-apocalypse.png'] },
-];
-let currentBoard = 0, currentSlide = 0;
+const IMG = 'images/';
 
+// ===================== CATÁLOGO (fotos reais) =====================
+// type: Fish | Shortboard | Mid-Length | Longboard  (usado no filtro)
+// NOTA: nomes/descrições são provisórios — ajustar quando o Baltazar
+// enviar os tipos e nomes oficiais das pranchas que ele faz.
+const boards = [
+  { name:'Since the Apocalypse', type:'Fish', fin:'Twin', desc:'Fish twin com nose preto. Solta e veloz em ondas de praia.', photos:['IMG_6873.jpeg','IMG_6867.jpeg'] },
+  { name:'Ride Fast Forever Young', type:'Fish', fin:'Twin Keel', desc:'Twin keel clássica. Velocidade e flow em ondas pequenas.', photos:['IMG_6837.jpeg','IMG_6852.jpeg'] },
+  { name:'The Tiger', type:'Fish', fin:'Single', desc:'Arte tigre laminada na fibra. Pegada retrô single fin.', photos:['IMG_6844.jpeg','IMG_6877.jpeg'] },
+  { name:'Fast Machines', type:'Shortboard', fin:'Thruster', desc:'Performance thruster para surfe progressivo.', photos:['IMG_6853.jpeg'] },
+  { name:'Pegasus Five', type:'Shortboard', fin:'5 Caixas', desc:'Cinco caixas: rode thruster ou quad. Arte Ride Fast.', photos:['IMG_6858.jpeg'] },
+  { name:'Black Scribble', type:'Fish', fin:'Twin', desc:'Arte rabisco em fibra e bordas artesanais pretas.', photos:['IMG_6835.jpeg','IMG_6856.jpeg'] },
+  { name:'Photo Collage', type:'Fish', fin:'Twin', desc:'Deck em colagem fotográfica. Peça única.', photos:['IMG_6838.jpeg','IMG_6839.jpeg'] },
+  { name:'Camo Twin', type:'Fish', fin:'Twin', desc:'Camuflagem cinza/preto. Twin bem solta.', photos:['IMG_6868.jpeg'] },
+  { name:'Red Rail Fish', type:'Fish', fin:'Twin', desc:'Bordas vermelhas, fundo branco. Twin fish.', photos:['IMG_6875.jpeg','IMG_6874.jpeg'] },
+  { name:'Tie-Dye', type:'Fish', fin:'Thruster', desc:'Resin tint tie-dye em azul e roxo.', photos:['IMG_6849.jpeg'] },
+  { name:'Teal Twin', type:'Fish', fin:'Twin', desc:'Verde-água com bordas brancas.', photos:['IMG_6883.jpeg','IMG_6884.jpeg'] },
+  { name:'Performance White', type:'Shortboard', fin:'Thruster', desc:'Shortboard limpa para manobras.', photos:['IMG_6876.jpeg','IMG_6846.jpeg'] },
+  { name:'Quad Cross', type:'Shortboard', fin:'Quad', desc:'Quad rápida em ondas ocas e tubulares.', photos:['IMG_6880.jpeg','IMG_6865.jpeg'] },
+  { name:'Egg Sunset', type:'Mid-Length', fin:'Single', desc:'Egg com gradiente laranja. Versátil e fluida.', photos:['IMG_6857.jpeg'] },
+  { name:'Lightning Longboard', type:'Longboard', fin:'Single', desc:'Longboard amarela, stringer raio. Glide clássico.', photos:['IMG_6845.jpeg'] },
+  { name:'Neon Flame', type:'Fish', fin:'Twin', desc:'Amarelo neon com arte de chamas e xadrez.', photos:['IMG_6841.jpeg'] },
+];
+
+const actionPhotos = ['IMG_6889.jpeg','IMG_6890.jpeg','IMG_6862.jpeg','IMG_6863.jpeg','IMG_6887.jpeg','IMG_6888.jpeg','IMG_6861.jpeg','IMG_6842.jpeg'];
+
+// ===================== RENDER CATÁLOGO + FILTRO =====================
+function renderBoards(type) {
+  const g = document.getElementById('boardGrid');
+  g.innerHTML = '';
+  boards.forEach((b, i) => {
+    if (type && type !== 'Todas' && b.type !== type) return;
+    const card = document.createElement('div');
+    card.className = 'group cursor-pointer';
+    card.onclick = () => openBoardModal(i);
+    card.innerHTML =
+      '<div class="aspect-[3/4] overflow-hidden bg-surface-container mb-3 md:mb-5 relative">' +
+        '<img src="' + IMG + b.photos[0] + '" alt="' + b.name + '" loading="lazy" class="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"/>' +
+        '<div class="absolute top-3 left-3 bg-black text-white px-2 py-0.5 font-sans text-[7px] md:text-[8px] tracking-widest uppercase">' + b.fin + '</div>' +
+      '</div>' +
+      '<h3 class="font-serif italic text-lg md:text-2xl mb-1">' + b.name + '</h3>' +
+      '<p class="font-sans text-[11px] md:text-sm text-on-surface-variant leading-relaxed hidden md:block">' + b.desc + '</p>';
+    g.appendChild(card);
+  });
+}
+document.getElementById('boardFilters').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-chip');
+  if (!btn) return;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderBoards(btn.dataset.type);
+});
+
+function renderActionGrid() {
+  const g = document.getElementById('actionGrid');
+  g.innerHTML = actionPhotos.map(p =>
+    '<div class="aspect-square overflow-hidden">' +
+    '<img src="' + IMG + p + '" alt="César Baltazar surfando" loading="lazy" class="w-full h-full object-cover grayscale contrast-110 hover:grayscale-0 transition-all duration-700"/>' +
+    '</div>'
+  ).join('');
+}
+
+// ===================== BOARD MODAL (carrossel) =====================
+let currentBoard = 0, currentSlide = 0;
 function openBoardModal(i) {
   currentBoard = i; currentSlide = 0;
   renderModalSlide();
-  const m = document.getElementById('boardModal');
-  m.classList.remove('hidden');
+  document.getElementById('boardModal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
 }
 function closeBoardModal() {
@@ -324,48 +326,197 @@ function closeBoardModal() {
 }
 function renderModalSlide() {
   const b = boards[currentBoard];
-  const src = b.images[currentSlide];
-  // Desktop
-  const dImg = document.getElementById('modalImgDesktop');
-  if (dImg) { dImg.src = src; }
-  const dTitle = document.getElementById('modalTitleDesktop');
-  if (dTitle) dTitle.textContent = b.name;
-  const dDots = document.getElementById('modalDotsDesktop');
-  if (dDots) dDots.innerHTML = b.images.map((_, i) => `<button onclick="goToSlide(${i})" class="w-2 h-2 rounded-full ${i===currentSlide?'bg-white':'bg-white/40'}"></button>`).join('');
-  // Mobile
-  const mImg = document.getElementById('modalImgMobile');
-  if (mImg) mImg.src = src;
-  const mTitle = document.getElementById('modalTitleMobile');
-  if (mTitle) mTitle.textContent = b.name;
-  const mDots = document.getElementById('modalDotsMobile');
-  if (mDots) mDots.innerHTML = b.images.map((_, i) => `<button onclick="goToSlide(${i})" class="w-2 h-2 rounded-full ${i===currentSlide?'bg-black':'bg-black/30'}"></button>`).join('');
+  const src = IMG + b.photos[currentSlide];
+  const set = (id, fn) => { const el = document.getElementById(id); if (el) fn(el); };
+  set('modalImgDesktop', el => el.src = src);
+  set('modalTitleDesktop', el => el.textContent = b.name);
+  set('modalDescDesktop', el => el.textContent = b.desc);
+  set('modalImgMobile', el => el.src = src);
+  set('modalTitleMobile', el => el.textContent = b.name);
+  set('modalDescMobile', el => el.textContent = b.desc);
+  const dots = b.photos.map((_, i) => i === currentSlide).map((on, i) =>
+    '<button onclick="goToSlide(' + i + ')" class="w-2 h-2 rounded-full ' + (on ? 'bg-white' : 'bg-white/40') + '"></button>').join('');
+  const dotsM = b.photos.map((_, i) => i === currentSlide).map((on, i) =>
+    '<button onclick="goToSlide(' + i + ')" class="w-2 h-2 rounded-full ' + (on ? 'bg-black' : 'bg-black/30') + '"></button>').join('');
+  set('modalDotsDesktop', el => el.innerHTML = dots);
+  set('modalDotsMobile', el => el.innerHTML = dotsM);
 }
-function nextSlide() { currentSlide = (currentSlide+1) % boards[currentBoard].images.length; renderModalSlide(); }
-function prevSlide() { currentSlide = (currentSlide-1+boards[currentBoard].images.length) % boards[currentBoard].images.length; renderModalSlide(); }
+function nextSlide() { currentSlide = (currentSlide + 1) % boards[currentBoard].photos.length; renderModalSlide(); }
+function prevSlide() { currentSlide = (currentSlide - 1 + boards[currentBoard].photos.length) % boards[currentBoard].photos.length; renderModalSlide(); }
 function goToSlide(i) { currentSlide = i; renderModalSlide(); }
 
-function openOrderModal() {
-  document.getElementById('orderModal').classList.remove('hidden');
+// ===================== CHAT GUIADO (Atelier) =====================
+// >>> PRONTO PARA IA: hoje o fluxo segue os passos fixos de chatSteps.
+// Para plugar uma IA de verdade (Claude) no futuro, troque askStep()/answer()
+// por uma chamada a um backend, ex.:
+//   async function askAI(history){ const r = await fetch('/api/chat',{method:'POST',body:JSON.stringify(history)}); return (await r.json()).reply; }
+// e renderize a resposta com addMsg(reply,'bot'). O resto da UI já está pronto.
+const WHATSAPP = '5521999999999'; // TODO: trocar pelo WhatsApp real do Baltazar (formato 55 + DDD + número)
+
+const chatSteps = [
+  { key:'modelo',   bot:'Fala! Sou o assistente do atelier. Qual tipo de prancha te interessa?', type:'choice', options:['Fish','Shortboard','Mid-Length','Longboard','Me ajude a decidir'] },
+  { key:'altura',   bot:'Beleza. Qual a sua altura? (em cm)', type:'number', placeholder:'175' },
+  { key:'peso',     bot:'E o seu peso? (em kg)', type:'number', placeholder:'75' },
+  { key:'nivel',    bot:'Como você descreve seu nível no surfe?', type:'choice', options:['Iniciante','Intermediário','Avançado','Profissional'] },
+  { key:'onda',     bot:'Que tipo de onda você mais surfa?', type:'choice', options:['Pequena/fraca','Média','Grande/forte','Tubular'] },
+  { key:'quilhas',  bot:'Qual configuração de quilhas você prefere?', type:'choice', options:['Single','Twin','Thruster','Quad','Não sei'] },
+  { key:'copinho',  bot:'E o sistema de quilha (o "copinho")?', type:'choice', options:['FCS II','Futures','Caixa de single','Não sei'] },
+  { key:'nome',     bot:'Show! Como é o seu nome?', type:'text', placeholder:'Seu nome' },
+  { key:'whatsapp', bot:'Por último: qual seu WhatsApp pra gente te chamar?', type:'tel', placeholder:'(21) 99999-9999' },
+];
+let chatState = {}, chatIdx = 0;
+
+function openChat() {
+  document.getElementById('chatModal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
+  startChat();
 }
-function closeOrderModal() {
-  document.getElementById('orderModal').classList.add('hidden');
+function closeChat() {
+  document.getElementById('chatModal').classList.add('hidden');
   document.body.style.overflow = '';
 }
+function startChat() {
+  chatState = {}; chatIdx = 0;
+  document.getElementById('chatBody').innerHTML = '';
+  document.getElementById('chatInput').innerHTML = '';
+  askStep();
+}
+function addMsg(text, who) {
+  const body = document.getElementById('chatBody');
+  const wrap = document.createElement('div');
+  wrap.className = who === 'user' ? 'flex justify-end' : 'flex justify-start';
+  const bub = document.createElement('div');
+  bub.className = (who === 'user'
+    ? 'bg-black text-white'
+    : 'bg-surface-container text-on-surface') + ' px-4 py-2.5 max-w-[82%] text-sm font-sans whitespace-pre-line leading-relaxed';
+  bub.textContent = text;
+  wrap.appendChild(bub);
+  body.appendChild(wrap);
+  body.scrollTop = body.scrollHeight;
+}
+function askStep() {
+  if (chatIdx >= chatSteps.length) { finishChat(); return; }
+  const step = chatSteps[chatIdx];
+  addMsg(step.bot, 'bot');
+  buildInput(step);
+}
+function answer(val) {
+  addMsg(val, 'user');
+  chatState[chatSteps[chatIdx].key] = val;
+  chatIdx++;
+  document.getElementById('chatInput').innerHTML = '';
+  setTimeout(askStep, 280);
+}
+function buildInput(step) {
+  const c = document.getElementById('chatInput');
+  c.innerHTML = '';
+  if (step.type === 'choice') {
+    const g = document.createElement('div');
+    g.className = 'flex flex-wrap gap-2';
+    step.options.forEach(o => {
+      const btn = document.createElement('button');
+      btn.className = 'border border-black/20 hover:bg-black hover:text-white transition-colors px-3 py-2 text-xs font-sans';
+      btn.textContent = o;
+      btn.onclick = () => answer(o);
+      g.appendChild(btn);
+    });
+    c.appendChild(g);
+  } else {
+    const form = document.createElement('form');
+    form.className = 'flex gap-2 items-end';
+    const inp = document.createElement('input');
+    inp.type = step.type === 'number' ? 'number' : (step.type === 'tel' ? 'tel' : 'text');
+    inp.placeholder = step.placeholder || '';
+    inp.className = 'flex-1 border-b border-black bg-transparent py-2 text-sm focus:outline-none';
+    const sub = document.createElement('button');
+    sub.type = 'submit';
+    sub.className = 'bg-black text-white px-4 py-2 text-xs uppercase tracking-widest';
+    sub.textContent = 'OK';
+    form.onsubmit = e => { e.preventDefault(); const v = inp.value.trim(); if (!v) return; answer(v); };
+    form.appendChild(inp);
+    form.appendChild(sub);
+    c.appendChild(form);
+    inp.focus();
+  }
+}
 
-// Keyboard
+// --- Lógica de recomendação / litragem ---
+function guildFactor(nivel) {
+  // Fator x peso(kg) = litragem sugerida (ponto de partida; o shaper refina).
+  return { 'Iniciante':0.55, 'Intermediário':0.40, 'Avançado':0.36, 'Profissional':0.34 }[nivel] || 0.40;
+}
+function calcVolume() {
+  const peso = parseFloat(chatState.peso);
+  if (!peso || peso <= 0) return null;
+  let f = guildFactor(chatState.nivel);
+  if (chatState.onda === 'Pequena/fraca') f += 0.02;   // mais flutuação em ondas fracas
+  if (chatState.onda === 'Grande/forte' || chatState.onda === 'Tubular') f -= 0.01;
+  return Math.round(peso * f);
+}
+function recModel() {
+  if (chatState.nivel === 'Iniciante') return 'Longboard ou Mid-Length (estável e fácil de remar)';
+  if (chatState.onda === 'Pequena/fraca') return 'Fish (flutua e ganha velocidade em ondas fracas)';
+  if (chatState.nivel === 'Profissional' || chatState.nivel === 'Avançado') return 'Shortboard de performance';
+  return 'Mid-Length (versátil para o dia a dia)';
+}
+function recFin() {
+  if (chatState.nivel === 'Iniciante') return 'Thruster (mais estável e controlável)';
+  if (chatState.onda === 'Tubular') return 'Quad (rápida no tubo)';
+  if (chatState.onda === 'Pequena/fraca') return 'Twin (solta e veloz)';
+  return 'Thruster (versátil)';
+}
+function firstName(n) { return (n || '').trim().split(/\s+/)[0] || ''; }
+
+function finishChat() {
+  const vol = calcVolume();
+  const modelo = chatState.modelo === 'Me ajude a decidir' ? recModel() : chatState.modelo;
+  const finRec = chatState.quilhas === 'Não sei' ? recFin() : chatState.quilhas;
+  const copinho = chatState.copinho === 'Não sei' ? 'A definir com o shaper' : chatState.copinho;
+
+  const resumo =
+    'Fechou' + (firstName(chatState.nome) ? ', ' + firstName(chatState.nome) : '') + '! Aqui vai o resumo:\n\n' +
+    '• Modelo: ' + modelo + '\n' +
+    '• Litragem sugerida: ' + (vol ? '~' + vol + ' L' : 'a calcular') + '\n' +
+    '• Quilhas: ' + finRec + '\n' +
+    '• Copinho: ' + copinho + '\n' +
+    '• Perfil: ' + chatState.altura + 'cm · ' + chatState.peso + 'kg · ' + chatState.nivel + '\n' +
+    '• Onda: ' + chatState.onda + '\n\n' +
+    'Toque no botão abaixo pra enviar pro Baltazar pelo WhatsApp.';
+  addMsg(resumo, 'bot');
+
+  const msg =
+    'Olá Baltazar! Quero encomendar uma prancha.\n' +
+    'Modelo: ' + modelo + '\n' +
+    'Litragem sugerida: ' + (vol ? '~' + vol + ' L' : 'a calcular') + '\n' +
+    'Quilhas: ' + finRec + ' | Copinho: ' + copinho + '\n' +
+    'Altura: ' + chatState.altura + 'cm | Peso: ' + chatState.peso + 'kg\n' +
+    'Nível: ' + chatState.nivel + ' | Onda: ' + chatState.onda + '\n' +
+    'Nome: ' + chatState.nome;
+  const link = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(msg);
+
+  const c = document.getElementById('chatInput');
+  c.innerHTML = '';
+  const a = document.createElement('a');
+  a.href = link; a.target = '_blank'; a.rel = 'noopener';
+  a.className = 'block bg-black text-white text-center py-3 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity';
+  a.textContent = 'Enviar pelo WhatsApp';
+  c.appendChild(a);
+  const again = document.createElement('button');
+  again.className = 'w-full mt-2 font-sans text-[10px] uppercase tracking-widest text-neutral-500 underline';
+  again.textContent = 'Recomeçar';
+  again.onclick = startChat;
+  c.appendChild(again);
+}
+
+// ===================== KEYBOARD / SWIPE =====================
 document.addEventListener('keydown', e => {
   if (!document.getElementById('boardModal').classList.contains('hidden')) {
-    if (e.key==='ArrowRight') nextSlide();
-    if (e.key==='ArrowLeft') prevSlide();
-    if (e.key==='Escape') closeBoardModal();
+    if (e.key === 'ArrowRight') nextSlide();
+    if (e.key === 'ArrowLeft') prevSlide();
+    if (e.key === 'Escape') closeBoardModal();
   }
-  if (!document.getElementById('orderModal').classList.contains('hidden')) {
-    if (e.key==='Escape') closeOrderModal();
-  }
+  if (!document.getElementById('chatModal').classList.contains('hidden') && e.key === 'Escape') closeChat();
 });
-
-// Swipe support for mobile
 let touchStartX = 0;
 document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
 document.addEventListener('touchend', e => {
@@ -373,5 +524,9 @@ document.addEventListener('touchend', e => {
   const diff = e.changedTouches[0].clientX - touchStartX;
   if (Math.abs(diff) > 50) { diff > 0 ? prevSlide() : nextSlide(); }
 });
+
+// ===================== INIT =====================
+renderBoards('Todas');
+renderActionGrid();
 </script>
 </body></html>
