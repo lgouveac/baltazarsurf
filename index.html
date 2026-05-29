@@ -100,16 +100,16 @@ summary::-webkit-details-marker { display:none; }
 <section class="relative min-h-[100svh] w-full flex items-center justify-center overflow-hidden bg-black py-24 md:py-0">
 <div class="absolute inset-0 md:hidden" id="heroShow">
 <img class="hero-slide active w-full h-full object-contain grayscale" src="images/IMG_6840.jpeg" alt="Pranchas Baltazar Customs"/>
-<img class="hero-slide w-full h-full object-contain grayscale" src="images/IMG_6849.jpeg" alt=""/>
-<img class="hero-slide w-full h-full object-contain grayscale" src="images/IMG_6839.jpeg" alt=""/>
-<img class="hero-slide w-full h-full object-contain grayscale" src="images/IMG_6845.jpeg" alt=""/>
-<img class="hero-slide w-full h-full object-contain grayscale" src="images/IMG_6863.jpeg" alt=""/>
+<img class="hero-slide w-full h-full object-contain grayscale" src="images/IMG_6881.jpeg" alt=""/>
+<img class="hero-slide w-full h-full object-contain grayscale" src="images/IMG_6868.jpeg" alt=""/>
+<img class="hero-slide w-full h-full object-contain grayscale" src="images/IMG_6831.jpeg" alt=""/>
+<img class="hero-slide w-full h-full object-contain grayscale" src="images/IMG_6848.jpeg" alt=""/>
 </div>
-<div class="absolute inset-0 hidden md:flex">
-<img class="flex-1 min-w-0 h-full object-cover grayscale" src="images/IMG_6840.jpeg" alt="Pranchas Baltazar Customs"/>
-<img class="flex-1 min-w-0 h-full object-cover grayscale" src="images/IMG_6845.jpeg" alt=""/>
-<img class="flex-1 min-w-0 h-full object-cover grayscale" src="images/IMG_6839.jpeg" alt=""/>
-<img class="flex-1 min-w-0 h-full object-cover grayscale hidden lg:block" src="images/IMG_6863.jpeg" alt=""/>
+<div class="absolute inset-0 hidden md:flex" id="heroStrip" aria-hidden="true">
+<div class="hero-col relative flex-1 min-w-0 h-full overflow-hidden"></div>
+<div class="hero-col relative flex-1 min-w-0 h-full overflow-hidden"></div>
+<div class="hero-col relative flex-1 min-w-0 h-full overflow-hidden"></div>
+<div class="hero-col relative flex-1 min-w-0 h-full overflow-hidden hidden lg:block"></div>
 </div>
 <div class="absolute inset-0 bg-black/50 pointer-events-none"></div>
 <div class="relative z-10 text-center px-4 md:px-6">
@@ -732,6 +732,55 @@ renderActionGrid();
     i = (i + 1) % slides.length;
     slides[i].classList.add('active');
   }, 4200);
+})();
+
+// hero desktop: faixa de fotos lado a lado que trocam em crossfade
+(function () {
+  const strip = document.getElementById('heroStrip');
+  if (!strip) return;
+  const pool = ['IMG_6840','IMG_6881','IMG_6868','IMG_6831','IMG_6848','IMG_6880','IMG_6841','IMG_6865','IMG_6855','IMG_6856']
+    .map(n => 'images/' + n + '.jpeg');
+  for (let k = pool.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); const t = pool[k]; pool[k] = pool[j]; pool[j] = t; }
+  const cols = Array.prototype.slice.call(strip.querySelectorAll('.hero-col'));
+  const current = [];
+  let ptr = 0;
+  cols.forEach(function (col, idx) {
+    col._layers = [0, 1].map(function () {
+      const im = document.createElement('img');
+      im.className = 'absolute inset-0 w-full h-full object-cover grayscale transition-opacity duration-1000 opacity-0';
+      im.alt = '';
+      col.appendChild(im);
+      return im;
+    });
+    col._front = 0;
+    const src = pool[ptr++ % pool.length];
+    col._layers[0].src = src;
+    col._layers[0].classList.remove('opacity-0');
+    current[idx] = src;
+  });
+  function nextUnused() {
+    for (let s = 0; s < pool.length; s++) {
+      const cand = pool[ptr++ % pool.length];
+      if (current.indexOf(cand) === -1) return cand;
+    }
+    return pool[ptr++ % pool.length];
+  }
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let turn = 0;
+  setInterval(function () {
+    const idx = turn++ % cols.length;
+    const col = cols[idx];
+    const src = nextUnused();
+    const front = col._layers[col._front];
+    const back = col._layers[col._front ^ 1];
+    back.onload = function () {
+      back.classList.remove('opacity-0');
+      front.classList.add('opacity-0');
+      col._front ^= 1;
+      current[idx] = src;
+    };
+    back.src = src;
+  }, 2600);
 })();
 </script>
 </body></html>
