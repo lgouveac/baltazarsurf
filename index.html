@@ -61,8 +61,8 @@ summary::-webkit-details-marker { display:none; }
 <li><a class="text-neutral-500 font-sans uppercase text-[10px] tracking-widest hover:text-black transition-colors" href="#faq">FAQ</a></li>
 </ul>
 <div class="flex items-center gap-4">
-<button onclick="openChat()" class="hidden sm:block bg-black text-white px-5 py-2.5 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Quero Prancha</button>
-<button onclick="openChat()" class="sm:hidden text-black hover:opacity-70 transition-opacity" aria-label="Quero prancha">
+<button onclick="openChat()" class="hidden sm:block bg-black text-white px-5 py-2.5 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Quero Minha Prancha</button>
+<button onclick="openChat()" class="sm:hidden text-black hover:opacity-70 transition-opacity" aria-label="Quero minha prancha">
 <svg width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
 <path d="M16 2C14.5 2 12 4 11.5 8C11 12 11.5 18 12 22C12.5 26 14 30 16 30C18 30 19.5 26 20 22C20.5 18 21 12 20.5 8C20 4 17.5 2 16 2Z"/>
 <line x1="16" y1="4" x2="16" y2="28" stroke-dasharray="2 2" opacity="0.4"/>
@@ -136,8 +136,8 @@ summary::-webkit-details-marker { display:none; }
 <h3 class="font-serif italic text-3xl md:text-5xl mb-4">Carbon Trash</h3>
 <p class="font-sans text-sm md:text-base text-on-surface-variant leading-relaxed mb-6">Fios de carbono espalhados à mão na resina — cada padrão é impossível de repetir. A assinatura mais marcante do shaper: ao mesmo tempo performance e obra de arte única.</p>
 <div class="flex flex-wrap gap-3 items-center">
-<button onclick="filterTo('Carbon Trash')" class="bg-black text-white px-6 py-3 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Ver Carbon Trash</button>
-<button onclick="openChat()" class="font-sans uppercase tracking-widest text-[10px] underline hover:opacity-70">Quero uma</button>
+<button onclick="openChat()" class="bg-black text-white px-6 py-3 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Quero Minha Prancha</button>
+<button onclick="filterTo('Carbon Trash')" class="font-sans uppercase tracking-widest text-[10px] underline hover:opacity-70">Ver Carbon Trash</button>
 </div>
 </div>
 </div>
@@ -153,7 +153,8 @@ summary::-webkit-details-marker { display:none; }
 </div>
 <div id="boardGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6"></div>
 <div class="text-center mt-12 md:mt-20">
-<button onclick="openChat()" class="bg-black text-white px-10 py-4 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Não sei qual escolher? Fale com o Shaper</button>
+<p class="font-sans text-xs md:text-sm text-neutral-500 mb-4">Não sei qual escolher? Fale com o shaper.</p>
+<button onclick="openChat()" class="bg-black text-white px-10 py-4 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Quero Minha Prancha</button>
 </div>
 </div>
 </section>
@@ -311,7 +312,7 @@ Do planer à resina, o que sai do shaper é parte ferramenta, parte obra de arte
 <div class="flex flex-col md:flex-row justify-between items-center w-full px-5 md:px-10 py-8 md:py-16 gap-4 md:gap-8">
 <img src="images/brand/logo-oval-black.png" alt="BALTAZAR CUSTOMS" class="h-9 md:h-11 w-auto"/>
 <div class="flex gap-6 md:gap-8 items-center">
-<button onclick="openChat()" class="font-sans text-[10px] uppercase tracking-[0.2em] text-neutral-400 hover:text-black transition-colors">Quero Prancha</button>
+<button onclick="openChat()" class="font-sans text-[10px] uppercase tracking-[0.2em] text-neutral-400 hover:text-black transition-colors">Quero Minha Prancha</button>
 </div>
 <div class="font-sans text-[9px] md:text-[10px] uppercase tracking-[0.15em] md:tracking-[0.2em] text-neutral-500 text-center md:text-right">
 &copy; 2024 BALTAZAR CUSTOMS. FEITO À MÃO NO RIO.
@@ -329,7 +330,7 @@ Do planer à resina, o que sai do shaper é parte ferramenta, parte obra de arte
 <img id="modalImgDesktop" class="max-h-[70vh] object-contain" src="" alt=""/>
 <p id="modalTitleDesktop" class="font-serif italic text-2xl text-white mt-6"></p>
 <p id="modalDescDesktop" class="font-sans text-[10px] uppercase tracking-widest text-white/60 mt-2"></p>
-<button onclick="wantThis()" class="mt-6 bg-white text-black px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:bg-neutral-200 transition-colors">Quero uma assim</button>
+<button onclick="wantThis()" class="mt-6 bg-white text-black px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:bg-neutral-200 transition-colors">Quero Minha Prancha</button>
 </div>
 </div>
 <div class="md:hidden absolute bottom-0 left-0 right-0 bg-white bottom-sheet-enter rounded-t-2xl" style="max-height:88vh;">
@@ -343,7 +344,7 @@ Do planer à resina, o que sai do shaper é parte ferramenta, parte obra de arte
 </div>
 <p id="modalTitleMobile" class="font-serif italic text-xl mt-4 text-center"></p>
 <p id="modalDescMobile" class="font-sans text-[10px] uppercase tracking-widest text-neutral-500 mt-1 text-center"></p>
-<button onclick="wantThis()" class="w-full mt-4 bg-black text-white py-3 font-sans uppercase tracking-widest text-[10px]">Quero uma assim</button>
+<button onclick="wantThis()" class="w-full mt-4 bg-black text-white py-3 font-sans uppercase tracking-widest text-[10px]">Quero Minha Prancha</button>
 </div>
 </div>
 </div>
