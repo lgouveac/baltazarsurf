@@ -98,12 +98,18 @@ summary::-webkit-details-marker { display:none; }
 <main id="top">
 <!-- Hero Section -->
 <section class="relative min-h-[100svh] w-full flex items-center justify-center overflow-hidden bg-black py-24 md:py-0">
-<div class="absolute inset-0" id="heroShow">
+<div class="absolute inset-0 md:hidden" id="heroShow">
 <img class="hero-slide active w-full h-full object-contain grayscale" src="images/IMG_6840.jpeg" alt="Pranchas Baltazar Customs"/>
 <img class="hero-slide w-full h-full object-contain grayscale" src="images/IMG_6849.jpeg" alt=""/>
 <img class="hero-slide w-full h-full object-contain grayscale" src="images/IMG_6839.jpeg" alt=""/>
 <img class="hero-slide w-full h-full object-contain grayscale" src="images/IMG_6845.jpeg" alt=""/>
 <img class="hero-slide w-full h-full object-contain grayscale" src="images/IMG_6863.jpeg" alt=""/>
+</div>
+<div class="absolute inset-0 hidden md:flex">
+<img class="flex-1 min-w-0 h-full object-cover grayscale" src="images/IMG_6840.jpeg" alt="Pranchas Baltazar Customs"/>
+<img class="flex-1 min-w-0 h-full object-cover grayscale" src="images/IMG_6845.jpeg" alt=""/>
+<img class="flex-1 min-w-0 h-full object-cover grayscale" src="images/IMG_6839.jpeg" alt=""/>
+<img class="flex-1 min-w-0 h-full object-cover grayscale hidden lg:block" src="images/IMG_6863.jpeg" alt=""/>
 </div>
 <div class="absolute inset-0 bg-black/50 pointer-events-none"></div>
 <div class="relative z-10 text-center px-4 md:px-6">
