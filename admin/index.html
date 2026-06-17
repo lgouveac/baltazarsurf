@@ -1,30 +1,49 @@
 <!DOCTYPE html>
 <html lang="pt-BR"><head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
 <title>Admin · Baltazar Customs</title>
 <link rel="icon" type="image/png" href="/images/favicon.png"/>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  body { font-family: 'Work Sans', system-ui, sans-serif; }
+  body { font-family: 'Work Sans', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
   .font-serif { font-family: 'Newsreader', Georgia, serif; }
+  /* 16px nos inputs evita o zoom-on-focus do iOS Safari */
+  input, select, textarea, button { font-size: 16px; }
+  /* respeita o safe area do iPhone (notch / barra inferior) */
+  .pb-safe { padding-bottom: max(env(safe-area-inset-bottom), 0.75rem); }
+  .pt-safe { padding-top: env(safe-area-inset-top); }
+  /* sheet animation */
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+  .sheet-in   { animation: slideUp .25s ease-out; }
+  .overlay-in { animation: fadeIn .2s ease-out; }
+  /* evita o "salto" quando teclado vira no iOS */
+  body { overscroll-behavior: contain; }
 </style>
 </head>
-<body class="bg-neutral-50 text-black min-h-screen">
+<body class="bg-neutral-50 text-black min-h-screen pb-24 md:pb-0">
 
-<header class="border-b border-black/10 bg-white">
-  <div class="max-w-6xl mx-auto px-5 py-4 flex justify-between items-center gap-4">
-    <a href="/" class="font-serif italic text-lg md:text-xl">Baltazar Customs · Admin</a>
-    <div id="userStatus" class="text-xs text-neutral-600"></div>
+<header class="sticky top-0 z-30 border-b border-black/10 bg-white/95 backdrop-blur">
+  <div class="max-w-6xl mx-auto px-4 md:px-5 py-3 md:py-4 flex justify-between items-center gap-3">
+    <a href="/" class="font-serif italic text-base md:text-xl shrink-0">Baltazar · Admin</a>
+    <div id="userStatus" class="text-[11px] md:text-xs text-neutral-600 min-w-0 truncate text-right"></div>
   </div>
 </header>
 
-<main id="app" class="max-w-6xl mx-auto px-5 py-8">
+<main id="app" class="max-w-6xl mx-auto px-4 md:px-5 py-6 md:py-8">
   <div class="text-sm text-neutral-500">Carregando…</div>
 </main>
 
-<div id="modal" class="hidden fixed inset-0 bg-black/50 z-50 overflow-y-auto"></div>
+<!-- Botão flutuante de nova prancha (visível só no mobile, depois de logado) -->
+<div id="fab" class="hidden fixed bottom-0 left-0 right-0 z-20 md:hidden bg-gradient-to-t from-neutral-50 via-neutral-50/95 to-transparent pt-6 pb-safe px-4">
+  <button onclick="openNew()" class="w-full bg-black text-white py-4 uppercase tracking-widest text-xs hover:opacity-80 active:opacity-70 shadow-lg">
+    + Nova prancha
+  </button>
+</div>
+
+<div id="modal" class="hidden"></div>
 
 <script>
 const SUPABASE_URL = 'https://eylnwwerbssfaaaxsccw.supabase.co';
@@ -73,14 +92,15 @@ async function loadBoards() {
 // SCREENS
 // ============================================================
 function renderLogin() {
+  document.getElementById('fab').classList.add('hidden');
   document.getElementById('app').innerHTML = `
-    <div class="max-w-sm mx-auto mt-12">
+    <div class="max-w-sm mx-auto mt-6 md:mt-12">
       <h1 class="font-serif italic text-2xl md:text-3xl mb-2">Login</h1>
       <p class="text-sm text-neutral-600 mb-6">Manda um magic link pro teu email cadastrado.</p>
       <form id="loginForm" class="space-y-3">
-        <input type="email" placeholder="seu@email.com" required
-               class="w-full border border-black/20 bg-white px-4 py-3 text-sm focus:outline-none focus:border-black">
-        <button class="w-full bg-black text-white py-3 uppercase tracking-widest text-xs hover:opacity-80">
+        <input type="email" inputmode="email" autocomplete="email" placeholder="seu@email.com" required
+               class="w-full border border-black/20 bg-white px-4 py-3 focus:outline-none focus:border-black">
+        <button class="w-full bg-black text-white py-3 uppercase tracking-widest text-xs hover:opacity-80 active:opacity-70">
           Enviar magic link
         </button>
         <p id="loginMsg" class="text-xs text-neutral-600 min-h-[1em]"></p>
@@ -101,33 +121,41 @@ function renderLogin() {
 }
 
 function renderNoProfile() {
-  document.getElementById('userStatus').textContent = session.user.email;
+  document.getElementById('fab').classList.add('hidden');
+  document.getElementById('userStatus').innerHTML = `
+    <span class="truncate">${session.user.email}</span> ·
+    <button onclick="logout()" class="underline">sair</button>
+  `;
   document.getElementById('app').innerHTML = `
-    <div class="max-w-md mx-auto mt-12 text-sm text-neutral-700">
-      <p>Você está logado como <strong>${session.user.email}</strong>, mas não tem um perfil de admin nesse projeto.</p>
+    <div class="max-w-md mx-auto mt-6 md:mt-12 text-sm text-neutral-700">
+      <p>Você está logado como <strong class="break-all">${session.user.email}</strong>, mas não tem perfil de admin nesse projeto.</p>
       <p class="mt-3">Peça pro Lucas rodar o SQL pra te dar acesso.</p>
-      <button onclick="logout()" class="mt-6 underline text-xs">Sair</button>
     </div>
   `;
 }
 
 function renderApp() {
-  document.getElementById('userStatus').innerHTML =
-    `${session.user.email} · <span class="text-neutral-400">${profile.role}</span> · ` +
-    `<button onclick="logout()" class="underline hover:text-black">sair</button>`;
+  document.getElementById('userStatus').innerHTML = `
+    <span class="hidden sm:inline">${session.user.email} · </span>
+    <span class="text-neutral-400">${profile.role}</span> ·
+    <button onclick="logout()" class="underline hover:text-black">sair</button>
+  `;
+  document.getElementById('fab').classList.remove('hidden');
 
   document.getElementById('app').innerHTML = `
-    <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-6">
-      <h1 class="font-serif italic text-3xl md:text-4xl">Pranchas</h1>
-      <button onclick="openNew()" class="bg-black text-white px-5 py-3 uppercase tracking-widest text-[11px] hover:opacity-80 w-full md:w-auto">
+    <div class="flex justify-between items-end gap-3 mb-5 md:mb-6">
+      <div>
+        <h1 class="font-serif italic text-2xl md:text-4xl">Pranchas</h1>
+        <p class="text-xs text-neutral-500 mt-1">Total: <span id="totalCount">—</span></p>
+      </div>
+      <button onclick="openNew()" class="hidden md:inline-flex bg-black text-white px-5 py-3 uppercase tracking-widest text-[11px] hover:opacity-80">
         + Nova prancha
       </button>
     </div>
 
-    <div id="filters" class="flex flex-wrap gap-2 mb-6"></div>
+    <div id="filters" class="flex flex-nowrap md:flex-wrap gap-2 mb-5 md:mb-6 overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0 pb-1"></div>
 
     <div id="boardsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4"></div>
-    <p class="text-xs text-neutral-500 mt-8">Total: <span id="totalCount"></span></p>
   `;
   renderFilters();
   renderBoards();
@@ -138,7 +166,7 @@ function renderFilters() {
   const chips = [{ slug: 'Todas', name: 'Todas' }, ...categories.filter(x => x.active), { slug: '_inactive', name: 'Inativas' }];
   c.innerHTML = chips.map(x => `
     <button onclick="setFilter('${x.slug}')"
-            class="filter-chip ${filter === x.slug ? 'bg-black text-white' : 'bg-white text-black hover:bg-neutral-100'} border border-black/20 px-3 py-1.5 uppercase tracking-widest text-[10px]">
+            class="filter-chip shrink-0 ${filter === x.slug ? 'bg-black text-white' : 'bg-white text-black hover:bg-neutral-100'} border border-black/20 px-3 py-2 uppercase tracking-widest text-[11px]">
       ${x.name}
     </button>
   `).join('');
@@ -166,11 +194,11 @@ function renderBoards() {
   }
   grid.innerHTML = list.map(b => `
     <button onclick="openEdit('${b.id}')"
-            class="text-left border border-black/10 bg-white hover:border-black/40 ${b.active ? '' : 'opacity-50'} transition-colors">
+            class="text-left border border-black/10 bg-white hover:border-black/40 active:border-black ${b.active ? '' : 'opacity-50'} transition-colors">
       <div class="aspect-square overflow-hidden bg-neutral-100">
         <img src="${STORAGE_BASE}${b.image_path}" loading="lazy" class="w-full h-full object-cover">
       </div>
-      <div class="p-2.5 text-xs">
+      <div class="p-2.5 md:p-3 text-xs md:text-sm">
         <div class="font-medium">${slugName(b.category_slug)}</div>
         <div class="text-neutral-500 truncate">${b.fin_setup || '—'}</div>
         ${b.line ? `<div class="text-[10px] uppercase tracking-widest text-black mt-1">${b.line}</div>` : ''}
@@ -186,7 +214,7 @@ function slugName(slug) {
 }
 
 // ============================================================
-// MODAL (new / edit)
+// MODAL (new / edit) — bottom-sheet no mobile, modal no desktop
 // ============================================================
 function openNew() { openModal(null); }
 function openEdit(id) { openModal(boards.find(b => b.id === id)); }
@@ -195,57 +223,62 @@ function openModal(board) {
   const isNew = !board;
   const m = document.getElementById('modal');
   m.classList.remove('hidden');
+  m.className = 'fixed inset-0 z-50 overflow-y-auto';
+  document.body.style.overflow = 'hidden';
   m.innerHTML = `
-    <div class="min-h-full flex items-start md:items-center justify-center p-4">
-      <div class="bg-white max-w-md w-full p-6 my-8 shadow-xl">
-        <div class="flex justify-between items-center mb-5">
-          <h2 class="font-serif italic text-xl">${isNew ? 'Nova prancha' : 'Editar prancha'}</h2>
-          <button onclick="closeModal()" class="text-2xl leading-none text-neutral-400 hover:text-black">×</button>
+    <div class="overlay-in fixed inset-0 bg-black/50" onclick="closeModal()"></div>
+    <div class="relative min-h-full flex items-end md:items-center justify-center md:p-4 pointer-events-none">
+      <div class="sheet-in pointer-events-auto bg-white w-full md:max-w-md md:my-8 shadow-xl max-h-[92vh] md:max-h-none flex flex-col">
+        <div class="flex justify-between items-center px-5 md:px-6 pt-5 pb-4 border-b border-black/10 sticky top-0 bg-white z-10">
+          <h2 class="font-serif italic text-lg md:text-xl">${isNew ? 'Nova prancha' : 'Editar prancha'}</h2>
+          <button onclick="closeModal()" class="text-3xl leading-none text-neutral-400 hover:text-black w-10 h-10 flex items-center justify-center -mr-2" aria-label="Fechar">×</button>
         </div>
-        <form id="boardForm" class="space-y-4 text-sm">
-          ${!isNew ? `<img src="${STORAGE_BASE}${board.image_path}" class="w-full max-h-64 object-contain bg-neutral-100">` : ''}
-          <label class="block">
-            <span class="text-[10px] uppercase tracking-widest text-neutral-500">${isNew ? 'Imagem' : 'Trocar imagem (opcional)'}</span>
-            <input type="file" name="image" accept="image/*" class="block mt-1 text-xs w-full" ${isNew ? 'required' : ''}>
-          </label>
-          <label class="block">
-            <span class="text-[10px] uppercase tracking-widest text-neutral-500">Categoria</span>
-            <select name="category_slug" class="w-full border border-black/20 px-3 py-2 mt-1 bg-white" required>
-              ${categories.filter(c => c.active).map(c => `<option value="${c.slug}" ${board && board.category_slug === c.slug ? 'selected' : ''}>${c.name}</option>`).join('')}
-            </select>
-          </label>
-          <label class="block">
-            <span class="text-[10px] uppercase tracking-widest text-neutral-500">Quilhas</span>
-            <input type="text" name="fin_setup" value="${board ? esc(board.fin_setup || '') : ''}"
-                   placeholder="Thruster, Twin, Single, Quad, Twin Keel, ..."
-                   class="w-full border border-black/20 px-3 py-2 mt-1">
-          </label>
-          <label class="block">
-            <span class="text-[10px] uppercase tracking-widest text-neutral-500">Linha (opcional)</span>
-            <input type="text" name="line" value="${board ? esc(board.line || '') : ''}"
-                   placeholder="Ex: Carbon Trash"
-                   class="w-full border border-black/20 px-3 py-2 mt-1">
-          </label>
-          <label class="flex items-center gap-2 pt-1">
-            <input type="checkbox" name="active" ${(!board || board.active) ? 'checked' : ''}>
-            <span class="text-xs">Ativa (aparece no site público)</span>
-          </label>
-          <div class="flex justify-between items-center pt-4 border-t border-black/10">
-            ${!isNew ? `<button type="button" onclick="del('${board.id}')" class="text-red-600 text-xs underline">Excluir</button>` : '<span></span>'}
-            <div class="flex gap-2">
-              <button type="button" onclick="closeModal()" class="px-4 py-2 text-xs uppercase tracking-widest hover:bg-neutral-100">Cancelar</button>
-              <button class="bg-black text-white px-5 py-2 text-xs uppercase tracking-widest hover:opacity-80">Salvar</button>
-            </div>
+        <div class="overflow-y-auto flex-1">
+          <form id="boardForm" class="p-5 md:p-6 space-y-4">
+            ${!isNew ? `<img src="${STORAGE_BASE}${board.image_path}" class="w-full max-h-48 md:max-h-64 object-contain bg-neutral-100">` : ''}
+            <label class="block">
+              <span class="text-[10px] uppercase tracking-widest text-neutral-500">${isNew ? 'Imagem' : 'Trocar imagem (opcional)'}</span>
+              <input type="file" name="image" accept="image/*" class="block mt-2 w-full text-sm file:mr-3 file:py-2 file:px-3 file:border file:border-black/20 file:bg-white file:text-xs file:uppercase file:tracking-widest file:cursor-pointer" ${isNew ? 'required' : ''}>
+            </label>
+            <label class="block">
+              <span class="text-[10px] uppercase tracking-widest text-neutral-500">Categoria</span>
+              <select name="category_slug" class="w-full border border-black/20 px-3 py-3 mt-1 bg-white" required>
+                ${categories.filter(c => c.active).map(c => `<option value="${c.slug}" ${board && board.category_slug === c.slug ? 'selected' : ''}>${c.name}</option>`).join('')}
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-[10px] uppercase tracking-widest text-neutral-500">Quilhas</span>
+              <input type="text" name="fin_setup" value="${board ? esc(board.fin_setup || '') : ''}"
+                     placeholder="Thruster, Twin, Single, Quad, Twin Keel..."
+                     class="w-full border border-black/20 px-3 py-3 mt-1">
+            </label>
+            <label class="block">
+              <span class="text-[10px] uppercase tracking-widest text-neutral-500">Linha (opcional)</span>
+              <input type="text" name="line" value="${board ? esc(board.line || '') : ''}"
+                     placeholder="Ex: Carbon Trash"
+                     class="w-full border border-black/20 px-3 py-3 mt-1">
+            </label>
+            <label class="flex items-center gap-3 pt-1">
+              <input type="checkbox" name="active" class="w-5 h-5" ${(!board || board.active) ? 'checked' : ''}>
+              <span class="text-sm">Ativa (aparece no site)</span>
+            </label>
+            <p id="formMsg" class="text-xs text-neutral-600 min-h-[1em]"></p>
+          </form>
+        </div>
+        <div class="border-t border-black/10 px-5 md:px-6 py-4 pb-safe flex flex-col-reverse sm:flex-row sm:justify-between sm:items-center gap-3 bg-white">
+          ${!isNew ? `<button type="button" onclick="del('${board.id}')" class="text-red-600 text-xs underline self-start sm:self-auto py-2">Excluir prancha</button>` : '<span class="hidden sm:block"></span>'}
+          <div class="flex gap-2 w-full sm:w-auto">
+            <button type="button" onclick="closeModal()" class="flex-1 sm:flex-none px-4 py-3 text-xs uppercase tracking-widest hover:bg-neutral-100 border border-transparent">Cancelar</button>
+            <button form="boardForm" type="submit" class="flex-1 sm:flex-none bg-black text-white px-6 py-3 text-xs uppercase tracking-widest hover:opacity-80 active:opacity-70">Salvar</button>
           </div>
-          <p id="formMsg" class="text-xs text-neutral-600 min-h-[1em]"></p>
-        </form>
+        </div>
       </div>
     </div>
   `;
   document.getElementById('boardForm').onsubmit = async (e) => {
     e.preventDefault();
     const msg = document.getElementById('formMsg');
-    const btn = e.target.querySelector('button[type=submit]') || e.submitter;
+    const btn = document.querySelector('button[type=submit][form=boardForm]');
     msg.textContent = 'Salvando…';
     if (btn) btn.disabled = true;
     try {
@@ -283,12 +316,20 @@ function openModal(board) {
       if (btn) btn.disabled = false;
     }
   };
+  // ESC fecha
+  document.addEventListener('keydown', escClose);
+}
+
+function escClose(e) {
+  if (e.key === 'Escape') closeModal();
 }
 
 function closeModal() {
   const m = document.getElementById('modal');
   m.classList.add('hidden');
   m.innerHTML = '';
+  document.body.style.overflow = '';
+  document.removeEventListener('keydown', escClose);
 }
 
 async function del(id) {
@@ -296,7 +337,6 @@ async function del(id) {
   const b = boards.find(x => x.id === id);
   const { error } = await supa.from('boards').delete().eq('id', id);
   if (error) { alert('Erro: ' + error.message); return; }
-  // tenta apagar a imagem do storage (não falha o fluxo se não conseguir)
   if (b && b.image_path) {
     await supa.storage.from('boards').remove([b.image_path]).catch(() => {});
   }
