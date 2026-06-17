@@ -19,6 +19,7 @@
 <meta name="twitter:image" content="images/og-tiger.png"/>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@1,6..72,200..800&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 tailwind.config = {
   darkMode: "class",
@@ -401,7 +402,11 @@ Do planer à resina, o que sai do shaper é parte ferramenta, parte obra de arte
 </div>
 
 <script>
-const IMG = 'images/';
+// ===================== SUPABASE =====================
+const SUPABASE_URL = 'https://eylnwwerbssfaaaxsccw.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5bG53d2VyYnNzZmFhYXhzY2N3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MDU3NjYsImV4cCI6MjA5NzI4MTc2Nn0.XMYTNxGEj5Jjt89Q9GCQasnD9sR9q0lt4wdlXUNrJgc';
+const supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const IMG = SUPABASE_URL + '/storage/v1/object/public/boards/';
 const PRECO = 'R$ 2.600';            // valor base (a partir de)
 const LINK_PAGAMENTO = '';           // TODO: Lucas vai criar o link de pagamento e colar aqui
 
@@ -412,70 +417,30 @@ function precoCategoria(cat) {
   return 'R$ 2.600';
 }
 
-// ===================== CATÁLOGO (fotos reais, por categoria) =====================
-// Categorias do Baltazar: High Performance | Twin Fin | Mid-Length | Longboard | Quad
-// Sem nomes de modelo, ele quase nunca repete. As fotos servem de inspiração.
-// (Novos modelos que o Baltazar está finalizando entram aqui depois.)
-const gallery = [
-  { p:'IMG_6839.jpeg', c:'Twin',         f:'Twin' },
-  { p:'IMG_6846.jpeg', c:'Thruster', f:'Thruster' },
-  { p:'IMG_6845.jpeg', c:'Longboard',        f:'Single' },
-  { p:'IMG_6873.jpeg', c:'Twin',         f:'Twin' },
-  { p:'IMG_6857.jpeg', c:'Mid-Length',       f:'Single + Estab.' },
-  { p:'IMG_6880.jpeg', c:'Quad',             f:'Quad' },
-  { p:'IMG_6837.jpeg', c:'Twin',         f:'Twin Keel' },
-  { p:'IMG_6853.jpeg', c:'Thruster', f:'Thruster' },
-  { p:'IMG_6844.jpeg', c:'Twin',         f:'Twin' },
-  { p:'IMG_6868.jpeg', c:'Twin',         f:'Twin' },
-  { p:'IMG_6876.jpeg', c:'Thruster', f:'Thruster' },
-  { p:'IMG_6883.jpeg', c:'Twin',         f:'Twin' },
-  { p:'IMG_6858.jpeg', c:'Thruster', f:'5 Caixas' },
-  { p:'IMG_6852.jpeg', c:'Twin',         f:'Twin Keel' },
-  { p:'IMG_6865.jpeg', c:'Quad',             f:'Quad' },
-  { p:'IMG_6841.jpeg', c:'Twin',         f:'Twin' },
-  { p:'IMG_6849.jpeg', c:'Thruster', f:'Thruster' },
-  { p:'IMG_6835.jpeg', c:'Twin',         f:'Twin', line:'Carbon Trash' },
-  { p:'IMG_6884.jpeg', c:'Twin',         f:'Twin' },
-  { p:'IMG_6856.jpeg', c:'Twin',         f:'Twin', line:'Carbon Trash' },
-  { p:'IMG_6874.jpeg', c:'Thruster', f:'Thruster' },
-  { p:'IMG_6875.jpeg', c:'Twin',         f:'Twin' },
-  { p:'IMG_6832.jpeg', c:'Twin',         f:'Twin' },
-  { p:'IMG_6836.jpeg', c:'Twin',         f:'Twin', line:'Carbon Trash' },
-  { p:'IMG_6838.jpeg', c:'Twin',         f:'Twin' },
-  { p:'IMG_6840.jpeg', c:'Twin',         f:'Twin', line:'Carbon Trash' },
-  { p:'IMG_6847.jpeg', c:'Twin',         f:'Twin' },
-  { p:'IMG_6848.jpeg', c:'Twin',         f:'Twin', line:'Carbon Trash' },
-  { p:'IMG_6855.jpeg', c:'Twin',         f:'Twin', line:'Carbon Trash' },
-  { p:'IMG_6859.jpeg', c:'Twin',         f:'Twin' },
-  { p:'IMG_6872.jpeg', c:'Twin',         f:'Twin' },
-  { p:'IMG_6885.jpeg', c:'Twin',         f:'Twin' },
-  // Lote junho/2026 (WhatsApp Cesar). Categorias provisórias por inspeção visual; ajustar via CMS.
-  { p:'baltazar/baltz-001.jpeg', c:'Outras',     f:'Variável' },
-  { p:'baltazar/baltz-002.jpeg', c:'Twin',       f:'Twin' },
-  { p:'baltazar/baltz-003.jpeg', c:'Thruster',   f:'Thruster' },
-  { p:'baltazar/baltz-004.jpeg', c:'Mid-Length', f:'Single + Estab.' },
-  { p:'baltazar/baltz-005.jpeg', c:'Longboard',  f:'Single' },
-  { p:'baltazar/baltz-006.jpeg', c:'Mid-Length', f:'Single + Estab.' },
-  { p:'baltazar/baltz-007.jpeg', c:'Twin',       f:'Twin' },
-  { p:'baltazar/baltz-008.jpeg', c:'Quad',       f:'Quad' },
-  { p:'baltazar/baltz-009.jpeg', c:'Twin',       f:'Twin' },
-  { p:'baltazar/baltz-010.jpeg', c:'Twin',       f:'Twin' },
-  { p:'baltazar/baltz-011.jpeg', c:'Twin',       f:'Twin Keel' },
-  { p:'baltazar/baltz-012.jpeg', c:'Twin',       f:'Twin' },
-  { p:'baltazar/baltz-013.jpeg', c:'Thruster',   f:'Thruster' },
-  { p:'baltazar/baltz-014.jpeg', c:'Longboard',  f:'Single' },
-  { p:'baltazar/baltz-015.jpeg', c:'Mid-Length', f:'Single + Estab.' },
-  { p:'baltazar/baltz-016.jpeg', c:'Twin +1',    f:'Twin + Estab.' },
-  { p:'baltazar/baltz-017.jpeg', c:'Longboard',  f:'Single' },
-  { p:'baltazar/baltz-018.jpeg', c:'Mid-Length', f:'Single + Estab.' },
-  { p:'baltazar/baltz-019.jpeg', c:'Twin',       f:'Twin' },
-  { p:'baltazar/baltz-020.jpeg', c:'Mid-Length', f:'Single + Estab.' },
-  { p:'baltazar/baltz-021.jpeg', c:'Longboard',  f:'Single' },
-  { p:'baltazar/baltz-022.jpeg', c:'Twin',       f:'Twin' },
-  { p:'baltazar/baltz-023.jpeg', c:'Twin',       f:'Twin' },
-  { p:'baltazar/baltz-024.jpeg', c:'Outras',     f:'Variável' },
-  { p:'baltazar/baltz-025.jpeg', c:'Thruster',   f:'Thruster' },
-];
+// ===================== CATÁLOGO (carregado do Supabase) =====================
+let gallery = [];
+let categoriesDB = [];
+
+async function loadCatalog() {
+  try {
+    const [catRes, brdRes] = await Promise.all([
+      supa.from('categories').select('slug,name,display_order').eq('active', true).order('display_order'),
+      supa.from('boards').select('image_path,category_slug,fin_setup,line,sort_order').eq('active', true).order('sort_order'),
+    ]);
+    if (catRes.error) throw catRes.error;
+    if (brdRes.error) throw brdRes.error;
+    categoriesDB = catRes.data || [];
+    const slugToName = Object.fromEntries(categoriesDB.map(c => [c.slug, c.name]));
+    gallery = (brdRes.data || []).map(b => ({
+      p: b.image_path,
+      c: slugToName[b.category_slug] || 'Outras',
+      f: b.fin_setup || '',
+      line: b.line || undefined
+    }));
+  } catch (e) {
+    console.error('Erro carregando catálogo:', e);
+  }
+}
 
 const actionPhotos = ['IMG_6889.jpeg','IMG_6862.jpeg','IMG_6863.jpeg','IMG_6887.jpeg','IMG_6861.jpeg','IMG_6842.jpeg','IMG_6860.jpeg','IMG_6882.jpeg'];
 
@@ -761,7 +726,7 @@ function filterTo(type) {
 }
 
 // ===================== INIT =====================
-renderGallery('Todas');
+loadCatalog().then(() => { renderGallery('Todas'); });
 renderActionGrid();
 // hero showcase: crossfade leve entre fotos
 (function () {
