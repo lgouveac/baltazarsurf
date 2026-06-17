@@ -177,11 +177,14 @@ summary::-webkit-details-marker { display:none; }
 <!-- Filtros por categoria -->
 <div id="boardFilters" class="flex flex-wrap gap-2 mb-8 md:mb-12">
 <button class="filter-chip active border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Todas">Todas</button>
-<button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="High Performance">High Performance</button>
-<button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Twin Fin">Twin Fin</button>
+<button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Thruster">Thruster</button>
+<button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Twin">Twin</button>
+<button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Twin +1">Twin +1</button>
+<button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Quad">Quad</button>
 <button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Mid-Length">Mid-Length</button>
 <button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Longboard">Longboard</button>
-<button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Quad">Quad</button>
+<button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Asymmetric">Asymmetric</button>
+<button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Outras">Outras</button>
 <button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Carbon Trash">Carbon Trash</button>
 </div>
 <div id="boardGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6"></div>
@@ -414,44 +417,70 @@ function precoCategoria(cat) {
 // Sem nomes de modelo, ele quase nunca repete. As fotos servem de inspiração.
 // (Novos modelos que o Baltazar está finalizando entram aqui depois.)
 const gallery = [
-  { p:'IMG_6839.jpeg', c:'Twin Fin',         f:'Twin' },
-  { p:'IMG_6846.jpeg', c:'High Performance', f:'Thruster' },
+  { p:'IMG_6839.jpeg', c:'Twin',         f:'Twin' },
+  { p:'IMG_6846.jpeg', c:'Thruster', f:'Thruster' },
   { p:'IMG_6845.jpeg', c:'Longboard',        f:'Single' },
-  { p:'IMG_6873.jpeg', c:'Twin Fin',         f:'Twin' },
+  { p:'IMG_6873.jpeg', c:'Twin',         f:'Twin' },
   { p:'IMG_6857.jpeg', c:'Mid-Length',       f:'Single + Estab.' },
   { p:'IMG_6880.jpeg', c:'Quad',             f:'Quad' },
-  { p:'IMG_6837.jpeg', c:'Twin Fin',         f:'Twin Keel' },
-  { p:'IMG_6853.jpeg', c:'High Performance', f:'Thruster' },
-  { p:'IMG_6844.jpeg', c:'Twin Fin',         f:'Twin' },
-  { p:'IMG_6868.jpeg', c:'Twin Fin',         f:'Twin' },
-  { p:'IMG_6876.jpeg', c:'High Performance', f:'Thruster' },
-  { p:'IMG_6883.jpeg', c:'Twin Fin',         f:'Twin' },
-  { p:'IMG_6858.jpeg', c:'High Performance', f:'5 Caixas' },
-  { p:'IMG_6852.jpeg', c:'Twin Fin',         f:'Twin Keel' },
+  { p:'IMG_6837.jpeg', c:'Twin',         f:'Twin Keel' },
+  { p:'IMG_6853.jpeg', c:'Thruster', f:'Thruster' },
+  { p:'IMG_6844.jpeg', c:'Twin',         f:'Twin' },
+  { p:'IMG_6868.jpeg', c:'Twin',         f:'Twin' },
+  { p:'IMG_6876.jpeg', c:'Thruster', f:'Thruster' },
+  { p:'IMG_6883.jpeg', c:'Twin',         f:'Twin' },
+  { p:'IMG_6858.jpeg', c:'Thruster', f:'5 Caixas' },
+  { p:'IMG_6852.jpeg', c:'Twin',         f:'Twin Keel' },
   { p:'IMG_6865.jpeg', c:'Quad',             f:'Quad' },
-  { p:'IMG_6841.jpeg', c:'Twin Fin',         f:'Twin' },
-  { p:'IMG_6849.jpeg', c:'High Performance', f:'Thruster' },
-  { p:'IMG_6835.jpeg', c:'Twin Fin',         f:'Twin', line:'Carbon Trash' },
-  { p:'IMG_6884.jpeg', c:'Twin Fin',         f:'Twin' },
-  { p:'IMG_6856.jpeg', c:'Twin Fin',         f:'Twin', line:'Carbon Trash' },
-  { p:'IMG_6874.jpeg', c:'High Performance', f:'Thruster' },
-  { p:'IMG_6875.jpeg', c:'Twin Fin',         f:'Twin' },
-  { p:'IMG_6832.jpeg', c:'Twin Fin',         f:'Twin' },
-  { p:'IMG_6836.jpeg', c:'Twin Fin',         f:'Twin', line:'Carbon Trash' },
-  { p:'IMG_6838.jpeg', c:'Twin Fin',         f:'Twin' },
-  { p:'IMG_6840.jpeg', c:'Twin Fin',         f:'Twin', line:'Carbon Trash' },
-  { p:'IMG_6847.jpeg', c:'Twin Fin',         f:'Twin' },
-  { p:'IMG_6848.jpeg', c:'Twin Fin',         f:'Twin', line:'Carbon Trash' },
-  { p:'IMG_6855.jpeg', c:'Twin Fin',         f:'Twin', line:'Carbon Trash' },
-  { p:'IMG_6859.jpeg', c:'Twin Fin',         f:'Twin' },
-  { p:'IMG_6872.jpeg', c:'Twin Fin',         f:'Twin' },
-  { p:'IMG_6885.jpeg', c:'Twin Fin',         f:'Twin' },
+  { p:'IMG_6841.jpeg', c:'Twin',         f:'Twin' },
+  { p:'IMG_6849.jpeg', c:'Thruster', f:'Thruster' },
+  { p:'IMG_6835.jpeg', c:'Twin',         f:'Twin', line:'Carbon Trash' },
+  { p:'IMG_6884.jpeg', c:'Twin',         f:'Twin' },
+  { p:'IMG_6856.jpeg', c:'Twin',         f:'Twin', line:'Carbon Trash' },
+  { p:'IMG_6874.jpeg', c:'Thruster', f:'Thruster' },
+  { p:'IMG_6875.jpeg', c:'Twin',         f:'Twin' },
+  { p:'IMG_6832.jpeg', c:'Twin',         f:'Twin' },
+  { p:'IMG_6836.jpeg', c:'Twin',         f:'Twin', line:'Carbon Trash' },
+  { p:'IMG_6838.jpeg', c:'Twin',         f:'Twin' },
+  { p:'IMG_6840.jpeg', c:'Twin',         f:'Twin', line:'Carbon Trash' },
+  { p:'IMG_6847.jpeg', c:'Twin',         f:'Twin' },
+  { p:'IMG_6848.jpeg', c:'Twin',         f:'Twin', line:'Carbon Trash' },
+  { p:'IMG_6855.jpeg', c:'Twin',         f:'Twin', line:'Carbon Trash' },
+  { p:'IMG_6859.jpeg', c:'Twin',         f:'Twin' },
+  { p:'IMG_6872.jpeg', c:'Twin',         f:'Twin' },
+  { p:'IMG_6885.jpeg', c:'Twin',         f:'Twin' },
+  // Lote junho/2026 (WhatsApp Cesar). Categorias provisórias por inspeção visual; ajustar via CMS.
+  { p:'baltazar/baltz-001.jpeg', c:'Thruster',   f:'Thruster' },
+  { p:'baltazar/baltz-002.jpeg', c:'Twin',       f:'Twin' },
+  { p:'baltazar/baltz-003.jpeg', c:'Thruster',   f:'Thruster' },
+  { p:'baltazar/baltz-004.jpeg', c:'Mid-Length', f:'Single + Estab.' },
+  { p:'baltazar/baltz-005.jpeg', c:'Longboard',  f:'Single' },
+  { p:'baltazar/baltz-006.jpeg', c:'Mid-Length', f:'Single + Estab.' },
+  { p:'baltazar/baltz-007.jpeg', c:'Twin',       f:'Twin' },
+  { p:'baltazar/baltz-008.jpeg', c:'Thruster',   f:'Thruster' },
+  { p:'baltazar/baltz-009.jpeg', c:'Thruster',   f:'Thruster' },
+  { p:'baltazar/baltz-010.jpeg', c:'Twin',       f:'Twin' },
+  { p:'baltazar/baltz-011.jpeg', c:'Twin',       f:'Twin Keel' },
+  { p:'baltazar/baltz-012.jpeg', c:'Twin',       f:'Twin' },
+  { p:'baltazar/baltz-013.jpeg', c:'Thruster',   f:'Thruster' },
+  { p:'baltazar/baltz-014.jpeg', c:'Longboard',  f:'Single' },
+  { p:'baltazar/baltz-015.jpeg', c:'Mid-Length', f:'Single + Estab.' },
+  { p:'baltazar/baltz-016.jpeg', c:'Twin +1',    f:'Twin + Estab.' },
+  { p:'baltazar/baltz-017.jpeg', c:'Longboard',  f:'Single' },
+  { p:'baltazar/baltz-018.jpeg', c:'Mid-Length', f:'Single + Estab.' },
+  { p:'baltazar/baltz-019.jpeg', c:'Twin',       f:'Twin' },
+  { p:'baltazar/baltz-020.jpeg', c:'Mid-Length', f:'Single + Estab.' },
+  { p:'baltazar/baltz-021.jpeg', c:'Longboard',  f:'Single' },
+  { p:'baltazar/baltz-022.jpeg', c:'Twin',       f:'Twin' },
+  { p:'baltazar/baltz-023.jpeg', c:'Twin',       f:'Twin' },
+  { p:'baltazar/baltz-024.jpeg', c:'Outras',     f:'Variável' },
+  { p:'baltazar/baltz-025.jpeg', c:'Thruster',   f:'Thruster' },
 ];
 
 const actionPhotos = ['IMG_6889.jpeg','IMG_6862.jpeg','IMG_6863.jpeg','IMG_6887.jpeg','IMG_6861.jpeg','IMG_6842.jpeg','IMG_6860.jpeg','IMG_6882.jpeg'];
 
 // categorias que o cliente pode escolher no chat
-const CATEGORIAS = ['High Performance','Twin Fin','Mid-Length','Longboard','Quad'];
+const CATEGORIAS = ['Thruster','Twin','Mid-Length','Longboard','Quad','Asymmetric','Twin +1','Outras'];
 
 // ===================== RENDER CATÁLOGO + FILTRO =====================
 let currentFilter = 'Todas';
@@ -536,7 +565,7 @@ function wantThis() {
 //   async function askAI(history){ const r = await fetch('/api/chat',{method:'POST',body:JSON.stringify(history)}); return (await r.json()).reply; }
 // e renderize a resposta com addMsg(reply,'bot'). O resto da UI já está pronto.
 const chatSteps = [
-  { key:'modelo',   bot:'Fala! Sou o assistente do shaper. Que tipo de prancha tem a sua cara?', type:'choice', options:['High Performance','Twin Fin','Mid-Length','Longboard','Quad','Me ajude a decidir'] },
+  { key:'modelo',   bot:'Fala! Sou o assistente do shaper. Que tipo de prancha tem a sua cara?', type:'choice', options:['Thruster','Twin','Twin +1','Quad','Mid-Length','Longboard','Asymmetric','Me ajude a decidir'] },
   { key:'altura',   bot:'Beleza. Qual a sua altura? (em cm)', type:'number', placeholder:'175' },
   { key:'peso',     bot:'E o seu peso? (em kg)', type:'number', placeholder:'75' },
   { key:'nivel',    bot:'Como você descreve seu nível no surfe?', type:'choice', options:['Iniciante','Intermediário','Avançado','Profissional'] },
@@ -644,7 +673,7 @@ function calcVolume() {
 function recModel() {
   if (chatState.nivel === 'Iniciante') return 'Longboard ou Mid-Length (estável e fácil de remar)';
   if (chatState.onda === 'Pequena/fraca') return 'Twin Fin (solta e veloz em ondas fracas)';
-  if (chatState.nivel === 'Profissional' || chatState.nivel === 'Avançado') return 'High Performance';
+  if (chatState.nivel === 'Profissional' || chatState.nivel === 'Avançado') return 'Thruster';
   return 'Mid-Length (versátil para o dia a dia)';
 }
 function recFin() {
