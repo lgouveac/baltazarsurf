@@ -1,0 +1,15 @@
+{
+  "name": "Baltazar Customs Surfboards",
+  "short_name": "Baltazar",
+  "description": "Pranchas de surf artesanais sob medida no Rio de Janeiro. Performance, arte e a linha exclusiva Carbon Trash.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f9f9f9",
+  "theme_color": "#f9f9f9",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "/images/favicon.png", "sizes": "256x256", "type": "image/png", "purpose": "any" },
+    { "src": "/images/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
