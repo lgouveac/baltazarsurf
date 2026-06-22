@@ -15,6 +15,8 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preload" as="image" href="/images/IMG_6840.jpeg" fetchpriority="high"/>
+<link rel="preload" as="image" href="/images/brand/logo-oval-white.png"/>
 <meta property="og:type" content="website"/>
 <meta property="og:locale" content="pt_BR"/>
 <meta property="og:url" content="https://www.baltazarcustomsurfboards.com.br/"/>
@@ -305,11 +307,11 @@ summary::-webkit-details-marker { display:none; }
 <!-- Hero Section -->
 <section class="relative min-h-[100svh] w-full flex items-center justify-center overflow-hidden bg-black py-24 md:py-0">
 <div class="absolute inset-0 md:hidden" id="heroShow">
-<img class="hero-slide active w-full h-full object-contain grayscale" src="images/IMG_6840.jpeg" alt="Pranchas Baltazar Customs"/>
-<img class="hero-slide w-full h-full object-contain grayscale" src="images/IMG_6881.jpeg" alt=""/>
-<img class="hero-slide w-full h-full object-contain grayscale" src="images/IMG_6868.jpeg" alt=""/>
-<img class="hero-slide w-full h-full object-contain grayscale" src="images/IMG_6831.jpeg" alt=""/>
-<img class="hero-slide w-full h-full object-contain grayscale" src="images/IMG_6848.jpeg" alt=""/>
+<img class="hero-slide active w-full h-full object-contain grayscale" src="images/IMG_6840.jpeg" alt="Pranchas Baltazar Customs no galpão do shaper" width="900" height="1600" fetchpriority="high"/>
+<img class="hero-slide w-full h-full object-contain grayscale" src="images/IMG_6881.jpeg" alt="" width="900" height="1600"/>
+<img class="hero-slide w-full h-full object-contain grayscale" src="images/IMG_6868.jpeg" alt="" width="1200" height="1600"/>
+<img class="hero-slide w-full h-full object-contain grayscale" src="images/IMG_6831.jpeg" alt="" width="1161" height="1452"/>
+<img class="hero-slide w-full h-full object-contain grayscale" src="images/IMG_6848.jpeg" alt="" width="900" height="1600"/>
 </div>
 <div class="absolute inset-0 hidden md:flex" id="heroStrip" aria-hidden="true">
 <div class="hero-col relative flex-1 min-w-0 h-full overflow-hidden"></div>
@@ -319,7 +321,7 @@ summary::-webkit-details-marker { display:none; }
 </div>
 <div class="absolute inset-0 bg-black/50 pointer-events-none"></div>
 <div class="relative z-10 text-center px-4 md:px-6">
-<img src="images/brand/logo-oval-white.png" alt="Baltazar Customs Surfboards" class="w-[min(82vw,500px)] mx-auto mb-6 md:mb-8"/>
+<img src="images/brand/logo-oval-white.png" alt="Baltazar Customs Surfboards" width="1286" height="550" class="w-[min(82vw,500px)] mx-auto mb-6 md:mb-8"/>
 <h1 class="font-sans uppercase tracking-[0.2em] md:tracking-[0.3em] text-[9px] md:text-xs text-white/80 max-w-xl mx-auto">Pranchas de surf artesanais feitas à mão. Recreio, Rio de Janeiro.</h1>
 <p class="font-serif italic text-white/70 text-base md:text-2xl mt-5 md:mt-7 max-w-2xl mx-auto">Cada prancha é única. Você se inspira, a gente faz a sua.</p>
 <div class="mt-10 md:mt-14 flex flex-col sm:flex-row gap-3 justify-center items-center">
@@ -646,7 +648,16 @@ async function loadCatalog() {
   }
 }
 
-const actionPhotos = ['IMG_6889.jpeg','IMG_6862.jpeg','IMG_6863.jpeg','IMG_6887.jpeg','IMG_6861.jpeg','IMG_6842.jpeg','IMG_6860.jpeg','IMG_6882.jpeg'];
+const actionPhotos = [
+  { p:'IMG_6889.jpeg', alt:'Surfista do Recreio dropando onda com prancha Baltazar Customs' },
+  { p:'IMG_6862.jpeg', alt:'Manobra de cutback com Twin Fin no Rio de Janeiro' },
+  { p:'IMG_6863.jpeg', alt:'César Baltazar surfando onda no Recreio' },
+  { p:'IMG_6887.jpeg', alt:'Surfista remando com prancha artesanal Baltazar' },
+  { p:'IMG_6861.jpeg', alt:'Linha de surf na praia do Recreio dos Bandeirantes' },
+  { p:'IMG_6842.jpeg', alt:'Onda perfeita com prancha custom Baltazar Customs' },
+  { p:'IMG_6860.jpeg', alt:'Surfista dropando no breaker com prancha Carbon Trash' },
+  { p:'IMG_6882.jpeg', alt:'Sessão de surf no Rio com prancha Baltazar' },
+];
 
 // categorias que o cliente pode escolher no chat
 const CATEGORIAS = ['Thruster','Twin','Mid-Length','Longboard','Quad','Asymmetric','Twin +1','Outras'];
@@ -683,9 +694,9 @@ document.getElementById('boardFilters').addEventListener('click', e => {
 });
 
 function renderActionGrid() {
-  document.getElementById('actionGrid').innerHTML = actionPhotos.map(p =>
+  document.getElementById('actionGrid').innerHTML = actionPhotos.map(item =>
     '<div class="aspect-square overflow-hidden">' +
-    '<img src="' + IMG + p + '" alt="César Baltazar surfando" loading="lazy" class="w-full h-full object-cover grayscale contrast-110 hover:grayscale-0 transition-all duration-700"/>' +
+    '<img src="' + IMG + item.p + '" alt="' + item.alt + '" loading="lazy" class="w-full h-full object-cover grayscale contrast-110 hover:grayscale-0 transition-all duration-700"/>' +
     '</div>'
   ).join('');
 }

@@ -1,0 +1,45 @@
+# Baltazar Customs Surfboards
+
+> Shaper artesanal de pranchas de surf customizadas no Recreio dos Bandeirantes, Rio de Janeiro. Cada prancha é shapeada à mão por César Baltazar, do shape à laminação, sob medida para a altura, peso, nível e tipo de onda do surfista. Inclui a linha exclusiva Carbon Trash, construída com retalhos de fibra de carbono reaproveitados.
+
+## Fatos essenciais
+- Nome: Baltazar Customs Surfboards (também conhecido como Baltazar Customs)
+- Shaper: César Baltazar
+- Localização: Recreio dos Bandeirantes, Rio de Janeiro, RJ, Brasil
+- Faixa de preço: R$ 2.600 a R$ 3.600, por tamanho
+- Atendimento: por agendamento via chat no site
+- Categorias de prancha: Thruster, Twin, Twin +1, Quad, Mid-Length, Longboard, Asymmetric
+- Linha exclusiva: Carbon Trash, em sete construções (Full, Full Lite, Rails, Rails 12" nose, Rails 12" nose and tail, Bottom and rails, Deck and rails)
+- Email: baltazar.dev@flowcode.cc
+- Site: https://www.baltazarcustomsurfboards.com.br/
+
+## Páginas principais
+- [Home](/): catálogo, processo, sobre, FAQ
+- [Carbon Trash](/carbon-trash): linha exclusiva de carbono reaproveitado
+- [Sobre César Baltazar](/sobre-cesar): história do shaper
+- [Processo de shape](/processo): do bloco à laminação
+- [Glossário](/glossario): termos do shape e do surf
+- [Blog](/blog/): artigos sobre litragem, quilhas e shape
+
+## Perguntas que o site responde direto
+
+### Como funciona a encomenda?
+Você escolhe um modelo como inspiração, conta suas medidas no chat e reserva pelo site. Cada prancha é única e feita à mão. Depois do pagamento, o Baltazar acerta com você os detalhes finais (arte, cor e medidas).
+
+### Quanto custa?
+R$ 2.600 até 6′3″, R$ 2.700 de 6′4″ a 7′0″, R$ 2.900 de 7′1″ a 8′0″, R$ 3.200 de 8′1″ a 8′5″, R$ 3.600 de 8′6″ a 9′6″. Arte e acabamentos especiais podem ter custo adicional.
+
+### O que é a Carbon Trash?
+Prancha de carbono construída com retalhos de fibra de carbono descartados (o trash). Os fios são espalhados à mão na resina, então cada padrão é único. Tem performance, flexibilidade e resistência únicas. Sete construções disponíveis.
+
+### Single, twin, thruster ou quad?
+Single: clássica, deslize suave. Twin: solta e veloz em ondas pequenas. Thruster (3 quilhas): a mais versátil e controlável. Quad (4 quilhas): rápida em ondas ocas e tubulares.
+
+### Fish, mid-length ou longboard?
+Fish: curta e larga, perfeita pra ondas pequenas. Mid-length: versátil e fácil de remar. Longboard: deslize clássico, ótima pra iniciantes e ondas suaves.
+
+### Como sei a litragem ideal?
+A litragem (volume em litros) define flutuação e remada: quanto mais iniciante ou mais pesado, mais litros; quanto mais avançado, menos. No chat o site sugere uma litragem a partir do seu peso e nível.
+
+### O que é o copinho?
+É o sistema de quilha, a caixa onde a quilha encaixa. Os mais comuns são FCS II (encaixa sem ferramenta) e Futures (encaixe único, bem firme), além da caixa de single.

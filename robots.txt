@@ -1,4 +1,45 @@
+# Baltazar Customs Surfboards
+# https://www.baltazarcustomsurfboards.com.br/
+
+# Bots de busca
 User-agent: *
+Allow: /
+Disallow: /admin/
+
+# Bots de IA / Answer Engines (explicitamente permitidos)
+User-agent: GPTBot
+Allow: /
+Disallow: /admin/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin/
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /admin/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin/
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /admin/
+
+User-agent: cohere-ai
+Allow: /
+Disallow: /admin/
+
+User-agent: CCBot
+Allow: /
+Disallow: /admin/
+
+User-agent: Bytespider
 Allow: /
 Disallow: /admin/
 
