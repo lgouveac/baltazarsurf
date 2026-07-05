@@ -1,5 +1,5 @@
 # Baltazar Customs Surfboards
-# https://www.baltazarcustomsurfboards.com.br/
+# https://www.baltazarcustomssurfboards.com/
 
 # Bots de busca
 User-agent: *
@@ -43,4 +43,4 @@ User-agent: Bytespider
 Allow: /
 Disallow: /admin/
 
-Sitemap: https://www.baltazarcustomsurfboards.com.br/sitemap.xml
+Sitemap: https://www.baltazarcustomssurfboards.com/sitemap.xml

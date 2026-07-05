@@ -11,7 +11,7 @@
 - Categorias de prancha: Thruster, Twin, Twin +1, Quad, Mid-Length, Longboard, Asymmetric
 - Linha exclusiva: Carbon Trash, em sete construções (Full, Full Lite, Rails, Rails 12" nose, Rails 12" nose and tail, Bottom and rails, Deck and rails)
 - Email: baltazar.dev@flowcode.cc
-- Site: https://www.baltazarcustomsurfboards.com.br/
+- Site: https://www.baltazarcustomssurfboards.com/
 
 ## Páginas principais
 - [Home](/): catálogo, processo, sobre, FAQ
