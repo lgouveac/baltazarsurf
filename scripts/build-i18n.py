@@ -343,11 +343,16 @@ def apply_map(html, mapping):
         html = html.replace(pt, tr)
     return html
 
+def strip_switcher(html):
+    return re.sub(
+        r'<div class="flex items-center gap-2 font-sans text-\[10px\] uppercase tracking-widest">.*?</div>\n(?=<div class="flex items-center gap-4">)',
+        '', html, count=1, flags=re.DOTALL)
+
 def add_common(html, lang):
-    # hreflang depois do canonical
-    html = re.sub(r'(<link rel="canonical"[^>]*/>\n)', r'\1' + HREFLANG, html, count=1)
-    # switcher: injeta antes do <div class="flex items-center gap-4"> no header
-    html = html.replace(
+    if 'hreflang="en"' not in html:  # hreflang é igual em todos os idiomas
+        html = re.sub(r'(<link rel="canonical"[^>]*/>\n)', r'\1' + HREFLANG, html, count=1)
+    html = strip_switcher(html)      # remove qualquer switcher pré-existente
+    html = html.replace(             # e re-injeta com o idioma ativo correto
         '<div class="flex items-center gap-4">',
         switcher(lang) + '\n<div class="flex items-center gap-4">',
         1)

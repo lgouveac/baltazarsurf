@@ -55,7 +55,27 @@ let session = null;
 let profile = null;
 let categories = [];
 let boards = [];
+let siteTexts = {};      // { 'pt': {key:value}, 'en':..., 'es':... }
 let filter = 'Todas';
+let tab = 'boards';      // boards | categories | texts
+
+// Textos editáveis do site (as chaves batem com os data-cms do index.html).
+const TEXT_SCHEMA = [
+  { key: 'hero_tagline',        label: 'Hero — etiqueta acima do título', multiline: false },
+  { key: 'hero_subtitle',       label: 'Hero — frase de impacto',         multiline: false },
+  { key: 'collection_heading',  label: 'Coleção — título',                multiline: false },
+  { key: 'collection_cta_hint', label: 'Coleção — chamada acima do botão', multiline: false },
+  { key: 'carbon_desc',         label: 'Carbon Trash — descrição',        multiline: true  },
+  { key: 'how_heading',         label: 'Como Funciona — título',          multiline: false },
+  { key: 'how_step1_title',     label: 'Passo 1 — título',                multiline: false },
+  { key: 'how_step1_desc',      label: 'Passo 1 — descrição',             multiline: true  },
+  { key: 'how_step2_title',     label: 'Passo 2 — título',                multiline: false },
+  { key: 'how_step2_desc',      label: 'Passo 2 — descrição',             multiline: true  },
+  { key: 'how_step3_title',     label: 'Passo 3 — título',                multiline: false },
+  { key: 'how_step3_desc',      label: 'Passo 3 — descrição',             multiline: true  },
+  { key: 'manifesto',           label: 'Frase de fechamento',             multiline: true  },
+];
+const LANGS = [ { code: 'pt', name: 'Português' }, { code: 'en', name: 'English' }, { code: 'es', name: 'Español' } ];
 
 // ============================================================
 // INIT + AUTH
@@ -66,8 +86,15 @@ async function init() {
   if (!session) { renderLogin(); return; }
   await loadProfile();
   if (!profile) { renderNoProfile(); return; }
-  await Promise.all([loadCategories(), loadBoards()]);
+  await Promise.all([loadCategories(), loadBoards(), loadSiteTexts()]);
   renderApp();
+}
+
+async function loadSiteTexts() {
+  siteTexts = { pt: {}, en: {}, es: {} };
+  const { data, error } = await supa.from('site_texts').select('key,lang,value');
+  if (error) { console.warn(error); return; }
+  (data || []).forEach(r => { (siteTexts[r.lang] = siteTexts[r.lang] || {})[r.key] = r.value; });
 }
 
 async function loadProfile() {
@@ -134,31 +161,169 @@ function renderNoProfile() {
   `;
 }
 
+function setTab(t) { tab = t; renderApp(); }
+
 function renderApp() {
   document.getElementById('userStatus').innerHTML = `
     <span class="hidden sm:inline">${session.user.email} · </span>
     <span class="text-neutral-400">${profile.role}</span> ·
     <button onclick="logout()" class="underline hover:text-black">sair</button>
   `;
-  document.getElementById('fab').classList.remove('hidden');
+  // FAB "+ Nova prancha" só faz sentido na aba de pranchas
+  document.getElementById('fab').classList.toggle('hidden', tab !== 'boards');
+
+  const tabBtn = (id, label) =>
+    `<button onclick="setTab('${id}')" class="px-4 py-2 uppercase tracking-widest text-[11px] border-b-2 ${tab === id ? 'border-black text-black' : 'border-transparent text-neutral-400 hover:text-black'}">${label}</button>`;
 
   document.getElementById('app').innerHTML = `
-    <div class="flex justify-between items-end gap-3 mb-5 md:mb-6">
-      <div>
-        <h1 class="font-serif italic text-2xl md:text-4xl">Pranchas</h1>
-        <p class="text-xs text-neutral-500 mt-1">Total: <span id="totalCount">—</span></p>
-      </div>
-      <button onclick="openNew()" class="hidden md:inline-flex bg-black text-white px-5 py-3 uppercase tracking-widest text-[11px] hover:opacity-80">
-        + Nova prancha
-      </button>
+    <div class="flex gap-1 md:gap-2 border-b border-black/10 mb-6 -mx-4 px-4 md:mx-0 md:px-0 overflow-x-auto">
+      ${tabBtn('boards','Pranchas')}${tabBtn('categories','Categorias')}${tabBtn('texts','Textos')}
     </div>
+    <div id="tabBody"></div>
+  `;
+  if (tab === 'boards') renderBoardsView();
+  else if (tab === 'categories') renderCategoriesView();
+  else renderTextsView();
+}
 
+function renderBoardsView() {
+  document.getElementById('tabBody').innerHTML = `
+    <div class="flex justify-between items-end gap-3 mb-5">
+      <p class="text-xs text-neutral-500">Total: <span id="totalCount">—</span></p>
+      <button onclick="openNew()" class="hidden md:inline-flex bg-black text-white px-5 py-3 uppercase tracking-widest text-[11px] hover:opacity-80">+ Nova prancha</button>
+    </div>
     <div id="filters" class="flex flex-nowrap md:flex-wrap gap-2 mb-5 md:mb-6 overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0 pb-1"></div>
-
     <div id="boardsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4"></div>
   `;
   renderFilters();
   renderBoards();
+}
+
+// ============================================================
+// CATEGORIAS
+// ============================================================
+function renderCategoriesView() {
+  const rows = categories.map((c, i) => `
+    <div class="flex items-center gap-3 border border-black/10 bg-white px-3 py-3">
+      <div class="flex flex-col">
+        <button onclick="moveCategory('${c.slug}',-1)" ${i===0?'disabled':''} class="text-neutral-400 hover:text-black disabled:opacity-20 leading-none">▲</button>
+        <button onclick="moveCategory('${c.slug}',1)" ${i===categories.length-1?'disabled':''} class="text-neutral-400 hover:text-black disabled:opacity-20 leading-none">▼</button>
+      </div>
+      <div class="flex-1 min-w-0">
+        <input value="${esc(c.name)}" onchange="renameCategory('${c.slug}', this.value)"
+               class="w-full font-medium bg-transparent border-b border-transparent hover:border-black/20 focus:border-black focus:outline-none py-1"/>
+        <p class="text-[10px] uppercase tracking-widest text-neutral-400 mt-0.5">${c.slug}</p>
+      </div>
+      <label class="flex items-center gap-1.5 text-[11px] text-neutral-600 shrink-0">
+        <input type="checkbox" ${c.active?'checked':''} onchange="toggleCategory('${c.slug}', this.checked)" class="w-4 h-4"> ativa
+      </label>
+      <button onclick="deleteCategory('${c.slug}')" class="text-red-600 text-lg hover:opacity-70 shrink-0" title="Excluir">×</button>
+    </div>
+  `).join('');
+  document.getElementById('tabBody').innerHTML = `
+    <div class="max-w-2xl space-y-2">
+      <p class="text-sm text-neutral-600 mb-4">Renomeie no campo, reordene com as setas, ative/desative ou exclua. A ordem e os nomes aparecem nos filtros do site.</p>
+      ${rows}
+      <form id="newCatForm" class="flex gap-2 pt-4">
+        <input name="name" placeholder="Nova categoria (ex: Gun)" required class="flex-1 border border-black/20 px-3 py-3"/>
+        <button class="bg-black text-white px-5 py-3 uppercase tracking-widest text-[11px] hover:opacity-80">Adicionar</button>
+      </form>
+      <p id="catMsg" class="text-xs text-neutral-600 min-h-[1em] pt-1"></p>
+    </div>
+  `;
+  document.getElementById('newCatForm').onsubmit = addCategory;
+}
+
+function slugify(s) {
+  return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40) || ('cat-' + categories.length);
+}
+
+async function addCategory(e) {
+  e.preventDefault();
+  const name = e.target.name.value.trim();
+  if (!name) return;
+  const msg = document.getElementById('catMsg');
+  const maxOrder = categories.reduce((m,c)=>Math.max(m, c.display_order||0), 0);
+  const slug = slugify(name);
+  msg.textContent = 'Salvando…';
+  const { error } = await supa.from('categories').insert({ slug, name, display_order: maxOrder+1, active: true });
+  if (error) { msg.textContent = 'Erro: ' + error.message; return; }
+  await loadCategories(); renderCategoriesView();
+}
+
+async function renameCategory(slug, name) {
+  await supa.from('categories').update({ name: name.trim() }).eq('slug', slug);
+  await loadCategories();
+}
+
+async function toggleCategory(slug, active) {
+  await supa.from('categories').update({ active }).eq('slug', slug);
+  await loadCategories(); renderCategoriesView();
+}
+
+async function moveCategory(slug, dir) {
+  const i = categories.findIndex(c => c.slug === slug);
+  const j = i + dir;
+  if (j < 0 || j >= categories.length) return;
+  const a = categories[i], b = categories[j];
+  await Promise.all([
+    supa.from('categories').update({ display_order: b.display_order }).eq('slug', a.slug),
+    supa.from('categories').update({ display_order: a.display_order }).eq('slug', b.slug),
+  ]);
+  await loadCategories(); renderCategoriesView();
+}
+
+async function deleteCategory(slug) {
+  const used = boards.filter(b => b.category_slug === slug).length;
+  if (!confirm(used ? `Há ${used} prancha(s) nessa categoria. Elas ficam sem categoria. Excluir mesmo assim?` : 'Excluir esta categoria?')) return;
+  const { error } = await supa.from('categories').delete().eq('slug', slug);
+  if (error) { alert('Erro: ' + error.message); return; }
+  await Promise.all([loadCategories(), loadBoards()]); renderCategoriesView();
+}
+
+// ============================================================
+// TEXTOS DO SITE
+// ============================================================
+function renderTextsView() {
+  const blocks = TEXT_SCHEMA.map(t => `
+    <div class="border border-black/10 bg-white p-4">
+      <p class="font-medium text-sm mb-1">${t.label}</p>
+      <p class="text-[10px] uppercase tracking-widest text-neutral-400 mb-3">${t.key}</p>
+      <div class="space-y-3">
+        ${LANGS.map(l => {
+          const v = (siteTexts[l.code] && siteTexts[l.code][t.key]) || '';
+          const field = t.multiline
+            ? `<textarea data-key="${t.key}" data-lang="${l.code}" rows="2" class="w-full border border-black/20 px-3 py-2 text-sm">${esc(v)}</textarea>`
+            : `<input data-key="${t.key}" data-lang="${l.code}" value="${esc(v)}" class="w-full border border-black/20 px-3 py-2 text-sm"/>`;
+          return `<label class="block"><span class="text-[10px] uppercase tracking-widest text-neutral-500">${l.name}</span>${field}</label>`;
+        }).join('')}
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('tabBody').innerHTML = `
+    <div class="max-w-2xl">
+      <p class="text-sm text-neutral-600 mb-2">Edite os textos do site em cada idioma. Deixe em branco pra usar o texto padrão do site.</p>
+      <p class="text-xs text-neutral-400 mb-6">As mudanças aparecem no site ao recarregar a página.</p>
+      <div class="space-y-3">${blocks}</div>
+      <div class="sticky bottom-0 bg-neutral-50 py-4 mt-2 flex items-center gap-3">
+        <button onclick="saveTexts()" class="bg-black text-white px-6 py-3 uppercase tracking-widest text-[11px] hover:opacity-80">Salvar textos</button>
+        <span id="textsMsg" class="text-xs text-neutral-600"></span>
+      </div>
+    </div>
+  `;
+}
+
+async function saveTexts() {
+  const msg = document.getElementById('textsMsg');
+  msg.textContent = 'Salvando…';
+  const fields = document.querySelectorAll('#tabBody [data-key]');
+  const rows = [];
+  fields.forEach(f => rows.push({ key: f.getAttribute('data-key'), lang: f.getAttribute('data-lang'), value: f.value }));
+  const { error } = await supa.from('site_texts').upsert(rows, { onConflict: 'key,lang' });
+  if (error) { msg.textContent = 'Erro: ' + error.message; return; }
+  await loadSiteTexts();
+  msg.textContent = 'Salvo ✓';
 }
 
 function renderFilters() {
