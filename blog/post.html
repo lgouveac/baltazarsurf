@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Blog — Baltazar Customs Surfboards</title>
+<meta name="description" content="Artigo do blog da Baltazar Customs Surfboards."/>
+<link rel="icon" type="image/png" href="/images/favicon.png"/>
+<meta name="theme-color" content="#f9f9f9"/>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@1,6..72,200..800&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+body{font-family:'Work Sans',sans-serif}.font-serif{font-family:'Newsreader',serif}
+.prose p{margin-bottom:1.15rem;line-height:1.75}
+.prose h2{font-family:'Newsreader',serif;font-style:italic;font-size:1.6rem;margin:2.2rem 0 .9rem}
+.prose h3{font-family:'Newsreader',serif;font-style:italic;font-size:1.25rem;margin:1.6rem 0 .6rem}
+.prose ul{margin:0 0 1.15rem 1.2rem;list-style:disc}
+.prose li{margin-bottom:.4rem}
+.prose a{text-decoration:underline}
+.prose strong{font-weight:600}
+.prose blockquote{border-left:2px solid #000;padding-left:1rem;font-style:italic;color:#555;margin:1.4rem 0}
+</style>
+</head>
+<body class="bg-[#f9f9f9] text-[#1a1c1c]">
+
+<header class="px-5 md:px-10 py-4 md:py-6 border-b border-black/10 sticky top-0 bg-[#f9f9f9]/95 backdrop-blur z-40">
+  <div class="max-w-6xl mx-auto flex justify-between items-center gap-4">
+    <a href="/" aria-label="Baltazar Customs Surfboards"><img src="/images/brand/logo-oval-black.png" alt="Baltazar Customs Surfboards" width="200" height="86" class="h-9 md:h-12 w-auto"/></a>
+    <nav class="hidden md:flex gap-8 text-[10px] uppercase tracking-widest text-neutral-500">
+      <a href="/#boards" class="hover:text-black">A Coleção</a><a href="/carbon-trash" class="hover:text-black">Carbon Trash</a><a href="/sobre-cesar" class="hover:text-black">Sobre</a><a href="/blog/" class="text-black">Blog</a>
+    </nav>
+    <a href="/" class="bg-black text-white px-4 py-2 text-[10px] uppercase tracking-widest hover:opacity-80">Quero Prancha</a>
+  </div>
+</header>
+
+<main id="post" class="max-w-3xl mx-auto px-5 md:px-10 py-12 md:py-20">
+  <p class="text-sm text-neutral-500">Carregando…</p>
+</main>
+
+<footer class="border-t border-black/10 px-5 md:px-10 py-10 mt-16">
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <div><p class="font-serif italic text-lg">Baltazar Customs Surfboards</p><p class="text-xs text-neutral-500 mt-1">Pranchas artesanais sob medida. Recreio, Rio de Janeiro.</p></div>
+    <nav class="flex flex-wrap gap-x-6 gap-y-2 text-[10px] uppercase tracking-widest text-neutral-500">
+      <a href="/" class="hover:text-black">Home</a><a href="/carbon-trash" class="hover:text-black">Carbon Trash</a><a href="/sobre-cesar" class="hover:text-black">Sobre</a><a href="/blog/" class="hover:text-black">Blog</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+const SUPABASE_URL = 'https://eylnwwerbssfaaaxsccw.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5bG53d2VyYnNzZmFhYXhzY2N3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MDU3NjYsImV4cCI6MjA5NzI4MTc2Nn0.XMYTNxGEj5Jjt89Q9GCQasnD9sR9q0lt4wdlXUNrJgc';
+const supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const IMG = SUPABASE_URL + '/storage/v1/object/public/boards/';
+const SITE = 'https://www.baltazarcustomssurfboards.com';
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// Markdown mínimo e seguro: escapa o HTML primeiro, depois aplica os tokens.
+function mdToHtml(md){
+  const lines = String(md).replace(/\r\n/g,'\n').split('\n');
+  let html = '', inList = false, para = [];
+  const inline = (t) => esc(t)
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g,'<em>$1</em>')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+|\/[^)\s]*)\)/g,'<a href="$2">$1</a>');
+  const flushPara = () => { if(para.length){ html += '<p>'+inline(para.join(' '))+'</p>'; para=[]; } };
+  const flushList = () => { if(inList){ html += '</ul>'; inList=false; } };
+  for (const raw of lines){
+    const line = raw.trimEnd();
+    if (/^###\s+/.test(line)) { flushPara(); flushList(); html += '<h3>'+inline(line.replace(/^###\s+/,''))+'</h3>'; }
+    else if (/^##\s+/.test(line)) { flushPara(); flushList(); html += '<h2>'+inline(line.replace(/^##\s+/,''))+'</h2>'; }
+    else if (/^>\s?/.test(line)) { flushPara(); flushList(); html += '<blockquote>'+inline(line.replace(/^>\s?/,''))+'</blockquote>'; }
+    else if (/^[-*]\s+/.test(line)) { flushPara(); if(!inList){ html+='<ul>'; inList=true; } html += '<li>'+inline(line.replace(/^[-*]\s+/,''))+'</li>'; }
+    else if (line === '') { flushPara(); flushList(); }
+    else { para.push(line); }
+  }
+  flushPara(); flushList();
+  return html;
+}
+
+function setMeta(name, val, attr='name'){
+  let el = document.head.querySelector(`meta[${attr}="${name}"]`);
+  if(!el){ el=document.createElement('meta'); el.setAttribute(attr,name); document.head.appendChild(el); }
+  el.setAttribute('content', val);
+}
+
+async function load(){
+  const slug = new URLSearchParams(location.search).get('slug');
+  const main = document.getElementById('post');
+  if(!slug){ main.innerHTML = notFound('Artigo não especificado.'); return; }
+  const { data, error } = await supa.from('posts').select('*').eq('slug', slug).eq('published', true).maybeSingle();
+  if(error || !data){ main.innerHTML = notFound('Artigo não encontrado.'); return; }
+  render(data);
+}
+
+function notFound(msg){
+  return `<span class="font-sans uppercase text-[10px] tracking-widest text-neutral-500">Blog</span>
+    <h1 class="font-serif italic text-4xl md:text-6xl leading-tight mt-2 mb-6">${esc(msg)}</h1>
+    <a href="/blog/" class="bg-black text-white px-6 py-3 uppercase tracking-widest text-[10px] inline-block">Ver todos os artigos</a>`;
+}
+
+function render(p){
+  const url = SITE + '/blog/post?slug=' + encodeURIComponent(p.slug);
+  const cover = p.cover_image ? (IMG + p.cover_image) : '';
+  document.documentElement.lang = p.lang === 'pt' ? 'pt-BR' : p.lang;
+  document.title = p.title + ' | Baltazar Customs Surfboards';
+  setMeta('description', p.excerpt || p.title);
+  setMeta('og:title', p.title, 'property');
+  setMeta('og:description', p.excerpt || p.title, 'property');
+  setMeta('og:type', 'article', 'property');
+  setMeta('og:url', url, 'property');
+  if(cover) setMeta('og:image', cover, 'property');
+  let link = document.head.querySelector('link[rel=canonical]');
+  if(!link){ link=document.createElement('link'); link.rel='canonical'; document.head.appendChild(link); }
+  link.href = url;
+
+  const date = p.published_at ? new Date(p.published_at) : null;
+  const dateStr = date ? date.toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' }) : '';
+
+  const ld = {
+    "@context":"https://schema.org","@type":"BlogPosting",
+    "headline": p.title, "description": p.excerpt || p.title,
+    "author": { "@type":"Organization", "name":"Baltazar Customs Surfboards" },
+    "publisher": { "@id": SITE + "/#business" },
+    "datePublished": p.published_at || p.created_at, "dateModified": p.updated_at || p.created_at,
+    "url": url, "mainEntityOfPage": url
+  };
+  if(cover) ld.image = cover;
+  const ldEl = document.createElement('script'); ldEl.type='application/ld+json'; ldEl.textContent = JSON.stringify(ld); document.head.appendChild(ldEl);
+
+  document.getElementById('post').innerHTML = `
+    <nav class="text-[10px] uppercase tracking-widest text-neutral-400 mb-8"><a href="/" class="hover:text-black">Home</a>  ·  <a href="/blog/" class="hover:text-black">Blog</a>  ·  ${esc(p.title)}</nav>
+    <span class="font-sans uppercase text-[10px] tracking-widest text-neutral-500">${dateStr ? esc(dateStr)+'  ·  ' : ''}${p.read_minutes} MIN</span>
+    <h1 class="font-serif italic text-4xl md:text-6xl leading-tight mt-2 mb-6">${esc(p.title)}</h1>
+    ${p.excerpt ? `<p class="font-serif italic text-lg md:text-2xl text-neutral-600 leading-relaxed mb-10">${esc(p.excerpt)}</p>`:''}
+    ${cover ? `<img src="${cover}" alt="${esc(p.title)}" class="w-full max-h-[420px] object-cover mb-10"/>`:''}
+    <div class="prose text-base md:text-lg text-neutral-800 max-w-none">${mdToHtml(p.body)}</div>
+    <div class="border-t border-black/10 mt-14 pt-10">
+      <h2 class="font-serif italic text-2xl md:text-4xl mb-4">Quer a sua prancha?</h2>
+      <a href="/" class="bg-black text-white px-8 py-4 uppercase tracking-widest text-[10px] inline-block hover:opacity-80">Falar com o shaper</a>
+    </div>`;
+}
+
+load();
+</script>
+</body></html>

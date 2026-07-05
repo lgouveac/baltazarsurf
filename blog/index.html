@@ -14,6 +14,7 @@
 <meta property="og:image" content="https://www.baltazarcustomssurfboards.com/images/og-tiger.png"/>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@1,6..72,200..800&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>body{font-family:'Work Sans',sans-serif}.font-serif{font-family:'Newsreader',serif}</style>
 <script type="application/ld+json">
 {
@@ -61,6 +62,11 @@
   <h1 class="font-serif italic text-5xl md:text-8xl leading-none mb-8">Blog.</h1>
   <p class="font-serif italic text-lg md:text-2xl text-neutral-600 leading-relaxed max-w-2xl mb-16">Conteúdo factual sobre shape, materiais, quilhas e como escolher a prancha certa. Direto pra quem quer entender antes de comprar.</p>
 
+  <!-- Artigos dinâmicos (CMS) -->
+  <div id="dynamicPosts" class="space-y-10 md:space-y-14 mb-16 md:mb-20"></div>
+
+  <!-- Guias fixos -->
+  <span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 block mb-6">Guias</span>
   <div class="space-y-10 md:space-y-14">
 
     <article class="border-t border-black/10 pt-8 md:pt-10">
@@ -83,6 +89,33 @@
 
   </div>
 </main>
+
+<script>
+(function(){
+  const SUPABASE_URL = 'https://eylnwwerbssfaaaxsccw.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5bG53d2VyYnNzZmFhYXhzY2N3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MDU3NjYsImV4cCI6MjA5NzI4MTc2Nn0.XMYTNxGEj5Jjt89Q9GCQasnD9sR9q0lt4wdlXUNrJgc';
+  const supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  async function loadPosts(){
+    try{
+      const { data, error } = await supa.from('posts')
+        .select('slug,title,excerpt,read_minutes,published_at')
+        .eq('published', true).order('published_at', { ascending: false });
+      if(error || !data || !data.length) return;
+      document.getElementById('dynamicPosts').innerHTML = data.map(p => `
+        <article class="border-t border-black/10 pt-8 md:pt-10">
+          <span class="font-sans uppercase text-[10px] tracking-widest text-neutral-400">ARTIGO  ·  ${p.read_minutes||5} min</span>
+          <h2 class="font-serif italic text-3xl md:text-5xl leading-tight mt-2 mb-4">
+            <a href="/blog/post?slug=${encodeURIComponent(p.slug)}" class="hover:underline">${esc(p.title)}</a>
+          </h2>
+          ${p.excerpt ? `<p class="font-sans text-base md:text-lg text-neutral-700 leading-relaxed max-w-2xl">${esc(p.excerpt)}</p>`:''}
+          <a href="/blog/post?slug=${encodeURIComponent(p.slug)}" class="inline-block mt-4 text-[10px] uppercase tracking-widest underline hover:no-underline">Ler artigo</a>
+        </article>`).join('');
+    }catch(e){ /* mantém só os guias fixos */ }
+  }
+  loadPosts();
+})();
+</script>
 
 <footer class="border-t border-black/10 px-5 md:px-10 py-10 mt-16">
   <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-6">

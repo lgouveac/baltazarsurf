@@ -57,8 +57,9 @@ let categories = [];
 let boards = [];
 let siteTexts = {};      // { 'pt': {key:value}, 'en':..., 'es':... }
 let siteImages = {};     // { slot: [{id, sort_order, image_path}] }
+let blogPosts = [];      // artigos do blog
 let filter = 'Todas';
-let tab = 'boards';      // boards | categories | texts | images
+let tab = 'boards';      // boards | categories | texts | images | blog
 
 // Textos editáveis do site (as chaves batem com os data-cms do index.html).
 const TEXT_SCHEMA = [
@@ -108,8 +109,14 @@ async function init() {
   if (!session) { renderLogin(); return; }
   await loadProfile();
   if (!profile) { renderNoProfile(); return; }
-  await Promise.all([loadCategories(), loadBoards(), loadSiteTexts(), loadSiteImages()]);
+  await Promise.all([loadCategories(), loadBoards(), loadSiteTexts(), loadSiteImages(), loadBlogPosts()]);
   renderApp();
+}
+
+async function loadBlogPosts() {
+  const { data, error } = await supa.from('posts').select('*').order('updated_at', { ascending: false });
+  if (error) { console.warn(error); return; }
+  blogPosts = data || [];
 }
 
 async function loadSiteTexts() {
@@ -206,14 +213,160 @@ function renderApp() {
 
   document.getElementById('app').innerHTML = `
     <div class="flex gap-1 md:gap-2 border-b border-black/10 mb-6 -mx-4 px-4 md:mx-0 md:px-0 overflow-x-auto">
-      ${tabBtn('boards','Pranchas')}${tabBtn('categories','Categorias')}${tabBtn('texts','Textos')}${tabBtn('images','Imagens')}
+      ${tabBtn('boards','Pranchas')}${tabBtn('categories','Categorias')}${tabBtn('texts','Textos')}${tabBtn('images','Imagens')}${tabBtn('blog','Blog')}
     </div>
     <div id="tabBody"></div>
   `;
   if (tab === 'boards') renderBoardsView();
   else if (tab === 'categories') renderCategoriesView();
   else if (tab === 'texts') renderTextsView();
-  else renderImagesView();
+  else if (tab === 'images') renderImagesView();
+  else renderBlogView();
+}
+
+// ============================================================
+// BLOG
+// ============================================================
+function renderBlogView() {
+  const rows = blogPosts.length ? blogPosts.map(p => `
+    <div class="flex items-center gap-3 border border-black/10 bg-white px-4 py-3">
+      <div class="flex-1 min-w-0">
+        <p class="font-medium truncate">${esc(p.title)}</p>
+        <p class="text-[10px] uppercase tracking-widest text-neutral-400 mt-0.5">/blog/post?slug=${esc(p.slug)}</p>
+      </div>
+      <span class="shrink-0 text-[10px] uppercase tracking-widest px-2 py-1 ${p.published ? 'bg-black text-white' : 'bg-neutral-200 text-neutral-600'}">${p.published ? 'Publicado' : 'Rascunho'}</span>
+      <button onclick="openPostEditor('${p.id}')" class="shrink-0 text-[11px] uppercase tracking-widest underline hover:no-underline">Editar</button>
+    </div>
+  `).join('') : `<p class="text-sm text-neutral-500">Nenhum artigo ainda. Crie o primeiro.</p>`;
+  document.getElementById('tabBody').innerHTML = `
+    <div class="max-w-3xl">
+      <div class="flex justify-between items-center mb-5">
+        <p class="text-sm text-neutral-600">${blogPosts.length} artigo(s)</p>
+        <button onclick="openPostEditor(null)" class="bg-black text-white px-5 py-3 uppercase tracking-widest text-[11px] hover:opacity-80">+ Novo artigo</button>
+      </div>
+      <div class="space-y-2">${rows}</div>
+    </div>
+  `;
+}
+
+function openPostEditor(id) {
+  const p = id ? blogPosts.find(x => x.id === id) : null;
+  const isNew = !p;
+  const m = document.getElementById('modal');
+  m.classList.remove('hidden');
+  m.className = 'fixed inset-0 z-50 overflow-y-auto';
+  document.body.style.overflow = 'hidden';
+  m.innerHTML = `
+    <div class="overlay-in fixed inset-0 bg-black/50" onclick="closeModal()"></div>
+    <div class="relative min-h-full flex items-start justify-center md:p-4 pointer-events-none">
+      <div class="sheet-in pointer-events-auto bg-white w-full md:max-w-2xl md:my-8 shadow-xl max-h-[94vh] flex flex-col">
+        <div class="flex justify-between items-center px-5 md:px-6 pt-5 pb-4 border-b border-black/10 sticky top-0 bg-white z-10">
+          <h2 class="font-serif italic text-lg md:text-xl">${isNew ? 'Novo artigo' : 'Editar artigo'}</h2>
+          <button onclick="closeModal()" class="text-3xl leading-none text-neutral-400 hover:text-black w-10 h-10 flex items-center justify-center -mr-2">×</button>
+        </div>
+        <div class="overflow-y-auto flex-1">
+          <form id="postForm" class="p-5 md:p-6 space-y-4">
+            <label class="block">
+              <span class="text-[10px] uppercase tracking-widest text-neutral-500">Título</span>
+              <input name="title" required value="${p ? esc(p.title) : ''}" class="w-full border border-black/20 px-3 py-3 mt-1"/>
+            </label>
+            <div class="grid grid-cols-2 gap-3">
+              <label class="block">
+                <span class="text-[10px] uppercase tracking-widest text-neutral-500">Slug (URL)</span>
+                <input name="slug" value="${p ? esc(p.slug) : ''}" placeholder="gerado do título" class="w-full border border-black/20 px-3 py-3 mt-1"/>
+              </label>
+              <label class="block">
+                <span class="text-[10px] uppercase tracking-widest text-neutral-500">Minutos de leitura</span>
+                <input name="read_minutes" type="number" value="${p ? p.read_minutes : 5}" class="w-full border border-black/20 px-3 py-3 mt-1"/>
+              </label>
+            </div>
+            <label class="block">
+              <span class="text-[10px] uppercase tracking-widest text-neutral-500">Idioma</span>
+              <select name="lang" class="w-full border border-black/20 px-3 py-3 mt-1 bg-white">
+                ${['pt','en','es'].map(l => `<option value="${l}" ${p && p.lang===l ? 'selected':''}>${l.toUpperCase()}</option>`).join('')}
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-[10px] uppercase tracking-widest text-neutral-500">Resumo (aparece na listagem)</span>
+              <textarea name="excerpt" rows="2" class="w-full border border-black/20 px-3 py-3 mt-1">${p ? esc(p.excerpt||'') : ''}</textarea>
+            </label>
+            <label class="block">
+              <span class="text-[10px] uppercase tracking-widest text-neutral-500">Imagem de capa (opcional)</span>
+              ${p && p.cover_image ? `<img src="${STORAGE_BASE}${p.cover_image}" class="w-full max-h-40 object-cover my-2"/>` : ''}
+              <input name="cover" type="file" accept="image/*" class="block mt-1 w-full text-sm"/>
+            </label>
+            <label class="block">
+              <span class="text-[10px] uppercase tracking-widest text-neutral-500">Conteúdo (Markdown: ## título, **negrito**, - lista, [link](url))</span>
+              <textarea name="body" rows="14" required class="w-full border border-black/20 px-3 py-3 mt-1 font-mono text-sm">${p ? esc(p.body||'') : ''}</textarea>
+            </label>
+            <label class="flex items-center gap-3">
+              <input type="checkbox" name="published" class="w-5 h-5" ${p && p.published ? 'checked':''}>
+              <span class="text-sm">Publicado (visível no site)</span>
+            </label>
+            <p id="postMsg" class="text-xs text-neutral-600 min-h-[1em]"></p>
+          </form>
+        </div>
+        <div class="border-t border-black/10 px-5 md:px-6 py-4 pb-safe flex flex-col-reverse sm:flex-row sm:justify-between sm:items-center gap-3 bg-white">
+          ${!isNew ? `<button type="button" onclick="deletePost('${p.id}')" class="text-red-600 text-xs underline self-start py-2">Excluir artigo</button>` : '<span class="hidden sm:block"></span>'}
+          <div class="flex gap-2 w-full sm:w-auto">
+            <button type="button" onclick="closeModal()" class="flex-1 sm:flex-none px-4 py-3 text-xs uppercase tracking-widest hover:bg-neutral-100">Cancelar</button>
+            <button form="postForm" type="submit" class="flex-1 sm:flex-none bg-black text-white px-6 py-3 text-xs uppercase tracking-widest hover:opacity-80">Salvar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('postForm').onsubmit = (e) => savePost(e, p);
+  document.addEventListener('keydown', escClose);
+}
+
+async function savePost(e, existing) {
+  e.preventDefault();
+  const msg = document.getElementById('postMsg');
+  const btn = document.querySelector('button[type=submit][form=postForm]');
+  msg.textContent = 'Salvando…'; if (btn) btn.disabled = true;
+  try {
+    const fd = new FormData(e.target);
+    const title = fd.get('title').trim();
+    let slug = (fd.get('slug') || '').trim() || slugify(title);
+    let cover_image = existing ? existing.cover_image : '';
+    const file = fd.get('cover');
+    if (file && file.size) {
+      const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+      const name = `post-${slug}-${Date.now()}.${ext}`;
+      const { error: upErr } = await supa.storage.from('boards').upload(name, file, { contentType: file.type, upsert: false });
+      if (upErr) throw upErr;
+      cover_image = name;
+    }
+    const payload = {
+      slug, title,
+      lang: fd.get('lang') || 'pt',
+      excerpt: (fd.get('excerpt') || '').trim(),
+      read_minutes: parseInt(fd.get('read_minutes') || '5', 10) || 5,
+      cover_image,
+      body: fd.get('body') || '',
+      published: fd.get('published') === 'on',
+    };
+    let error;
+    if (existing) ({ error } = await supa.from('posts').update(payload).eq('id', existing.id));
+    else ({ error } = await supa.from('posts').insert(payload));
+    if (error) throw error;
+    await loadBlogPosts();
+    renderBlogView();
+    closeModal();
+  } catch (err) {
+    msg.textContent = 'Erro: ' + (err.message || err);
+    if (btn) btn.disabled = false;
+  }
+}
+
+async function deletePost(id) {
+  if (!confirm('Excluir este artigo permanentemente?')) return;
+  const { error } = await supa.from('posts').delete().eq('id', id);
+  if (error) { alert('Erro: ' + error.message); return; }
+  await loadBlogPosts();
+  renderBlogView();
+  closeModal();
 }
 
 // ============================================================

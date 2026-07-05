@@ -12,7 +12,7 @@ Passo a passo de quando você criar a conta no Supabase.
 
 - SQL Editor → cola o conteúdo de `schema.sql` → Run
 - Cria tabelas `profiles`, `categories`, `boards`, RLS, triggers, e popula as 8 categorias.
-- **Depois** cola e roda `schema-texts.sql` (tabela `site_texts` — CMS de textos) e `schema-images.sql` (tabela `site_images` — CMS de imagens de seção), ambos com RLS.
+- **Depois** cola e roda `schema-texts.sql` (tabela `site_texts` — CMS de textos), `schema-images.sql` (tabela `site_images` — CMS de imagens de seção) e `schema-posts.sql` (tabela `posts` — blog), todos com RLS.
 - Rode também uma vez, pra permitir o upsert do migrate e do admin:
   ```sql
   alter table public.boards add constraint boards_image_path_unique unique (image_path);
@@ -58,6 +58,7 @@ Depois de logado (owner ou shaper), o painel tem três abas:
 - **Categorias** — criar, renomear, reordenar (setas), ativar/desativar e excluir categorias. Reflete nos filtros do site.
 - **Textos** — editar os textos do site (hero, coleção, Carbon Trash, Como Funciona, Sobre o Shaper, nova geração, **FAQ** e frase de fechamento) em **PT / EN / ES**. Campo vazio = usa o texto padrão do site.
 - **Imagens** — trocar as fotos de cada seção: hero (5), destaque Carbon Trash (1), foto do César (1), grade "Na Água" (8) e "a nova geração" (2). Sem envio, usa a imagem padrão.
+- **Blog** — criar/editar/excluir artigos (título, slug, resumo, imagem de capa, conteúdo em Markdown, minutos de leitura, idioma, publicado sim/não). Artigos publicados aparecem em `/blog/` e abrem em `/blog/post?slug=...` — sem precisar de deploy.
 
 As mudanças aparecem no site ao recarregar a página.
 
