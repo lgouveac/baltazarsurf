@@ -56,8 +56,9 @@ let profile = null;
 let categories = [];
 let boards = [];
 let siteTexts = {};      // { 'pt': {key:value}, 'en':..., 'es':... }
+let siteImages = {};     // { slot: [{id, sort_order, image_path}] }
 let filter = 'Todas';
-let tab = 'boards';      // boards | categories | texts
+let tab = 'boards';      // boards | categories | texts | images
 
 // Textos editáveis do site (as chaves batem com os data-cms do index.html).
 const TEXT_SCHEMA = [
@@ -73,7 +74,28 @@ const TEXT_SCHEMA = [
   { key: 'how_step2_desc',      label: 'Passo 2 — descrição',             multiline: true  },
   { key: 'how_step3_title',     label: 'Passo 3 — título',                multiline: false },
   { key: 'how_step3_desc',      label: 'Passo 3 — descrição',             multiline: true  },
+  { key: 'about_p1',            label: 'Sobre o Shaper — parágrafo 1',    multiline: true  },
+  { key: 'about_p2',            label: 'Sobre o Shaper — parágrafo 2',    multiline: true  },
+  { key: 'about_p3',            label: 'Sobre o Shaper — parágrafo 3',    multiline: true  },
+  { key: 'nextgen_caption',     label: 'A nova geração — legenda',        multiline: true  },
+  { key: 'faq_a1',             label: 'FAQ — Como funciona a encomenda',  multiline: true  },
+  { key: 'faq_a2',             label: 'FAQ — Quanto custa',               multiline: true  },
+  { key: 'faq_a3',             label: 'FAQ — Quanto tempo leva',          multiline: true  },
+  { key: 'faq_a4',             label: 'FAQ — Litragem ideal',             multiline: true  },
+  { key: 'faq_a5',             label: 'FAQ — Single/twin/thruster/quad',  multiline: true  },
+  { key: 'faq_a6',             label: 'FAQ — Fish/mid/longboard',         multiline: true  },
+  { key: 'faq_a7',             label: 'FAQ — O copinho',                  multiline: true  },
+  { key: 'faq_a8',             label: 'FAQ — O que é Carbon Trash',       multiline: true  },
   { key: 'manifesto',           label: 'Frase de fechamento',             multiline: true  },
+];
+
+// Slots de imagem editáveis (batem com os data-cms-img do index.html).
+const IMAGE_SLOTS = [
+  { slot: 'hero',           label: 'Hero — fotos de fundo',        count: 5 },
+  { slot: 'carbon_feature', label: 'Carbon Trash — foto destaque', count: 1 },
+  { slot: 'cesar',          label: 'O Shaper — foto do César',     count: 1 },
+  { slot: 'action',         label: 'Na Água — grade de surf',      count: 8 },
+  { slot: 'nova_geracao',   label: 'A nova geração — 2 fotos',     count: 2 },
 ];
 const LANGS = [ { code: 'pt', name: 'Português' }, { code: 'en', name: 'English' }, { code: 'es', name: 'Español' } ];
 
@@ -86,7 +108,7 @@ async function init() {
   if (!session) { renderLogin(); return; }
   await loadProfile();
   if (!profile) { renderNoProfile(); return; }
-  await Promise.all([loadCategories(), loadBoards(), loadSiteTexts()]);
+  await Promise.all([loadCategories(), loadBoards(), loadSiteTexts(), loadSiteImages()]);
   renderApp();
 }
 
@@ -95,6 +117,13 @@ async function loadSiteTexts() {
   const { data, error } = await supa.from('site_texts').select('key,lang,value');
   if (error) { console.warn(error); return; }
   (data || []).forEach(r => { (siteTexts[r.lang] = siteTexts[r.lang] || {})[r.key] = r.value; });
+}
+
+async function loadSiteImages() {
+  siteImages = {};
+  const { data, error } = await supa.from('site_images').select('id,slot,sort_order,image_path').order('sort_order');
+  if (error) { console.warn(error); return; }
+  (data || []).forEach(r => { (siteImages[r.slot] = siteImages[r.slot] || []).push(r); });
 }
 
 async function loadProfile() {
@@ -177,13 +206,88 @@ function renderApp() {
 
   document.getElementById('app').innerHTML = `
     <div class="flex gap-1 md:gap-2 border-b border-black/10 mb-6 -mx-4 px-4 md:mx-0 md:px-0 overflow-x-auto">
-      ${tabBtn('boards','Pranchas')}${tabBtn('categories','Categorias')}${tabBtn('texts','Textos')}
+      ${tabBtn('boards','Pranchas')}${tabBtn('categories','Categorias')}${tabBtn('texts','Textos')}${tabBtn('images','Imagens')}
     </div>
     <div id="tabBody"></div>
   `;
   if (tab === 'boards') renderBoardsView();
   else if (tab === 'categories') renderCategoriesView();
-  else renderTextsView();
+  else if (tab === 'texts') renderTextsView();
+  else renderImagesView();
+}
+
+// ============================================================
+// IMAGENS DE SEÇÃO
+// ============================================================
+function renderImagesView() {
+  const blocks = IMAGE_SLOTS.map(s => {
+    const imgs = siteImages[s.slot] || [];
+    const cells = [];
+    for (let i = 0; i < s.count; i++) {
+      const rec = imgs[i];
+      const src = rec ? (STORAGE_BASE + rec.image_path) : '';
+      cells.push(`
+        <div class="border border-black/10 bg-white p-2">
+          <div class="aspect-square bg-neutral-100 overflow-hidden mb-2 flex items-center justify-center">
+            ${src ? `<img src="${src}" class="w-full h-full object-cover"/>` : `<span class="text-[10px] uppercase tracking-widest text-neutral-400 text-center px-2">Padrão do site</span>`}
+          </div>
+          <label class="block cursor-pointer">
+            <span class="block text-center text-[10px] uppercase tracking-widest text-neutral-500 border border-black/20 py-2 hover:bg-neutral-100">${rec ? 'Trocar' : 'Enviar'} foto ${s.count>1?(i+1):''}</span>
+            <input type="file" accept="image/*" class="hidden" onchange="uploadSlotImage('${s.slot}', ${i}, this)">
+          </label>
+          ${rec ? `<button onclick="clearSlotImage('${rec.id}')" class="w-full mt-1 text-[10px] uppercase tracking-widest text-red-600 hover:opacity-70">Remover</button>` : ''}
+        </div>
+      `);
+    }
+    return `
+      <div class="mb-8">
+        <p class="font-medium text-sm mb-1">${s.label}</p>
+        <p class="text-[10px] uppercase tracking-widest text-neutral-400 mb-3">${s.slot} · ${s.count>1?s.count+' fotos':'1 foto'}</p>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">${cells.join('')}</div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('tabBody').innerHTML = `
+    <div class="max-w-4xl">
+      <p class="text-sm text-neutral-600 mb-1">Troque as fotos de cada seção do site. Sem foto enviada, usa a imagem padrão.</p>
+      <p class="text-xs text-neutral-400 mb-6">As mudanças aparecem no site ao recarregar a página.</p>
+      ${blocks}
+      <p id="imgMsg" class="text-xs text-neutral-600 min-h-[1em]"></p>
+    </div>
+  `;
+}
+
+async function uploadSlotImage(slot, index, inputEl) {
+  const file = inputEl.files && inputEl.files[0];
+  if (!file) return;
+  const msg = document.getElementById('imgMsg');
+  msg.textContent = 'Enviando…';
+  try {
+    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+    const name = `site-${slot}-${index}-${Date.now()}.${ext}`;
+    const { error: upErr } = await supa.storage.from('boards').upload(name, file, { contentType: file.type, upsert: false });
+    if (upErr) throw upErr;
+    // remove registro anterior nesse slot/posição, se houver
+    const existing = (siteImages[slot] || [])[index];
+    if (existing) await supa.from('site_images').delete().eq('id', existing.id);
+    const { error } = await supa.from('site_images').insert({ slot, sort_order: index, image_path: name });
+    if (error) throw error;
+    await loadSiteImages();
+    renderImagesView();
+  } catch (e) {
+    msg.textContent = 'Erro: ' + (e.message || e);
+  }
+}
+
+async function clearSlotImage(id) {
+  if (!confirm('Voltar à imagem padrão do site nesse espaço?')) return;
+  const all = Object.values(siteImages).flat();
+  const rec = all.find(r => r.id === id);
+  const { error } = await supa.from('site_images').delete().eq('id', id);
+  if (error) { alert('Erro: ' + error.message); return; }
+  if (rec) await supa.storage.from('boards').remove([rec.image_path]).catch(()=>{});
+  await loadSiteImages();
+  renderImagesView();
 }
 
 function renderBoardsView() {

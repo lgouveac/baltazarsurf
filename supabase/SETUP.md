@@ -12,7 +12,7 @@ Passo a passo de quando você criar a conta no Supabase.
 
 - SQL Editor → cola o conteúdo de `schema.sql` → Run
 - Cria tabelas `profiles`, `categories`, `boards`, RLS, triggers, e popula as 8 categorias.
-- **Depois** cola e roda `schema-texts.sql` (cria a tabela `site_texts` do CMS de textos, com RLS).
+- **Depois** cola e roda `schema-texts.sql` (tabela `site_texts` — CMS de textos) e `schema-images.sql` (tabela `site_images` — CMS de imagens de seção), ambos com RLS.
 - Rode também uma vez, pra permitir o upsert do migrate e do admin:
   ```sql
   alter table public.boards add constraint boards_image_path_unique unique (image_path);
@@ -56,12 +56,15 @@ Depois de logado (owner ou shaper), o painel tem três abas:
 
 - **Pranchas** — adicionar/editar/excluir prancha, trocar imagem, categoria, quilhas, linha (Carbon Trash), ativar/desativar.
 - **Categorias** — criar, renomear, reordenar (setas), ativar/desativar e excluir categorias. Reflete nos filtros do site.
-- **Textos** — editar os textos-chave do site (hero, coleção, Carbon Trash, Como Funciona, frase de fechamento) em **PT / EN / ES**. Campo vazio = usa o texto padrão do site. As mudanças aparecem ao recarregar a página.
+- **Textos** — editar os textos do site (hero, coleção, Carbon Trash, Como Funciona, Sobre o Shaper, nova geração, **FAQ** e frase de fechamento) em **PT / EN / ES**. Campo vazio = usa o texto padrão do site.
+- **Imagens** — trocar as fotos de cada seção: hero (5), destaque Carbon Trash (1), foto do César (1), grade "Na Água" (8) e "a nova geração" (2). Sem envio, usa a imagem padrão.
 
-> Os textos editáveis são os marcados com `data-cms="..."` no `index.html`.
-> Pra tornar mais textos editáveis: adicione o atributo `data-cms="nova_chave"`
-> no elemento, rode `python3 scripts/build-i18n.py` (propaga pro /en e /es),
-> e adicione uma entrada em `TEXT_SCHEMA` no `admin/index.html`.
+As mudanças aparecem no site ao recarregar a página.
+
+> Textos = elementos com `data-cms="..."`; imagens = elementos com `data-cms-img="slot"`.
+> Pra tornar mais coisas editáveis: adicione o atributo no elemento, rode
+> `python3 scripts/build-i18n.py` (propaga pro /en e /es), e adicione a entrada
+> em `TEXT_SCHEMA` ou `IMAGE_SLOTS` no `admin/index.html`.
 
 ## Observações
 
