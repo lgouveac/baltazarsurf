@@ -12,6 +12,11 @@ Passo a passo de quando você criar a conta no Supabase.
 
 - SQL Editor → cola o conteúdo de `schema.sql` → Run
 - Cria tabelas `profiles`, `categories`, `boards`, RLS, triggers, e popula as 8 categorias.
+- **Depois** cola e roda `schema-texts.sql` (cria a tabela `site_texts` do CMS de textos, com RLS).
+- Rode também uma vez, pra permitir o upsert do migrate e do admin:
+  ```sql
+  alter table public.boards add constraint boards_image_path_unique unique (image_path);
+  ```
 
 ## 3. Criar o bucket de imagens
 
@@ -45,13 +50,18 @@ Manda os dois aqui:
 
 A anon key é pública (vai no JS do navegador) — sem problema.
 
-## 6. Próximos passos (eu faço)
+## 6. O que o CMS (/admin) edita
 
-- (a) Subir as imagens atuais (`images/baltazar/*` + as `IMG_*` da galeria) pro bucket `boards` via script
-- (b) Inserir registros das pranchas em `public.boards` apontando pras imagens do bucket
-- (c) Trocar o array hardcoded de pranchas no `index.html` por um fetch ao Supabase
-- (d) Criar `/admin` com login magic link + UI de upload/edição
-- (e) Setar variáveis de ambiente no Vercel e conectar com o GitHub
+Depois de logado (owner ou shaper), o painel tem três abas:
+
+- **Pranchas** — adicionar/editar/excluir prancha, trocar imagem, categoria, quilhas, linha (Carbon Trash), ativar/desativar.
+- **Categorias** — criar, renomear, reordenar (setas), ativar/desativar e excluir categorias. Reflete nos filtros do site.
+- **Textos** — editar os textos-chave do site (hero, coleção, Carbon Trash, Como Funciona, frase de fechamento) em **PT / EN / ES**. Campo vazio = usa o texto padrão do site. As mudanças aparecem ao recarregar a página.
+
+> Os textos editáveis são os marcados com `data-cms="..."` no `index.html`.
+> Pra tornar mais textos editáveis: adicione o atributo `data-cms="nova_chave"`
+> no elemento, rode `python3 scripts/build-i18n.py` (propaga pro /en e /es),
+> e adicione uma entrada em `TEXT_SCHEMA` no `admin/index.html`.
 
 ## Observações
 
