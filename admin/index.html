@@ -50,6 +50,8 @@ const SUPABASE_URL = 'https://eylnwwerbssfaaaxsccw.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5bG53d2VyYnNzZmFhYXhzY2N3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MDU3NjYsImV4cCI6MjA5NzI4MTc2Nn0.XMYTNxGEj5Jjt89Q9GCQasnD9sR9q0lt4wdlXUNrJgc';
 const supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const STORAGE_BASE = SUPABASE_URL + '/storage/v1/object/public/boards/';
+// imagens já locais (/images/...) ou URL completa usam direto; senão vêm do bucket
+function boardImg(p){ return (/^(https?:|\/)/.test(p||'')) ? p : (STORAGE_BASE + p); }
 
 let session = null;
 let profile = null;
@@ -618,7 +620,7 @@ function renderBoards() {
     <button onclick="openEdit('${b.id}')"
             class="text-left border border-black/10 bg-white hover:border-black/40 active:border-black ${b.active ? '' : 'opacity-50'} transition-colors">
       <div class="aspect-square overflow-hidden bg-neutral-100">
-        <img src="${STORAGE_BASE}${b.image_path}" loading="lazy" class="w-full h-full object-cover">
+        <img src="${boardImg(b.image_path)}" loading="lazy" class="w-full h-full object-cover">
       </div>
       <div class="p-2.5 md:p-3 text-xs md:text-sm">
         <div class="font-medium">${slugName(b.category_slug)}</div>
@@ -657,7 +659,7 @@ function openModal(board) {
         </div>
         <div class="overflow-y-auto flex-1">
           <form id="boardForm" class="p-5 md:p-6 space-y-4">
-            ${!isNew ? `<img src="${STORAGE_BASE}${board.image_path}" class="w-full max-h-48 md:max-h-64 object-contain bg-neutral-100">` : ''}
+            ${!isNew ? `<img src="${boardImg(board.image_path)}" class="w-full max-h-48 md:max-h-64 object-contain bg-neutral-100">` : ''}
             <label class="block">
               <span class="text-[10px] uppercase tracking-widest text-neutral-500">${isNew ? 'Imagem' : 'Trocar imagem (opcional)'}</span>
               <input type="file" name="image" accept="image/*" class="block mt-2 w-full text-sm file:mr-3 file:py-2 file:px-3 file:border file:border-black/20 file:bg-white file:text-xs file:uppercase file:tracking-widest file:cursor-pointer" ${isNew ? 'required' : ''}>

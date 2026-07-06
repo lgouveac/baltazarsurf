@@ -626,6 +626,9 @@ const SUPABASE_URL = 'https://eylnwwerbssfaaaxsccw.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5bG53d2VyYnNzZmFhYXhzY2N3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MDU3NjYsImV4cCI6MjA5NzI4MTc2Nn0.XMYTNxGEj5Jjt89Q9GCQasnD9sR9q0lt4wdlXUNrJgc';
 const supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const IMG = SUPABASE_URL + '/storage/v1/object/public/boards/';
+// Resolve o caminho da imagem: se já for local (/images/...) ou URL completa, usa direto;
+// senão (nome de arquivo enviado pelo CMS), busca no bucket do Supabase.
+function boardImg(p){ return (/^(https?:|\/)/.test(p)) ? p : (IMG + p); }
 const PRECO = 'R$ 2.600';            // valor base (a partir de)
 const LINK_PAGAMENTO = '';           // TODO: Lucas vai criar o link de pagamento e colar aqui
 
@@ -721,7 +724,7 @@ function renderGallery(filter) {
     card.onclick = () => openLightbox(i);
     card.innerHTML =
       '<div class="aspect-[3/4] overflow-hidden bg-surface-container relative">' +
-        '<img src="' + IMG + b.p + '" alt="Prancha ' + b.c + '" loading="lazy" class="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"/>' +
+        '<img src="' + boardImg(b.p) + '" alt="Prancha ' + b.c + '" loading="lazy" class="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"/>' +
         '<div class="absolute top-2 left-2 bg-black text-white px-2 py-0.5 font-sans text-[7px] md:text-[8px] tracking-widest uppercase">' + b.c + '</div>' +
         '<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 flex justify-between items-end opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">' +
           '<span class="font-sans text-[8px] md:text-[9px] tracking-widest uppercase text-white/80">' + b.f + '</span>' +
@@ -766,7 +769,7 @@ function closeBoardModal() {
 }
 function renderLightbox() {
   const item = gallery[lbList[lbPos]];
-  const src = IMG + item.p;
+  const src = boardImg(item.p);
   const sub = (item.line ? item.line + ' · ' : '') + item.c + ' · ' + item.f + ' · a partir de ' + precoCategoria(item.c);
   const set = (id, fn) => { const el = document.getElementById(id); if (el) fn(el); };
   set('modalImgDesktop', el => el.src = src);
