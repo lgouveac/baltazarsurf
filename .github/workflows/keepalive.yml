@@ -1,0 +1,30 @@
+name: Supabase Keep-Alive
+
+# Mantém o projeto Supabase (free tier) acordado.
+# Free tier pausa após ~7 dias sem atividade no banco.
+# Este job cutuca o REST a cada 2 dias — roda nos servidores do GitHub
+# (que têm internet), então não depende de nenhum ambiente local.
+
+on:
+  schedule:
+    - cron: '23 7 */2 * *'   # a cada 2 dias, 07:23 UTC
+  workflow_dispatch:          # botão pra rodar na mão quando quiser
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cutucar o Supabase (mantém ativo)
+        run: |
+          URL="https://eylnwwerbssfaaaxsccw.supabase.co"
+          # anon key é pública (já está no site) — só serve pra tocar o banco
+          KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5bG53d2VyYnNzZmFhYXhzY2N3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MDU3NjYsImV4cCI6MjA5NzI4MTc2Nn0.XMYTNxGEj5Jjt89Q9GCQasnD9sR9q0lt4wdlXUNrJgc"
+          code=$(curl -s -o /dev/null -w "%{http_code}" \
+            "$URL/rest/v1/boards?select=id&limit=1" \
+            -H "apikey: $KEY" -H "Authorization: Bearer $KEY")
+          echo "Resposta do Supabase: HTTP $code"
+          # 200 = ok; 401/403 (RLS) tambem significa que o banco respondeu = ativo.
+          case "$code" in
+            2*|401|403|404) echo "Projeto ativo"; exit 0 ;;
+            *) echo "Sem resposta do Supabase (HTTP $code)"; exit 1 ;;
+          esac
