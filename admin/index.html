@@ -161,27 +161,63 @@ function renderLogin() {
   document.getElementById('app').innerHTML = `
     <div class="max-w-sm mx-auto mt-6 md:mt-12">
       <h1 class="font-serif italic text-2xl md:text-3xl mb-2">Login</h1>
-      <p class="text-sm text-neutral-600 mb-6">Manda um magic link pro teu email cadastrado.</p>
-      <form id="loginForm" class="space-y-3">
-        <input type="email" inputmode="email" autocomplete="email" placeholder="seu@email.com" required
+      <p class="text-sm text-neutral-600 mb-6">Coloca teu email. A gente manda um código de 6 dígitos (e um link) pra você entrar.</p>
+
+      <form id="emailForm" class="space-y-3">
+        <input name="email" type="email" inputmode="email" autocomplete="email" placeholder="seu@email.com" required
                class="w-full border border-black/20 bg-white px-4 py-3 focus:outline-none focus:border-black">
         <button class="w-full bg-black text-white py-3 uppercase tracking-widest text-xs hover:opacity-80 active:opacity-70">
-          Enviar magic link
+          Enviar código
         </button>
-        <p id="loginMsg" class="text-xs text-neutral-600 min-h-[1em]"></p>
       </form>
+
+      <form id="codeForm" class="space-y-3 hidden mt-3">
+        <input name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="6" placeholder="Código de 6 dígitos"
+               class="w-full border border-black/20 bg-white px-4 py-3 tracking-[0.4em] text-center text-lg focus:outline-none focus:border-black">
+        <button class="w-full bg-black text-white py-3 uppercase tracking-widest text-xs hover:opacity-80 active:opacity-70">
+          Entrar
+        </button>
+        <button type="button" id="resend" class="w-full text-[11px] uppercase tracking-widest text-neutral-500 underline">Reenviar / trocar email</button>
+      </form>
+
+      <p id="loginMsg" class="text-xs text-neutral-600 min-h-[1em] mt-3"></p>
     </div>
   `;
-  document.getElementById('loginForm').onsubmit = async (e) => {
+  const emailForm = document.getElementById('emailForm');
+  const codeForm = document.getElementById('codeForm');
+  const msg = document.getElementById('loginMsg');
+  let currentEmail = '';
+
+  emailForm.onsubmit = async (e) => {
     e.preventDefault();
-    const email = e.target.querySelector('input').value.trim();
-    const msg = document.getElementById('loginMsg');
+    currentEmail = emailForm.email.value.trim();
     msg.textContent = 'Enviando…';
     const { error } = await supa.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: location.origin + location.pathname }
+      email: currentEmail,
+      options: { shouldCreateUser: false, emailRedirectTo: location.origin + location.pathname }
     });
-    msg.textContent = error ? ('Erro: ' + error.message) : 'Link enviado. Abre teu email e clica.';
+    if (error) { msg.textContent = 'Erro: ' + error.message; return; }
+    emailForm.classList.add('hidden');
+    codeForm.classList.remove('hidden');
+    codeForm.code.focus();
+    msg.textContent = 'Código enviado pra ' + currentEmail + '. Digite os 6 dígitos do email (ou clique no link do email).';
+  };
+
+  codeForm.onsubmit = async (e) => {
+    e.preventDefault();
+    const token = codeForm.code.value.trim();
+    if (token.length < 6) { msg.textContent = 'Digite os 6 dígitos.'; return; }
+    msg.textContent = 'Verificando…';
+    const { error } = await supa.auth.verifyOtp({ email: currentEmail, token, type: 'email' });
+    if (error) { msg.textContent = 'Código inválido ou expirado: ' + error.message; return; }
+    msg.textContent = 'Entrando…';
+    init();   // sessão criada -> recarrega o painel
+  };
+
+  document.getElementById('resend').onclick = () => {
+    codeForm.classList.add('hidden');
+    emailForm.classList.remove('hidden');
+    msg.textContent = '';
   };
 }
 
