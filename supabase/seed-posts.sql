@@ -44,7 +44,7 @@ Isso é o ponto que quase ninguém coloca na conta: uma prancha errada, mesmo ba
 
 ## O que entra no orçamento que você recebe
 
-Quando você chama pra pedir um orçamento, a conversa cobre:
+Quando você pede um orçamento, a conversa cobre:
 
 - Seu peso, altura e há quanto tempo você surfa.
 - As ondas onde você surfa na maior parte do tempo.
@@ -57,7 +57,7 @@ Com isso o César fecha litragem, outline e quilha, e aí sim sai um número fec
 
 Vale a pena quando você já surfa com alguma regularidade e sente que a prancha atual está segurando sua evolução, ou quando quer uma prancha específica pra um tipo de onda. Não faz tanto sentido pra quem pegou a primeira aula semana passada e ainda não sabe que direção o surf vai tomar.
 
-Se você está nesse ponto de querer uma prancha que conversa com o seu surf, o melhor caminho é conversar. [Chama o shaper no WhatsApp](/), conta seu momento, e receba um orçamento real, feito pra você, sem compromisso.$md$,
+Se você está nesse ponto de querer uma prancha que conversa com o seu surf, o melhor caminho é conversar. [Faz seu pedido pelo site](/), conta seu momento e recebe um orçamento real, feito pra você, sem compromisso. Pedindo pelo site, o cupom CARBON1000 ainda dá 10% de desconto.$md$,
   8, true, now()
 ),
 
@@ -107,7 +107,7 @@ Quando você olha o custo por sessão bem surfada, e não só o preço da etique
 
 **Sob medida faz sentido** quando você já surfa com alguma regularidade, sente a prancha atual te segurando, ou quer uma prancha pensada pra uma onda ou um estilo específico. É o passo de quem parou de aceitar a média.
 
-Se é o seu caso, [conversa com o shaper](/) e conta seu momento. O orçamento é feito pra você, e a prancha também.$md$,
+Se é o seu caso, [faz seu pedido pelo site](/) e conta seu momento. O orçamento é feito pra você, e a prancha também. Com o cupom CARBON1000, pedindo pelo site, tem 10% de desconto.$md$,
   7, true, now()
 ),
 
@@ -143,7 +143,7 @@ Se você surfa mais em ondas pequenas e fracas boa parte do ano, por exemplo, is
 
 O processo é simples e todo por conversa:
 
-1. Você chama no WhatsApp e conta seu peso, altura, tempo de surf e onde costuma surfar.
+1. Você faz o pedido pelo formulário do site, com seu peso, altura, tempo de surf e onde costuma surfar.
 2. O César sugere litragem, formato e configuração de quilha pro seu caso.
 3. Vocês fecham o orçamento e o modelo.
 4. A prancha entra na fila de shape e você acompanha até ficar pronta.
@@ -155,11 +155,11 @@ Sem intermediário, sem prancha errada empurrada, sem etiqueta genérica.
 
 ## E se eu não for do Recreio?
 
-Sem problema. A maior parte da conversa acontece no WhatsApp, então você pode morar em qualquer bairro do Rio, ou fora dele, e ainda assim encomendar. A retirada e a entrega a gente combina. O que importa é a prancha chegar certa na sua mão.
+Sem problema. A conversa toda acontece online, então você pode morar em qualquer bairro do Rio, ou fora dele, e ainda assim encomendar. A retirada e a entrega a gente combina. O que importa é a prancha chegar certa na sua mão.
 
 ## Comece a conversa
 
-Se você está no Rio e quer uma prancha sob medida, feita à mão por um shaper local, [fala com o César no WhatsApp](/). Conta seu momento e receba uma proposta feita pra você. Dá pra conhecer mais do trabalho e da história dele na página [sobre o shaper](/sobre-cesar).$md$,
+Se você está no Rio e quer uma prancha sob medida, feita à mão por um shaper local, [faz seu pedido pelo site](/). Conta seu momento e recebe uma proposta feita pra você, com 10% de desconto pelo cupom CARBON1000. Dá pra conhecer mais do trabalho e da história dele na página [sobre o shaper](/sobre-cesar).$md$,
   6, true, now()
 ),
 
@@ -174,7 +174,7 @@ Se você está no Rio e quer uma prancha sob medida, feita à mão por um shaper
   '',
   $md$Encomendar uma prancha sob medida parece complicado pra quem nunca fez, mas é mais simples do que comprar uma pronta e torcer pra dar certo. Aqui está o caminho completo, do primeiro contato até você embaixo do braço com a prancha na água.
 
-## Antes de chamar: junte essas informações
+## Antes de pedir: junte essas informações
 
 Quanto mais o shaper souber de você, melhor a prancha sai. Tenha em mãos:
 
@@ -186,9 +186,9 @@ Quanto mais o shaper souber de você, melhor a prancha sai. Tenha em mãos:
 
 Se você não tem todos esses dados, tudo bem. O shaper puxa o resto na conversa.
 
-## Passo 1: a conversa inicial
+## Passo 1: o pedido pelo site
 
-Tudo começa por uma conversa no WhatsApp. Você conta seu momento, o César faz algumas perguntas e já começa a desenhar o caminho: que tipo de prancha faz sentido, que litragem, que configuração de quilha. Se você está em dúvida entre [thruster, twin ou quad](/blog/thruster-twin-quad), é aqui que isso se resolve.
+Tudo começa pelo formulário do site. Você conta seu momento, seus dados e o que procura, e o César já começa a desenhar o caminho: que tipo de prancha faz sentido, que litragem, que configuração de quilha. Se você está em dúvida entre [thruster, twin ou quad](/blog/thruster-twin-quad), é aqui que isso se resolve.
 
 ## Passo 2: definição do projeto
 
@@ -217,7 +217,7 @@ O prazo depende da fila de shape e do tipo de prancha, e é combinado logo na co
 
 ## Comece agora
 
-O primeiro passo é o mais fácil. [Chama o shaper no WhatsApp](/), conta seu momento e comece a desenhar a sua prancha. Se quiser entender preço antes, dá uma olhada em [quanto custa uma prancha sob medida](/blog/post?slug=quanto-custa-prancha-sob-medida).$md$,
+O primeiro passo é o mais fácil. [Faz seu pedido pelo site](/), conta seu momento e começa a desenhar a sua prancha. Pelo site, o cupom CARBON1000 dá 10% de desconto. Se quiser entender preço antes, dá uma olhada em [quanto custa uma prancha sob medida](/blog/post?slug=quanto-custa-prancha-sob-medida).$md$,
   6, true, now()
 ),
 
@@ -264,7 +264,7 @@ E como o shaper é daqui, reparo e ajuste voltam pra mesma mão, o que estica ai
 
 ## Quer uma prancha assim?
 
-Se você quer uma prancha sob medida, feita à mão, com desempenho e com uma pegada mais consciente, [fala com o shaper no WhatsApp](/) e pergunte sobre a linha Carbon Trash. Dá pra ver os detalhes da tecnologia na [página do Carbon Trash](/carbon-trash).$md$,
+Se você quer uma prancha sob medida, feita à mão, com desempenho e com uma pegada mais consciente, [faz seu pedido pelo site](/) e pergunta sobre a linha Carbon Trash. Com o cupom CARBON1000, pedindo pelo site, tem 10% de desconto. Dá pra ver os detalhes da tecnologia na [página do Carbon Trash](/carbon-trash).$md$,
   6, true, now()
 )
 

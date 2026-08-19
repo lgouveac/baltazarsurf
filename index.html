@@ -78,12 +78,16 @@ body { font-family: 'Work Sans', sans-serif; }
 summary { list-style:none; }
 summary::-webkit-details-marker { display:none; }
 @media (prefers-reduced-motion: reduce){ .hero-slide{ transition:none; } }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+#boardFilters .filter-chip { flex-shrink: 0; white-space: nowrap; }
+@media (max-width: 767px) { footer { padding-bottom: 56px; } }
 </style>
 
 <!-- ============================================================
      JSON-LD structured data (SEO + AEO)
      ============================================================ -->
-<script data-cms="faq_a8" data-cms="faq_a7" data-cms="faq_a6" data-cms="faq_a5" data-cms="faq_a4" data-cms="faq_a3" data-cms="faq_a2" data-cms="faq_a1" type="application/ld+json">
+<script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@graph": [
@@ -142,7 +146,7 @@ summary::-webkit-details-marker { display:none; }
       "serviceType": "Custom surfboard shaping",
       "provider": { "@id": "https://www.baltazarcustomssurfboards.com/#business" },
       "areaServed": { "@type": "Country", "name": "Brasil" },
-      "description": "Cada prancha é shapeada à mão pelo César Baltazar com base na altura, peso, nível e tipo de onda do surfista. O cliente escolhe um modelo como inspiração, conversa pelo chat e recebe a prancha sob medida.",
+      "description": "Cada prancha é shapeada à mão pelo César Baltazar com base na altura, peso, nível e tipo de onda do surfista. O cliente escolhe um modelo como inspiração, faz o pedido pelo site e recebe a prancha sob medida.",
       "category": "Surfboards",
       "offers": {
         "@type": "AggregateOffer",
@@ -208,7 +212,7 @@ summary::-webkit-details-marker { display:none; }
           "name": "Como funciona a encomenda de uma prancha Baltazar Customs?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Você escolhe um modelo como inspiração, conta suas medidas no chat e reserva pelo site. Cada prancha é única e feita à mão. Depois do pagamento, o Baltazar acerta com você os detalhes finais (arte, cor e medidas)."
+            "text": "Você escolhe um modelo como inspiração, conta suas medidas no formulário e reserva pelo site. Cada prancha é única e feita à mão. Depois do pagamento, o Baltazar acerta com você os detalhes finais (arte, cor e medidas)."
           }
         },
         {
@@ -266,6 +270,14 @@ summary::-webkit-details-marker { display:none; }
             "@type": "Answer",
             "text": "Construímos a Carbon Trash reaproveitando retalhos de carbono descartados, o trash. Os fios são espalhados à mão na resina, então cada padrão é único. A prancha tem performance, flexibilidade e resistência únicas, e está disponível em sete construções: Full, Full Lite, Rails, Rails 12 polegadas nose, Rails 12 polegadas nose and tail, Bottom and rails, Deck and rails."
           }
+        },
+        {
+          "@type": "Question",
+          "name": "Tem desconto?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tem. Pedindo pelo site, o cupom CARBON1000 dá 10% de desconto no valor da prancha. Você envia o pedido pelo formulário e o desconto entra no fechamento com o shaper."
+          }
         }
       ]
     }
@@ -310,7 +322,7 @@ summary::-webkit-details-marker { display:none; }
 
 <main id="top">
 <!-- Hero Section -->
-<section class="relative min-h-[100svh] w-full flex items-center justify-center overflow-hidden bg-black py-24 md:py-0">
+<section class="relative min-h-[88svh] md:min-h-[100svh] w-full flex items-center justify-center overflow-hidden bg-black py-24 md:py-0">
 <div class="absolute inset-0 md:hidden" id="heroShow">
 <img data-cms-img="hero" data-cms-img-i="0" class="hero-slide active w-full h-full object-contain grayscale" src="/images/IMG_6840.jpeg" alt="Pranchas Baltazar Customs no galpão do shaper" width="900" height="1600" fetchpriority="high"/>
 <img data-cms-img="hero" data-cms-img-i="1" class="hero-slide w-full h-full object-contain grayscale" src="/images/IMG_6881.jpeg" alt="" width="900" height="1600"/>
@@ -356,7 +368,7 @@ summary::-webkit-details-marker { display:none; }
 <div class="bg-white px-4 py-4"><p class="font-sans uppercase text-[9px] tracking-widest text-neutral-500">6′4″ – 7′0″</p><p class="font-serif italic text-xl md:text-2xl mt-1">R$ 2.700</p></div>
 <div class="bg-white px-4 py-4"><p class="font-sans uppercase text-[9px] tracking-widest text-neutral-500">7′1″ – 8′0″</p><p class="font-serif italic text-xl md:text-2xl mt-1">R$ 2.900</p></div>
 <div class="bg-white px-4 py-4"><p class="font-sans uppercase text-[9px] tracking-widest text-neutral-500">8′1″ – 8′5″</p><p class="font-serif italic text-xl md:text-2xl mt-1">R$ 3.200</p></div>
-<div class="bg-white px-4 py-4"><p class="font-sans uppercase text-[9px] tracking-widest text-neutral-500">8′6″ – 9′6″</p><p class="font-serif italic text-xl md:text-2xl mt-1">R$ 3.600</p></div>
+<div class="bg-white px-4 py-4 col-span-2 sm:col-span-1"><p class="font-sans uppercase text-[9px] tracking-widest text-neutral-500">8′6″ – 9′6″</p><p class="font-serif italic text-xl md:text-2xl mt-1">R$ 3.600</p></div>
 </div>
 <p class="font-sans text-[11px] text-neutral-400 mt-3">Arte e acabamentos especiais podem ter custo adicional.</p>
 </div>
@@ -389,7 +401,7 @@ summary::-webkit-details-marker { display:none; }
 </div>
 </div>
 <!-- Filtros por categoria -->
-<div id="boardFilters" class="flex flex-wrap gap-2 mb-8 md:mb-12">
+<div id="boardFilters" class="flex md:flex-wrap gap-2 mb-8 md:mb-12 overflow-x-auto md:overflow-visible no-scrollbar -mx-5 px-5 md:mx-0 md:px-0">
 <button class="filter-chip active border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Todas">Todas</button>
 <button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Thruster">Thruster</button>
 <button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Twin">Twin</button>
@@ -480,6 +492,15 @@ Do planer à resina, o que sai do shaper é parte ferramenta, parte obra de arte
 </section>
 
 <!-- FAQ -->
+<!-- Depoimento -->
+<section class="py-16 md:py-28 bg-white px-5 md:px-10">
+<div class="max-w-3xl mx-auto text-center">
+<span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 block mb-6 md:mb-8">Quem rema com uma Baltazar</span>
+<blockquote data-cms="testimonial_1" class="font-serif italic text-2xl md:text-4xl leading-snug">"Carbon Trash é um foguete. Rápida, responde bem e resistente demais."</blockquote>
+<p data-cms="testimonial_1_author" class="font-sans uppercase text-[10px] tracking-widest text-neutral-500 mt-6">Lucas, Recreio</p>
+</div>
+</section>
+
 <section id="faq" class="scroll-mt-20 py-16 md:py-32 bg-surface px-5 md:px-10">
 <div class="max-w-4xl mx-auto">
 <div class="text-center mb-10 md:mb-16">
@@ -492,14 +513,14 @@ Do planer à resina, o que sai do shaper é parte ferramenta, parte obra de arte
 <span>Como funciona a encomenda?</span>
 <span class="font-sans text-2xl text-neutral-400 transition-transform duration-300 group-open:rotate-45 shrink-0">+</span>
 </summary>
-<p class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">Você escolhe um modelo como inspiração, conta suas medidas no chat e reserva pelo site. Cada prancha é única e feita à mão. Depois do pagamento, o Baltazar acerta com você os detalhes finais (arte, cor e medidas).</p>
+<p data-cms="faq_a1" class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">Você escolhe um modelo como inspiração, conta suas medidas no formulário e reserva pelo site. Cada prancha é única e feita à mão. Depois do pagamento, o Baltazar acerta com você os detalhes finais (arte, cor e medidas).</p>
 </details>
 <details class="border-t border-black/10 group">
 <summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif italic text-lg md:text-2xl">
 <span>Quanto custa?</span>
 <span class="font-sans text-2xl text-neutral-400 transition-transform duration-300 group-open:rotate-45 shrink-0">+</span>
 </summary>
-<p class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">O valor é por tamanho: de R$ 2.600 (até 6′3″) a R$ 3.600 (8′6″–9′6″). Arte e acabamentos especiais podem ter custo adicional.</p>
+<p data-cms="faq_a2" class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">O valor é por tamanho: de R$ 2.600 (até 6′3″) a R$ 3.600 (8′6″–9′6″). Arte e acabamentos especiais podem ter custo adicional.</p>
 </details>
 <!-- TODO: confirmar o prazo real de entrega com o César -->
 <details class="border-t border-black/10 group">
@@ -507,42 +528,49 @@ Do planer à resina, o que sai do shaper é parte ferramenta, parte obra de arte
 <span>Quanto tempo leva pra ficar pronta?</span>
 <span class="font-sans text-2xl text-neutral-400 transition-transform duration-300 group-open:rotate-45 shrink-0">+</span>
 </summary>
-<p class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">O prazo varia conforme a fila do shaper. A gente confirma a data certinha com você no momento do pedido.</p>
+<p data-cms="faq_a3" class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">O prazo varia conforme a fila do shaper. A gente confirma a data certinha com você no momento do pedido.</p>
 </details>
 <details class="border-t border-black/10 group">
 <summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif italic text-lg md:text-2xl">
 <span>Como sei a litragem ideal?</span>
 <span class="font-sans text-2xl text-neutral-400 transition-transform duration-300 group-open:rotate-45 shrink-0">+</span>
 </summary>
-<p class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">A litragem (volume em litros) define flutuação e remada: quanto mais iniciante ou mais pesado, mais litros; quanto mais avançado, menos. No chat, a gente sugere uma litragem a partir do seu peso e nível.</p>
+<p data-cms="faq_a4" class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">A litragem (volume em litros) define flutuação e remada: quanto mais iniciante ou mais pesado, mais litros; quanto mais avançado, menos. No chat, a gente sugere uma litragem a partir do seu peso e nível.</p>
 </details>
 <details class="border-t border-black/10 group">
 <summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif italic text-lg md:text-2xl">
 <span>Single, twin, thruster ou quad?</span>
 <span class="font-sans text-2xl text-neutral-400 transition-transform duration-300 group-open:rotate-45 shrink-0">+</span>
 </summary>
-<p class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">Single: clássica, deslize suave. Twin: solta e veloz em ondas pequenas. Thruster (3 quilhas): a mais versátil e controlável. Quad (4 quilhas): rápida em ondas ocas e tubulares.</p>
+<p data-cms="faq_a5" class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">Single: clássica, deslize suave. Twin: solta e veloz em ondas pequenas. Thruster (3 quilhas): a mais versátil e controlável. Quad (4 quilhas): rápida em ondas ocas e tubulares.</p>
 </details>
 <details class="border-t border-black/10 group">
 <summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif italic text-lg md:text-2xl">
 <span>Fish, mid-length ou longboard?</span>
 <span class="font-sans text-2xl text-neutral-400 transition-transform duration-300 group-open:rotate-45 shrink-0">+</span>
 </summary>
-<p class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">Fish: curta e larga, perfeita pra ondas pequenas. Mid-length: versátil e fácil de remar. Longboard: deslize clássico, ótima pra iniciantes e ondas suaves.</p>
+<p data-cms="faq_a6" class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">Fish: curta e larga, perfeita pra ondas pequenas. Mid-length: versátil e fácil de remar. Longboard: deslize clássico, ótima pra iniciantes e ondas suaves.</p>
 </details>
 <details class="border-t border-black/10 group">
 <summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif italic text-lg md:text-2xl">
 <span>O que é o "copinho"?</span>
 <span class="font-sans text-2xl text-neutral-400 transition-transform duration-300 group-open:rotate-45 shrink-0">+</span>
 </summary>
-<p class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">É o sistema de quilha, a caixa onde a quilha encaixa. Os mais comuns são FCS II (encaixa sem ferramenta) e Futures (encaixe único, bem firme), além da caixa de single.</p>
+<p data-cms="faq_a7" class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">É o sistema de quilha, a caixa onde a quilha encaixa. Os mais comuns são FCS II (encaixa sem ferramenta) e Futures (encaixe único, bem firme), além da caixa de single.</p>
 </details>
 <details class="border-t border-black/10 group">
 <summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif italic text-lg md:text-2xl">
 <span>O que é a Carbon Trash?</span>
 <span class="font-sans text-2xl text-neutral-400 transition-transform duration-300 group-open:rotate-45 shrink-0">+</span>
 </summary>
-<p class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">Construímos a Carbon Trash reaproveitando retalhos de carbono descartados, o trash. Os fios são espalhados à mão na resina, então cada padrão é único. Performance, flexibilidade e resistência únicas.</p>
+<p data-cms="faq_a8" class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">Construímos a Carbon Trash reaproveitando retalhos de carbono descartados, o trash. Os fios são espalhados à mão na resina, então cada padrão é único. Performance, flexibilidade e resistência únicas.</p>
+</details>
+<details class="border-t border-black/10 group">
+<summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif italic text-lg md:text-2xl">
+<span>Tem desconto?</span>
+<span class="font-sans text-2xl text-neutral-400 transition-transform duration-300 group-open:rotate-45 shrink-0">+</span>
+</summary>
+<p data-cms="faq_a9" class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">Tem. Pedindo pelo site, o cupom CARBON1000 dá 10% de desconto no valor da prancha. Você envia o pedido pelo formulário e o desconto entra no fechamento com o shaper.</p>
 </details>
 </div>
 </div>
@@ -570,8 +598,9 @@ Do planer à resina, o que sai do shaper é parte ferramenta, parte obra de arte
 </nav>
 <button onclick="openChat()" class="font-sans text-[10px] uppercase tracking-[0.2em] text-neutral-400 hover:text-black transition-colors">Quero Minha Prancha</button>
 </div>
-<div class="font-sans text-[9px] md:text-[10px] uppercase tracking-[0.15em] md:tracking-[0.2em] text-neutral-500 text-center md:text-right border-t border-black/5 pt-6">
-&copy; 2026 BALTAZAR CUSTOMS. FEITO À MÃO NO RIO.
+<div class="font-sans text-[9px] md:text-[10px] uppercase tracking-[0.15em] md:tracking-[0.2em] text-neutral-500 border-t border-black/5 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-center">
+<span>Recreio dos Bandeirantes, Rio de Janeiro · <a href="mailto:baltazar.dev@flowcode.cc" class="hover:text-black transition-colors normal-case">baltazar.dev@flowcode.cc</a></span>
+<span>&copy; 2026 BALTAZAR CUSTOMS. FEITO À MÃO NO RIO.</span>
 </div>
 </div>
 </footer>
@@ -603,6 +632,13 @@ Do planer à resina, o que sai do shaper é parte ferramenta, parte obra de arte
 <button onclick="wantThis()" class="w-full mt-4 bg-black text-white py-3 font-sans uppercase tracking-widest text-[10px]">Quero Minha Prancha</button>
 </div>
 </div>
+</div>
+
+<!-- CTA fixo (mobile) -->
+<div id="stickyCta" class="fixed bottom-0 inset-x-0 z-40 md:hidden translate-y-full transition-transform duration-300">
+<button onclick="openChat()" class="w-full bg-black text-white py-4 font-sans uppercase tracking-widest text-[10px] flex items-center justify-center gap-2">
+<span>Quero Minha Prancha</span><span class="text-white/50">·</span><span class="text-white/80">10% OFF no site</span>
+</button>
 </div>
 
 <!-- MODAL: PEÇA SUA PRANCHA (formulário) -->
@@ -943,6 +979,18 @@ loadTexts();
 loadCatalog().then(() => { renderGallery('Todas'); });
 renderActionGrid();
 loadImages();
+// CTA fixo mobile: aparece depois que a pessoa passa do hero
+(function () {
+  var bar = document.getElementById('stickyCta');
+  if (!bar) return;
+  var onScroll = function () {
+    if (window.scrollY > window.innerHeight * 0.7) bar.classList.remove('translate-y-full');
+    else bar.classList.add('translate-y-full');
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+
 // hero showcase: crossfade leve entre fotos
 (function () {
   const slides = Array.prototype.slice.call(document.querySelectorAll('#heroShow .hero-slide'));
