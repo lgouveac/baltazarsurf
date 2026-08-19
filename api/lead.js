@@ -40,9 +40,9 @@ module.exports = async (req, res) => {
 
     const KEY = process.env.RESEND_API_KEY;
     if (!KEY) { res.status(500).json({ ok: false, error: 'resend_nao_configurado' }); return; }
-    // LEAD_TO aceita 1 ou vários emails separados por vírgula (depois é só
-    // adicionar o email do César: "lucas.carmo@flowcode.cc, cesar@...").
-    const TO = (process.env.LEAD_TO || 'lucas.carmo@flowcode.cc')
+    // LEAD_TO aceita 1 ou vários emails separados por vírgula.
+    // Padrão: Lucas (parceria) + César (shaper).
+    const TO = (process.env.LEAD_TO || 'lucas.carmo@flowcode.cc, baltazarferro4@gmail.com')
       .split(',').map(function (x) { return x.trim(); }).filter(Boolean);
     const FROM = process.env.LEAD_FROM || 'Baltazar Site <pedidos@flowcode.cc>';
 
