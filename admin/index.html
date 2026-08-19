@@ -65,7 +65,7 @@ let tab = 'boards';      // boards | categories | texts | images | blog
 
 // Textos editáveis do site (as chaves batem com os data-cms do index.html).
 const TEXT_SCHEMA = [
-  { key: 'hero_tagline',        label: 'Hero — etiqueta acima do título', multiline: false },
+  { key: 'hero_tagline',        label: 'Hero — título principal',         multiline: false },
   { key: 'hero_subtitle',       label: 'Hero — frase de impacto',         multiline: false },
   { key: 'collection_heading',  label: 'Coleção — título',                multiline: false },
   { key: 'collection_cta_hint', label: 'Coleção — chamada acima do botão', multiline: false },
@@ -97,7 +97,7 @@ const TEXT_SCHEMA = [
 
 // Slots de imagem editáveis (batem com os data-cms-img do index.html).
 const IMAGE_SLOTS = [
-  { slot: 'hero',           label: 'Hero — fotos de fundo',        count: 5 },
+  { slot: 'hero',           label: 'Hero — foto principal',        count: 1 },
   { slot: 'carbon_feature', label: 'Carbon Trash — foto destaque', count: 1 },
   { slot: 'cesar',          label: 'O Shaper — foto do César',     count: 1 },
   { slot: 'action',         label: 'Na Água — grade de surf',      count: 8 },

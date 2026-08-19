@@ -73,11 +73,8 @@ body { font-family: 'Work Sans', sans-serif; }
 .hamburger.active span:nth-child(2) { opacity: 0; }
 .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(4px,-4px); }
 .filter-chip.active { background:#000; color:#fff; }
-.hero-slide { position:absolute; inset:0; opacity:0; transition:opacity 1.5s ease-in-out; }
-.hero-slide.active { opacity:1; }
 summary { list-style:none; }
 summary::-webkit-details-marker { display:none; }
-@media (prefers-reduced-motion: reduce){ .hero-slide{ transition:none; } }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }
 #boardFilters .filter-chip { flex-shrink: 0; white-space: nowrap; }
@@ -322,30 +319,20 @@ summary::-webkit-details-marker { display:none; }
 
 <main id="top">
 <!-- Hero Section -->
-<section class="relative min-h-[88svh] md:min-h-[100svh] w-full flex items-center justify-center overflow-hidden bg-black py-24 md:py-0">
-<div class="absolute inset-0 md:hidden" id="heroShow">
-<img data-cms-img="hero" data-cms-img-i="0" class="hero-slide active w-full h-full object-contain grayscale" src="/images/IMG_6840.jpeg" alt="Pranchas Baltazar Customs no galpão do shaper" width="900" height="1600" fetchpriority="high"/>
-<img data-cms-img="hero" data-cms-img-i="1" class="hero-slide w-full h-full object-contain grayscale" src="/images/IMG_6881.jpeg" alt="" width="900" height="1600"/>
-<img data-cms-img="hero" data-cms-img-i="2" class="hero-slide w-full h-full object-contain grayscale" src="/images/IMG_6868.jpeg" alt="" width="1200" height="1600"/>
-<img data-cms-img="hero" data-cms-img-i="3" class="hero-slide w-full h-full object-contain grayscale" src="/images/IMG_6831.jpeg" alt="" width="1161" height="1452"/>
-<img data-cms-img="hero" data-cms-img-i="4" class="hero-slide w-full h-full object-contain grayscale" src="/images/IMG_6848.jpeg" alt="" width="900" height="1600"/>
+<section class="w-full bg-surface border-b border-black/5">
+<div class="max-w-7xl mx-auto px-5 md:px-10 pt-16 pb-14 md:py-24 grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+<div>
+<span class="font-sans uppercase tracking-[0.2em] text-[10px] text-neutral-500 block mb-4 md:mb-6">Shaper artesanal</span>
+<h1 data-cms="hero_tagline" class="font-serif italic text-4xl md:text-6xl leading-tight">Pranchas de surf artesanais feitas à mão. Recreio, Rio de Janeiro.</h1>
+<p data-cms="hero_subtitle" class="font-sans text-base md:text-lg text-neutral-600 leading-relaxed mt-5 md:mt-6 max-w-md">Cada prancha é única. Você se inspira, a gente faz a sua.</p>
+<div class="mt-8 md:mt-10">
+<button onclick="openChat()" class="bg-black text-white px-10 py-4 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Quero Minha Prancha</button>
 </div>
-<div class="absolute inset-0 hidden md:flex" id="heroStrip" aria-hidden="true">
-<div class="hero-col relative flex-1 min-w-0 h-full overflow-hidden"></div>
-<div class="hero-col relative flex-1 min-w-0 h-full overflow-hidden"></div>
-<div class="hero-col relative flex-1 min-w-0 h-full overflow-hidden"></div>
-<div class="hero-col relative flex-1 min-w-0 h-full overflow-hidden hidden lg:block"></div>
+<p class="mt-5"><span class="inline-block border border-black/15 bg-white px-4 py-2 font-sans text-[10px] md:text-[11px] tracking-widest text-neutral-600">10% OFF comprando pelo site com o cupom <span class="text-black font-semibold">CARBON1000</span></span></p>
 </div>
-<div class="absolute inset-0 bg-black/50 pointer-events-none"></div>
-<div class="relative z-10 text-center px-4 md:px-6">
-<img src="/images/brand/logo-oval-white.png" alt="Baltazar Customs Surfboards" width="1286" height="550" class="w-[min(82vw,500px)] mx-auto mb-6 md:mb-8"/>
-<h1 data-cms="hero_tagline" class="font-sans uppercase tracking-[0.2em] md:tracking-[0.3em] text-[9px] md:text-xs text-white/80 max-w-xl mx-auto">Pranchas de surf artesanais feitas à mão. Recreio, Rio de Janeiro.</h1>
-<p data-cms="hero_subtitle" class="font-serif italic text-white/70 text-base md:text-2xl mt-5 md:mt-7 max-w-2xl mx-auto">Cada prancha é única. Você se inspira, a gente faz a sua.</p>
-<div class="mt-10 md:mt-14 flex flex-col sm:flex-row gap-3 justify-center items-center">
-<button onclick="openChat()" class="bg-white text-black px-8 md:px-12 py-4 md:py-5 font-sans uppercase tracking-widest text-[9px] md:text-[10px] hover:bg-neutral-200 transition-colors">Quero Minha Prancha</button>
-<a href="#boards" class="text-white/80 underline font-sans uppercase tracking-widest text-[9px] md:text-[10px] hover:text-white transition-colors">Ver a Coleção</a>
+<div class="aspect-[4/5] md:aspect-[3/4] max-h-[360px] md:max-h-[620px] w-full overflow-hidden">
+<img data-cms-img="hero" data-cms-img-i="0" src="/images/IMG_6840.jpeg" alt="Pranchas Baltazar Customs no galpão do shaper" width="900" height="1600" fetchpriority="high" class="w-full h-full object-cover grayscale"/>
 </div>
-<p class="mt-6"><span class="inline-block bg-black/60 border border-white/25 backdrop-blur-sm px-4 py-2 font-sans text-[10px] md:text-[11px] tracking-widest text-white/90">10% OFF comprando pelo site com o cupom <span class="text-white font-semibold">CARBON1000</span></span></p>
 </div>
 </section>
 
@@ -414,6 +401,7 @@ summary::-webkit-details-marker { display:none; }
 <button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Carbon Trash">Carbon Trash</button>
 </div>
 <div id="boardGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6"></div>
+<div class="text-center mt-8 md:mt-10"><button id="moreBoards" onclick="showMoreBoards()" class="hidden border border-black/20 px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:bg-black hover:text-white transition-colors">Ver mais pranchas</button></div>
 <div class="text-center mt-12 md:mt-20">
 <p data-cms="collection_cta_hint" class="font-sans text-xs md:text-sm text-neutral-500 mb-4">Não sei qual escolher? Fale com o shaper.</p>
 <button onclick="openChat()" class="bg-black text-white px-10 py-4 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Quero Minha Prancha</button>
@@ -800,12 +788,15 @@ const CATEGORIAS = ['Thruster','Twin','Mid-Length','Longboard','Quad','Asymmetri
 
 // ===================== RENDER CATÁLOGO + FILTRO =====================
 let currentFilter = 'Todas';
+const GALLERY_STEP = 8;
+let galleryVisible = GALLERY_STEP;
 function renderGallery(filter) {
   currentFilter = filter;
   const g = document.getElementById('boardGrid');
   g.innerHTML = '';
-  gallery.forEach((b, i) => {
-    if (filter !== 'Todas' && b.c !== filter && b.line !== filter) return;
+  const idx = gallery.map((_, i) => i).filter(i => filter === 'Todas' || gallery[i].c === filter || gallery[i].line === filter);
+  idx.slice(0, galleryVisible).forEach(i => {
+    const b = gallery[i];
     const card = document.createElement('div');
     card.className = 'group cursor-pointer';
     card.onclick = () => openLightbox(i);
@@ -820,18 +811,33 @@ function renderGallery(filter) {
       '</div>';
     g.appendChild(card);
   });
+  const more = document.getElementById('moreBoards');
+  if (more) {
+    const resto = idx.length - galleryVisible;
+    if (resto > 0) {
+      more.classList.remove('hidden');
+      more.textContent = 'Ver mais pranchas (' + resto + ')';
+    } else {
+      more.classList.add('hidden');
+    }
+  }
+}
+function showMoreBoards() {
+  galleryVisible += GALLERY_STEP;
+  renderGallery(currentFilter);
 }
 document.getElementById('boardFilters').addEventListener('click', e => {
   const btn = e.target.closest('.filter-chip');
   if (!btn) return;
   document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
   btn.classList.add('active');
+  galleryVisible = GALLERY_STEP;
   renderGallery(btn.dataset.type);
 });
 
 function renderActionGrid() {
   document.getElementById('actionGrid').innerHTML = actionPhotos.map((item, i) =>
-    '<div class="aspect-square overflow-hidden">' +
+    '<div class="aspect-square overflow-hidden' + (i >= 4 ? ' hidden md:block' : '') + '">' +
     '<img src="/images/' + item.p + '" data-cms-img="action" data-cms-img-i="' + i + '" alt="' + item.alt + '" loading="lazy" class="w-full h-full object-cover grayscale contrast-110 hover:grayscale-0 transition-all duration-700"/>' +
     '</div>'
   ).join('');
@@ -970,6 +976,7 @@ function filterTo(type) {
     document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
     btn.classList.add('active');
   }
+  galleryVisible = GALLERY_STEP;
   renderGallery(type);
   document.getElementById('boardFilters').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
@@ -991,65 +998,8 @@ loadImages();
   onScroll();
 })();
 
-// hero showcase: crossfade leve entre fotos
-(function () {
-  const slides = Array.prototype.slice.call(document.querySelectorAll('#heroShow .hero-slide'));
-  if (slides.length < 2) return;
-  let i = 0;
-  setInterval(function () {
-    slides[i].classList.remove('active');
-    i = (i + 1) % slides.length;
-    slides[i].classList.add('active');
-  }, 4200);
-})();
 
-// hero desktop: faixa de fotos lado a lado que trocam em crossfade
-(function () {
-  const strip = document.getElementById('heroStrip');
-  if (!strip) return;
-  const pool = ['IMG_6840','IMG_6881','IMG_6868','IMG_6831','IMG_6848','IMG_6880','IMG_6841','IMG_6865','IMG_6855','IMG_6856']
-    .map(n => 'images/' + n + '.jpeg');
-  for (let k = pool.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); const t = pool[k]; pool[k] = pool[j]; pool[j] = t; }
-  const cols = Array.prototype.slice.call(strip.querySelectorAll('.hero-col'));
-  const current = [];
-  let ptr = 0;
-  cols.forEach(function (col, idx) {
-    col._layers = [0, 1].map(function () {
-      const im = document.createElement('img');
-      im.className = 'absolute inset-0 w-full h-full object-cover grayscale transition-opacity duration-1000 opacity-0';
-      im.alt = '';
-      col.appendChild(im);
-      return im;
-    });
-    col._front = 0;
-    const src = pool[ptr++ % pool.length];
-    col._layers[0].src = src;
-    col._layers[0].classList.remove('opacity-0');
-    current[idx] = src;
-  });
-  function nextUnused() {
-    for (let s = 0; s < pool.length; s++) {
-      const cand = pool[ptr++ % pool.length];
-      if (current.indexOf(cand) === -1) return cand;
-    }
-    return pool[ptr++ % pool.length];
-  }
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  let turn = 0;
-  setInterval(function () {
-    const idx = turn++ % cols.length;
-    const col = cols[idx];
-    const src = nextUnused();
-    const front = col._layers[col._front];
-    const back = col._layers[col._front ^ 1];
-    back.onload = function () {
-      back.classList.remove('opacity-0');
-      front.classList.add('opacity-0');
-      col._front ^= 1;
-      current[idx] = src;
-    };
-    back.src = src;
-  }, 2600);
-})();
+
+
 </script>
 </body></html>
