@@ -333,6 +333,7 @@ summary::-webkit-details-marker { display:none; }
 <button onclick="openChat()" class="bg-white text-black px-8 md:px-12 py-4 md:py-5 font-sans uppercase tracking-widest text-[9px] md:text-[10px] hover:bg-neutral-200 transition-colors">Quiero Mi Tabla</button>
 <a href="#boards" class="text-white/80 underline font-sans uppercase tracking-widest text-[9px] md:text-[10px] hover:text-white transition-colors">Ver la Colección</a>
 </div>
+<p class="mt-6 font-sans text-[10px] md:text-[11px] tracking-widest text-white/70">10% OFF comprando por el sitio con el cupón <span class="text-white font-semibold">CARBON1000</span></p>
 </div>
 </section>
 
@@ -605,18 +606,69 @@ Del planer a la resina, lo que sale del shaper es parte herramienta, parte obra 
 </div>
 </div>
 
-<!-- CHAT / ATELIER MODAL -->
+<!-- MODAL: PEÇA SUA PRANCHA (formulário) -->
 <div id="chatModal" class="fixed inset-0 z-[100] hidden bg-black/90 backdrop-blur-sm modal-fade flex items-end md:items-center justify-center" onclick="if(event.target===this)closeChat()">
-<div class="bg-white w-full md:max-w-md h-[90dvh] md:h-[80vh] md:max-h-[660px] flex flex-col bottom-sheet-enter rounded-t-2xl md:rounded-none overflow-hidden">
-<div class="flex items-center justify-between px-5 py-4 border-b border-black/10">
+<div class="bg-white w-full md:max-w-md h-[92dvh] md:h-auto md:max-h-[90vh] flex flex-col bottom-sheet-enter rounded-t-2xl md:rounded-none overflow-hidden">
+<div class="flex items-center justify-between px-5 py-4 border-b border-black/10 shrink-0">
 <div>
-<p class="font-serif italic text-lg leading-none">Shaper Baltazar</p>
-<p class="font-sans text-[9px] uppercase tracking-widest text-neutral-500 mt-1">Arma tu tabla</p>
+<p class="font-serif italic text-lg leading-none">Pide tu tabla</p>
+<p class="font-sans text-[9px] uppercase tracking-widest text-neutral-500 mt-1">El shaper te responde para cerrar los detalles</p>
 </div>
-<button onclick="closeChat()" class="text-2xl hover:opacity-60">&times;</button>
+<button onclick="closeChat()" class="text-2xl hover:opacity-60" aria-label="Cerrar">&times;</button>
 </div>
-<div id="chatBody" class="flex-1 overflow-y-auto px-5 py-4 space-y-3"></div>
-<div id="chatInput" class="border-t border-black/10 p-4"></div>
+<div id="leadArea" class="flex-1 overflow-y-auto">
+<div class="bg-black text-white px-5 py-3 text-center">
+<p class="font-sans text-[11px] tracking-wide">Comprando por el sitio: <span class="font-semibold">10% OFF</span> con el cupón <span class="font-mono tracking-widest">CARBON1000</span></p>
+</div>
+<form id="leadForm" class="px-5 py-5 space-y-4" novalidate>
+<input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true"/>
+<label class="block">
+<span class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Nombre *</span>
+<input name="nome" required autocomplete="name" class="w-full border-b border-black/30 focus:border-black bg-transparent py-2 text-sm focus:outline-none" placeholder="Tu nombre"/>
+</label>
+<label class="block">
+<span class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Email o WhatsApp *</span>
+<input name="contato" required class="w-full border-b border-black/30 focus:border-black bg-transparent py-2 text-sm focus:outline-none" placeholder="para poder responderte"/>
+</label>
+<p class="font-sans text-[10px] uppercase tracking-widest text-neutral-400 pt-1">Opcional — ayuda al shaper a pensar tu tabla</p>
+<label class="block">
+<span class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Tipo de tabla</span>
+<select name="modelo" class="w-full border-b border-black/30 focus:border-black bg-transparent py-2 text-sm focus:outline-none">
+<option value="">Sin preferencia / ayúdame a decidir</option>
+<option>Thruster</option><option>Twin</option><option>Twin +1</option><option>Quad</option><option>Mid-Length</option><option>Longboard</option><option>Asymmetric</option><option>Outras</option>
+</select>
+</label>
+<div class="grid grid-cols-2 gap-4">
+<label class="block">
+<span class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Altura (cm)</span>
+<input name="altura" type="number" inputmode="numeric" class="w-full border-b border-black/30 focus:border-black bg-transparent py-2 text-sm focus:outline-none" placeholder="175"/>
+</label>
+<label class="block">
+<span class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Peso (kg)</span>
+<input name="peso" type="number" inputmode="numeric" class="w-full border-b border-black/30 focus:border-black bg-transparent py-2 text-sm focus:outline-none" placeholder="75"/>
+</label>
+</div>
+<label class="block">
+<span class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Nivel</span>
+<select name="nivel" class="w-full border-b border-black/30 focus:border-black bg-transparent py-2 text-sm focus:outline-none">
+<option value="">—</option><option>Principiante</option><option>Intermedio</option><option>Avanzado</option><option>Profesional</option>
+</select>
+</label>
+<label class="block">
+<span class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Ola que más surfeas</span>
+<select name="onda" class="w-full border-b border-black/30 focus:border-black bg-transparent py-2 text-sm focus:outline-none">
+<option value="">—</option><option>Pequeña/débil</option><option>Media</option><option>Grande/fuerte</option><option>Tubular</option>
+</select>
+</label>
+<label class="block">
+<span class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Mensaje</span>
+<textarea name="mensagem" rows="3" class="w-full border border-black/20 focus:border-black bg-transparent p-2 text-sm focus:outline-none resize-none" placeholder="Cuéntanos qué buscas, plazo, referencias..."></textarea>
+</label>
+<button type="submit" id="leadSubmit" class="w-full bg-black text-white py-3.5 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Enviar pedido</button>
+<p id="leadMsg" class="font-sans text-[11px] text-center min-h-[1em]"></p>
+<p class="font-sans text-[10px] text-neutral-400 text-center leading-relaxed">Tus datos van directo al shaper. Sin spam.</p>
+</form>
+</div>
 </div>
 </div>
 
@@ -626,6 +678,9 @@ const SUPABASE_URL = 'https://eylnwwerbssfaaaxsccw.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5bG53d2VyYnNzZmFhYXhzY2N3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MDU3NjYsImV4cCI6MjA5NzI4MTc2Nn0.XMYTNxGEj5Jjt89Q9GCQasnD9sR9q0lt4wdlXUNrJgc';
 const supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const IMG = SUPABASE_URL + '/storage/v1/object/public/boards/';
+// Resolve o caminho da imagem: se já for local (/images/...) ou URL completa, usa direto;
+// senão (nome de arquivo enviado pelo CMS), busca no bucket do Supabase.
+function boardImg(p){ return (/^(https?:|\/)/.test(p)) ? p : (IMG + p); }
 const PRECO = 'R$ 2.600';            // valor base (a partir de)
 const LINK_PAGAMENTO = '';           // TODO: Lucas vai criar o link de pagamento e colar aqui
 
@@ -721,7 +776,7 @@ function renderGallery(filter) {
     card.onclick = () => openLightbox(i);
     card.innerHTML =
       '<div class="aspect-[3/4] overflow-hidden bg-surface-container relative">' +
-        '<img src="' + IMG + b.p + '" alt="Prancha ' + b.c + '" loading="lazy" class="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"/>' +
+        '<img src="' + boardImg(b.p) + '" alt="Prancha ' + b.c + '" loading="lazy" class="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"/>' +
         '<div class="absolute top-2 left-2 bg-black text-white px-2 py-0.5 font-sans text-[7px] md:text-[8px] tracking-widest uppercase">' + b.c + '</div>' +
         '<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 flex justify-between items-end opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">' +
           '<span class="font-sans text-[8px] md:text-[9px] tracking-widest uppercase text-white/80">' + b.f + '</span>' +
@@ -766,7 +821,7 @@ function closeBoardModal() {
 }
 function renderLightbox() {
   const item = gallery[lbList[lbPos]];
-  const src = IMG + item.p;
+  const src = boardImg(item.p);
   const sub = (item.line ? item.line + ' · ' : '') + item.c + ' · ' + item.f + ' · a partir de ' + precoCategoria(item.c);
   const set = (id, fn) => { const el = document.getElementById(id); if (el) fn(el); };
   set('modalImgDesktop', el => el.src = src);
@@ -784,179 +839,72 @@ function wantThis() {
   openChat(item.c);
 }
 
-// ===================== CHAT GUIADO (Shaper) =====================
-// >>> PRONTO PARA IA: hoje o fluxo segue os passos fixos de chatSteps.
-// Para plugar uma IA de verdade (Claude) depois, troque askStep()/answer()
-// por uma chamada a um backend, ex.:
-//   async function askAI(history){ const r = await fetch('/api/chat',{method:'POST',body:JSON.stringify(history)}); return (await r.json()).reply; }
-// e renderize a resposta com addMsg(reply,'bot'). O resto da UI já está pronto.
-const chatSteps = [
-  { key:'modelo',   bot:'¡Hola! Soy el asistente del shaper. ¿Qué tipo de tabla tiene tu cara?', type:'choice', options:['Thruster','Twin','Twin +1','Quad','Mid-Length','Longboard','Asymmetric','Ayúdame a decidir'] },
-  { key:'altura',   bot:'Bien. ¿Cuánto mides? (en cm)', type:'number', placeholder:'175' },
-  { key:'peso',     bot:'¿Y tu peso? (en kg)', type:'number', placeholder:'75' },
-  { key:'nivel',    bot:'¿Cómo describes tu nivel de surf?', type:'choice', options:['Principiante','Intermedio','Avanzado','Profesional'] },
-  { key:'onda',     bot:'¿Qué tipo de ola surfeas más?', type:'choice', options:['Pequeña/débil','Media','Grande/fuerte','Tubular'] },
-  { key:'quilhas',  bot:'¿Qué configuración de quillas prefieres?', type:'choice', options:['Single','Twin','Thruster','Quad','No sé'] },
-  { key:'copinho',  bot:'¿Y el sistema de quillas (la caja)?', type:'choice', options:['FCS II','Futures','Caja de single','No sé'] },
-  { key:'nome',     bot:'¡Genial! ¿Cuál es tu nombre?', type:'text', placeholder:'Tu nombre' },
-  { key:'contato',  bot:'Por último: un email o teléfono para que Baltazar afine los detalles después.', type:'text', placeholder:'email o teléfono' },
-];
-let chatState = {}, chatIdx = 0;
-
+// ===================== FORMULÁRIO DE PEDIDO =====================
+// O antigo chat guiado virou um formulário. Os botões "Quiero Mi Tabla"
+// continuam chamando openChat(); wantThis() pré-seleciona a categoria da prancha.
 function openChat(preCat) {
   document.getElementById('chatModal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
-  startChat(preCat);
+  var sel = document.querySelector('#leadForm select[name=modelo]');
+  if (sel) {
+    var has = Array.prototype.some.call(sel.options, function(o){ return o.value === preCat; });
+    sel.value = (preCat && has) ? preCat : '';
+  }
+  setTimeout(function(){ var n = document.querySelector('#leadForm input[name=nome]'); if (n) n.focus(); }, 60);
 }
 function closeChat() {
   document.getElementById('chatModal').classList.add('hidden');
   document.body.style.overflow = '';
 }
-function startChat(preCat) {
-  chatState = {}; chatIdx = 0;
-  document.getElementById('chatBody').innerHTML = '';
-  document.getElementById('chatInput').innerHTML = '';
-  if (preCat && CATEGORIAS.indexOf(preCat) !== -1) {
-    chatState.modelo = preCat;
-    chatIdx = 1; // pula a pergunta do modelo
-    addMsg('Buena elección, una ' + preCat + '. Vamos a personalizar la tuya.', 'bot');
-    setTimeout(askStep, 300);
-  } else {
-    askStep();
-  }
+function leadSuccess(nome) {
+  var area = document.getElementById('leadArea');
+  if (!area) return;
+  var first = (nome || '').trim().split(/\s+/)[0] || '';
+  area.innerHTML =
+    '<div class="px-6 py-16 text-center">' +
+    '<p class="font-serif italic text-3xl mb-4">Recibido' + (first ? ', ' + first : '') + '!</p>' +
+    '<p class="font-sans text-sm text-neutral-600 leading-relaxed max-w-xs mx-auto">Tu pedido llegó al shaper. Pronto te respondemos para cerrar arte, medidas y el pago con el 10% del cupón CARBON1000.</p>' +
+    '<button onclick="closeChat()" class="mt-8 bg-black text-white px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:opacity-80">Cerrar</button>' +
+    '</div>';
 }
-function addMsg(text, who) {
-  const body = document.getElementById('chatBody');
-  const wrap = document.createElement('div');
-  wrap.className = who === 'user' ? 'flex justify-end' : 'flex justify-start';
-  const bub = document.createElement('div');
-  bub.className = (who === 'user' ? 'bg-black text-white' : 'bg-surface-container text-on-surface') +
-    ' px-4 py-2.5 max-w-[82%] text-sm font-sans whitespace-pre-line leading-relaxed';
-  bub.textContent = text;
-  wrap.appendChild(bub);
-  body.appendChild(wrap);
-  body.scrollTop = body.scrollHeight;
-}
-function askStep() {
-  if (chatIdx >= chatSteps.length) { finishChat(); return; }
-  const step = chatSteps[chatIdx];
-  addMsg(step.bot, 'bot');
-  buildInput(step);
-}
-function answer(val) {
-  addMsg(val, 'user');
-  chatState[chatSteps[chatIdx].key] = val;
-  chatIdx++;
-  document.getElementById('chatInput').innerHTML = '';
-  setTimeout(askStep, 280);
-}
-function buildInput(step) {
-  const c = document.getElementById('chatInput');
-  c.innerHTML = '';
-  if (step.type === 'choice') {
-    const g = document.createElement('div');
-    g.className = 'flex flex-wrap gap-2';
-    step.options.forEach(o => {
-      const btn = document.createElement('button');
-      btn.className = 'border border-black/20 hover:bg-black hover:text-white transition-colors px-3 py-2 text-xs font-sans';
-      btn.textContent = o;
-      btn.onclick = () => answer(o);
-      g.appendChild(btn);
-    });
-    c.appendChild(g);
-  } else {
-    const form = document.createElement('form');
-    form.className = 'flex gap-2 items-end';
-    const inp = document.createElement('input');
-    inp.type = step.type === 'number' ? 'number' : 'text';
-    inp.placeholder = step.placeholder || '';
-    inp.className = 'flex-1 border-b border-black bg-transparent py-2 text-sm focus:outline-none';
-    const sub = document.createElement('button');
-    sub.type = 'submit';
-    sub.className = 'bg-black text-white px-4 py-2 text-xs uppercase tracking-widest';
-    sub.textContent = 'OK';
-    form.onsubmit = e => { e.preventDefault(); const v = inp.value.trim(); if (!v) return; answer(v); };
-    form.appendChild(inp);
-    form.appendChild(sub);
-    c.appendChild(form);
-    inp.focus();
-  }
-}
-
-// --- Recomendação / litragem ---
-function guildFactor(nivel) {
-  // Fator x peso(kg) = litragem sugerida (ponto de partida; o shaper refina).
-  return { 'Principiante':0.55, 'Intermedio':0.40, 'Avanzado':0.36, 'Profesional':0.34 }[nivel] || 0.40;
-}
-function calcVolume() {
-  const peso = parseFloat(chatState.peso);
-  if (!peso || peso <= 0) return null;
-  let f = guildFactor(chatState.nivel);
-  if (chatState.onda === 'Pequeña/débil') f += 0.02;
-  if (chatState.onda === 'Grande/fuerte' || chatState.onda === 'Tubular') f -= 0.01;
-  return Math.round(peso * f);
-}
-function recModel() {
-  if (chatState.nivel === 'Principiante') return 'Longboard o Mid-Length (estable y fácil de remar)';
-  if (chatState.onda === 'Pequeña/débil') return 'Twin Fin (suelta y veloz en olas débiles)';
-  if (chatState.nivel === 'Profesional' || chatState.nivel === 'Avanzado') return 'Thruster';
-  return 'Mid-Length (versátil para el día a día)';
-}
-function recFin() {
-  if (chatState.nivel === 'Principiante') return 'Thruster (más estable y controlable)';
-  if (chatState.onda === 'Tubular') return 'Quad (rápida en el tubo)';
-  if (chatState.onda === 'Pequeña/débil') return 'Twin (suelta y veloz)';
-  return 'Thruster (versátil)';
-}
-function firstName(n) { return (n || '').trim().split(/\s+/)[0] || ''; }
-
-function finishChat() {
-  const vol = calcVolume();
-  const modelo = chatState.modelo === 'Ayúdame a decidir' ? recModel() : chatState.modelo;
-  const finRec = chatState.quilhas === 'No sé' ? recFin() : chatState.quilhas;
-  const copinho = chatState.copinho === 'No sé' ? 'a definir con el shaper' : chatState.copinho;
-  const precoTxt = (CATEGORIAS.indexOf(chatState.modelo) !== -1) ? precoCategoria(chatState.modelo) : PRECO;
-
-  const resumo =
-    'Listo' + (firstName(chatState.nome) ? ', ' + firstName(chatState.nome) : '') + '! Resumen de tu tabla:\n\n' +
-    '• Categoría: ' + modelo + '\n' +
-    '• Litraje sugerido: ' + (vol ? '~' + vol + ' L' : 'por calcular') + '\n' +
-    '• Quillas: ' + finRec + '\n' +
-    '• Caja: ' + copinho + '\n' +
-    '• Perfil: ' + chatState.altura + 'cm · ' + chatState.peso + 'kg · ' + chatState.nivel + '\n' +
-    '• Ola: ' + chatState.onda + '\n' +
-    '• Precio: desde ' + precoTxt + ' (según el tamaño final)\n\n' +
-    'Cada tabla es única y hecha a mano. Tras el pago, Baltazar afina contigo los detalles finales (arte, color y medidas).';
-  addMsg(resumo, 'bot');
-
-  const ref = modelo + (vol ? ' ~' + vol + 'L' : '') + ' / ' + finRec + ' / ' + copinho + ' / ' + chatState.altura + 'cm ' + chatState.peso + 'kg';
-  const c = document.getElementById('chatInput');
-  c.innerHTML = '';
-
-  if (LINK_PAGAMENTO) {
-    const a = document.createElement('a');
-    a.href = LINK_PAGAMENTO + (LINK_PAGAMENTO.indexOf('?') !== -1 ? '&' : '?') + 'ref=' + encodeURIComponent(ref);
-    a.target = '_blank'; a.rel = 'noopener';
-    a.className = 'block bg-black text-white text-center py-3 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity';
-    a.textContent = 'Reservar e ir al pago';
-    c.appendChild(a);
-  } else {
-    const b = document.createElement('button');
-    b.className = 'block w-full bg-black text-white text-center py-3 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity';
-    b.textContent = 'Finalizar pedido';
-    b.onclick = () => addMsg('¡El enlace de pago se está configurando. Pronto cierras todo por aquí!', 'bot');
-    c.appendChild(b);
-    const note = document.createElement('p');
-    note.className = 'mt-2 font-sans text-[10px] text-neutral-500 text-center';
-    note.textContent = 'Pago en línea en configuración.';
-    c.appendChild(note);
-  }
-  const again = document.createElement('button');
-  again.className = 'w-full mt-2 font-sans text-[10px] uppercase tracking-widest text-neutral-500 underline';
-  again.textContent = 'Empezar de nuevo';
-  again.onclick = () => startChat();
-  c.appendChild(again);
-}
+(function initLeadForm(){
+  var form = document.getElementById('leadForm');
+  if (!form) return;
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    var msg = document.getElementById('leadMsg');
+    var btn = document.getElementById('leadSubmit');
+    var fd = new FormData(form);
+    if (fd.get('website')) return; // honeypot
+    var nome = (fd.get('nome') || '').trim();
+    var contato = (fd.get('contato') || '').trim();
+    if (!nome || !contato) { msg.style.color = '#b00020'; msg.textContent = 'Completa nombre y contacto.'; return; }
+    var payload = {
+      nome: nome, contato: contato,
+      modelo: (fd.get('modelo') || '').trim(),
+      altura: (fd.get('altura') || '').trim(),
+      peso: (fd.get('peso') || '').trim(),
+      nivel: (fd.get('nivel') || '').trim(),
+      onda: (fd.get('onda') || '').trim(),
+      mensagem: (fd.get('mensagem') || '').trim(),
+      cupom: 'CARBON1000',
+      origem: location.href
+    };
+    btn.disabled = true; var orig = btn.textContent; btn.textContent = 'Enviando...';
+    msg.style.color = ''; msg.textContent = '';
+    try {
+      var r = await fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      var data = {};
+      try { data = await r.json(); } catch (_) {}
+      if (!r.ok || !data.ok) throw new Error((data && data.error) || ('HTTP ' + r.status));
+      leadSuccess(nome);
+    } catch (err) {
+      btn.disabled = false; btn.textContent = orig;
+      msg.style.color = '#b00020';
+      msg.textContent = 'No se pudo enviar ahora. Inténtalo de nuevo o escribe a baltazar.dev@flowcode.cc';
+    }
+  });
+})();
 
 // ===================== KEYBOARD / SWIPE =====================
 document.addEventListener('keydown', e => {

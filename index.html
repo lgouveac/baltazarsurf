@@ -333,6 +333,7 @@ summary::-webkit-details-marker { display:none; }
 <button onclick="openChat()" class="bg-white text-black px-8 md:px-12 py-4 md:py-5 font-sans uppercase tracking-widest text-[9px] md:text-[10px] hover:bg-neutral-200 transition-colors">Quero Minha Prancha</button>
 <a href="#boards" class="text-white/80 underline font-sans uppercase tracking-widest text-[9px] md:text-[10px] hover:text-white transition-colors">Ver a Coleção</a>
 </div>
+<p class="mt-6 font-sans text-[10px] md:text-[11px] tracking-widest text-white/70">10% OFF comprando pelo site com o cupom <span class="text-white font-semibold">CARBON1000</span></p>
 </div>
 </section>
 
@@ -605,18 +606,69 @@ Do planer à resina, o que sai do shaper é parte ferramenta, parte obra de arte
 </div>
 </div>
 
-<!-- CHAT / ATELIER MODAL -->
+<!-- MODAL: PEÇA SUA PRANCHA (formulário) -->
 <div id="chatModal" class="fixed inset-0 z-[100] hidden bg-black/90 backdrop-blur-sm modal-fade flex items-end md:items-center justify-center" onclick="if(event.target===this)closeChat()">
-<div class="bg-white w-full md:max-w-md h-[90dvh] md:h-[80vh] md:max-h-[660px] flex flex-col bottom-sheet-enter rounded-t-2xl md:rounded-none overflow-hidden">
-<div class="flex items-center justify-between px-5 py-4 border-b border-black/10">
+<div class="bg-white w-full md:max-w-md h-[92dvh] md:h-auto md:max-h-[90vh] flex flex-col bottom-sheet-enter rounded-t-2xl md:rounded-none overflow-hidden">
+<div class="flex items-center justify-between px-5 py-4 border-b border-black/10 shrink-0">
 <div>
-<p class="font-serif italic text-lg leading-none">Shaper Baltazar</p>
-<p class="font-sans text-[9px] uppercase tracking-widest text-neutral-500 mt-1">Monte sua prancha</p>
+<p class="font-serif italic text-lg leading-none">Peça sua prancha</p>
+<p class="font-sans text-[9px] uppercase tracking-widest text-neutral-500 mt-1">O shaper te retorna pra fechar os detalhes</p>
 </div>
-<button onclick="closeChat()" class="text-2xl hover:opacity-60">&times;</button>
+<button onclick="closeChat()" class="text-2xl hover:opacity-60" aria-label="Fechar">&times;</button>
 </div>
-<div id="chatBody" class="flex-1 overflow-y-auto px-5 py-4 space-y-3"></div>
-<div id="chatInput" class="border-t border-black/10 p-4"></div>
+<div id="leadArea" class="flex-1 overflow-y-auto">
+<div class="bg-black text-white px-5 py-3 text-center">
+<p class="font-sans text-[11px] tracking-wide">Comprando pelo site: <span class="font-semibold">10% OFF</span> com o cupom <span class="font-mono tracking-widest">CARBON1000</span></p>
+</div>
+<form id="leadForm" class="px-5 py-5 space-y-4" novalidate>
+<input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true"/>
+<label class="block">
+<span class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Nome *</span>
+<input name="nome" required autocomplete="name" class="w-full border-b border-black/30 focus:border-black bg-transparent py-2 text-sm focus:outline-none" placeholder="Seu nome"/>
+</label>
+<label class="block">
+<span class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Email ou WhatsApp *</span>
+<input name="contato" required class="w-full border-b border-black/30 focus:border-black bg-transparent py-2 text-sm focus:outline-none" placeholder="pra gente te retornar"/>
+</label>
+<p class="font-sans text-[10px] uppercase tracking-widest text-neutral-400 pt-1">Opcional — ajuda o shaper a já pensar na sua prancha</p>
+<label class="block">
+<span class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Tipo de prancha</span>
+<select name="modelo" class="w-full border-b border-black/30 focus:border-black bg-transparent py-2 text-sm focus:outline-none">
+<option value="">Sem preferência / me ajude a decidir</option>
+<option>Thruster</option><option>Twin</option><option>Twin +1</option><option>Quad</option><option>Mid-Length</option><option>Longboard</option><option>Asymmetric</option><option>Outras</option>
+</select>
+</label>
+<div class="grid grid-cols-2 gap-4">
+<label class="block">
+<span class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Altura (cm)</span>
+<input name="altura" type="number" inputmode="numeric" class="w-full border-b border-black/30 focus:border-black bg-transparent py-2 text-sm focus:outline-none" placeholder="175"/>
+</label>
+<label class="block">
+<span class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Peso (kg)</span>
+<input name="peso" type="number" inputmode="numeric" class="w-full border-b border-black/30 focus:border-black bg-transparent py-2 text-sm focus:outline-none" placeholder="75"/>
+</label>
+</div>
+<label class="block">
+<span class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Nível</span>
+<select name="nivel" class="w-full border-b border-black/30 focus:border-black bg-transparent py-2 text-sm focus:outline-none">
+<option value="">—</option><option>Iniciante</option><option>Intermediário</option><option>Avançado</option><option>Profissional</option>
+</select>
+</label>
+<label class="block">
+<span class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Onda que mais surfa</span>
+<select name="onda" class="w-full border-b border-black/30 focus:border-black bg-transparent py-2 text-sm focus:outline-none">
+<option value="">—</option><option>Pequena/fraca</option><option>Média</option><option>Grande/forte</option><option>Tubular</option>
+</select>
+</label>
+<label class="block">
+<span class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Mensagem</span>
+<textarea name="mensagem" rows="3" class="w-full border border-black/20 focus:border-black bg-transparent p-2 text-sm focus:outline-none resize-none" placeholder="Conta o que você procura, prazo, referências..."></textarea>
+</label>
+<button type="submit" id="leadSubmit" class="w-full bg-black text-white py-3.5 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Enviar pedido</button>
+<p id="leadMsg" class="font-sans text-[11px] text-center min-h-[1em]"></p>
+<p class="font-sans text-[10px] text-neutral-400 text-center leading-relaxed">Seus dados vão direto pro shaper. Sem spam.</p>
+</form>
+</div>
 </div>
 </div>
 
@@ -787,179 +839,72 @@ function wantThis() {
   openChat(item.c);
 }
 
-// ===================== CHAT GUIADO (Shaper) =====================
-// >>> PRONTO PARA IA: hoje o fluxo segue os passos fixos de chatSteps.
-// Para plugar uma IA de verdade (Claude) depois, troque askStep()/answer()
-// por uma chamada a um backend, ex.:
-//   async function askAI(history){ const r = await fetch('/api/chat',{method:'POST',body:JSON.stringify(history)}); return (await r.json()).reply; }
-// e renderize a resposta com addMsg(reply,'bot'). O resto da UI já está pronto.
-const chatSteps = [
-  { key:'modelo',   bot:'Fala! Sou o assistente do shaper. Que tipo de prancha tem a sua cara?', type:'choice', options:['Thruster','Twin','Twin +1','Quad','Mid-Length','Longboard','Asymmetric','Me ajude a decidir'] },
-  { key:'altura',   bot:'Beleza. Qual a sua altura? (em cm)', type:'number', placeholder:'175' },
-  { key:'peso',     bot:'E o seu peso? (em kg)', type:'number', placeholder:'75' },
-  { key:'nivel',    bot:'Como você descreve seu nível no surfe?', type:'choice', options:['Iniciante','Intermediário','Avançado','Profissional'] },
-  { key:'onda',     bot:'Que tipo de onda você mais surfa?', type:'choice', options:['Pequena/fraca','Média','Grande/forte','Tubular'] },
-  { key:'quilhas',  bot:'Configuração de quilhas que você prefere?', type:'choice', options:['Single','Twin','Thruster','Quad','Não sei'] },
-  { key:'copinho',  bot:'E o sistema de quilha (o "copinho")?', type:'choice', options:['FCS II','Futures','Caixa de single','Não sei'] },
-  { key:'nome',     bot:'Show! Como é o seu nome?', type:'text', placeholder:'Seu nome' },
-  { key:'contato',  bot:'Por último: um e-mail ou telefone pro Baltazar acertar os detalhes depois.', type:'text', placeholder:'email ou telefone' },
-];
-let chatState = {}, chatIdx = 0;
-
+// ===================== FORMULÁRIO DE PEDIDO =====================
+// O antigo chat guiado virou um formulário. Os botões "Quero Minha Prancha"
+// continuam chamando openChat(); wantThis() pré-seleciona a categoria da prancha.
 function openChat(preCat) {
   document.getElementById('chatModal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
-  startChat(preCat);
+  var sel = document.querySelector('#leadForm select[name=modelo]');
+  if (sel) {
+    var has = Array.prototype.some.call(sel.options, function(o){ return o.value === preCat; });
+    sel.value = (preCat && has) ? preCat : '';
+  }
+  setTimeout(function(){ var n = document.querySelector('#leadForm input[name=nome]'); if (n) n.focus(); }, 60);
 }
 function closeChat() {
   document.getElementById('chatModal').classList.add('hidden');
   document.body.style.overflow = '';
 }
-function startChat(preCat) {
-  chatState = {}; chatIdx = 0;
-  document.getElementById('chatBody').innerHTML = '';
-  document.getElementById('chatInput').innerHTML = '';
-  if (preCat && CATEGORIAS.indexOf(preCat) !== -1) {
-    chatState.modelo = preCat;
-    chatIdx = 1; // pula a pergunta do modelo
-    addMsg('Boa escolha, uma ' + preCat + '. Vamos personalizar a sua.', 'bot');
-    setTimeout(askStep, 300);
-  } else {
-    askStep();
-  }
+function leadSuccess(nome) {
+  var area = document.getElementById('leadArea');
+  if (!area) return;
+  var first = (nome || '').trim().split(/\s+/)[0] || '';
+  area.innerHTML =
+    '<div class="px-6 py-16 text-center">' +
+    '<p class="font-serif italic text-3xl mb-4">Recebido' + (first ? ', ' + first : '') + '!</p>' +
+    '<p class="font-sans text-sm text-neutral-600 leading-relaxed max-w-xs mx-auto">Seu pedido chegou pro shaper. Em breve a gente te retorna pra fechar arte, medidas e o pagamento com os 10% do cupom CARBON1000.</p>' +
+    '<button onclick="closeChat()" class="mt-8 bg-black text-white px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:opacity-80">Fechar</button>' +
+    '</div>';
 }
-function addMsg(text, who) {
-  const body = document.getElementById('chatBody');
-  const wrap = document.createElement('div');
-  wrap.className = who === 'user' ? 'flex justify-end' : 'flex justify-start';
-  const bub = document.createElement('div');
-  bub.className = (who === 'user' ? 'bg-black text-white' : 'bg-surface-container text-on-surface') +
-    ' px-4 py-2.5 max-w-[82%] text-sm font-sans whitespace-pre-line leading-relaxed';
-  bub.textContent = text;
-  wrap.appendChild(bub);
-  body.appendChild(wrap);
-  body.scrollTop = body.scrollHeight;
-}
-function askStep() {
-  if (chatIdx >= chatSteps.length) { finishChat(); return; }
-  const step = chatSteps[chatIdx];
-  addMsg(step.bot, 'bot');
-  buildInput(step);
-}
-function answer(val) {
-  addMsg(val, 'user');
-  chatState[chatSteps[chatIdx].key] = val;
-  chatIdx++;
-  document.getElementById('chatInput').innerHTML = '';
-  setTimeout(askStep, 280);
-}
-function buildInput(step) {
-  const c = document.getElementById('chatInput');
-  c.innerHTML = '';
-  if (step.type === 'choice') {
-    const g = document.createElement('div');
-    g.className = 'flex flex-wrap gap-2';
-    step.options.forEach(o => {
-      const btn = document.createElement('button');
-      btn.className = 'border border-black/20 hover:bg-black hover:text-white transition-colors px-3 py-2 text-xs font-sans';
-      btn.textContent = o;
-      btn.onclick = () => answer(o);
-      g.appendChild(btn);
-    });
-    c.appendChild(g);
-  } else {
-    const form = document.createElement('form');
-    form.className = 'flex gap-2 items-end';
-    const inp = document.createElement('input');
-    inp.type = step.type === 'number' ? 'number' : 'text';
-    inp.placeholder = step.placeholder || '';
-    inp.className = 'flex-1 border-b border-black bg-transparent py-2 text-sm focus:outline-none';
-    const sub = document.createElement('button');
-    sub.type = 'submit';
-    sub.className = 'bg-black text-white px-4 py-2 text-xs uppercase tracking-widest';
-    sub.textContent = 'OK';
-    form.onsubmit = e => { e.preventDefault(); const v = inp.value.trim(); if (!v) return; answer(v); };
-    form.appendChild(inp);
-    form.appendChild(sub);
-    c.appendChild(form);
-    inp.focus();
-  }
-}
-
-// --- Recomendação / litragem ---
-function guildFactor(nivel) {
-  // Fator x peso(kg) = litragem sugerida (ponto de partida; o shaper refina).
-  return { 'Iniciante':0.55, 'Intermediário':0.40, 'Avançado':0.36, 'Profissional':0.34 }[nivel] || 0.40;
-}
-function calcVolume() {
-  const peso = parseFloat(chatState.peso);
-  if (!peso || peso <= 0) return null;
-  let f = guildFactor(chatState.nivel);
-  if (chatState.onda === 'Pequena/fraca') f += 0.02;
-  if (chatState.onda === 'Grande/forte' || chatState.onda === 'Tubular') f -= 0.01;
-  return Math.round(peso * f);
-}
-function recModel() {
-  if (chatState.nivel === 'Iniciante') return 'Longboard ou Mid-Length (estável e fácil de remar)';
-  if (chatState.onda === 'Pequena/fraca') return 'Twin Fin (solta e veloz em ondas fracas)';
-  if (chatState.nivel === 'Profissional' || chatState.nivel === 'Avançado') return 'Thruster';
-  return 'Mid-Length (versátil para o dia a dia)';
-}
-function recFin() {
-  if (chatState.nivel === 'Iniciante') return 'Thruster (mais estável e controlável)';
-  if (chatState.onda === 'Tubular') return 'Quad (rápida no tubo)';
-  if (chatState.onda === 'Pequena/fraca') return 'Twin (solta e veloz)';
-  return 'Thruster (versátil)';
-}
-function firstName(n) { return (n || '').trim().split(/\s+/)[0] || ''; }
-
-function finishChat() {
-  const vol = calcVolume();
-  const modelo = chatState.modelo === 'Me ajude a decidir' ? recModel() : chatState.modelo;
-  const finRec = chatState.quilhas === 'Não sei' ? recFin() : chatState.quilhas;
-  const copinho = chatState.copinho === 'Não sei' ? 'a definir com o shaper' : chatState.copinho;
-  const precoTxt = (CATEGORIAS.indexOf(chatState.modelo) !== -1) ? precoCategoria(chatState.modelo) : PRECO;
-
-  const resumo =
-    'Fechou' + (firstName(chatState.nome) ? ', ' + firstName(chatState.nome) : '') + '! Resumo da sua prancha:\n\n' +
-    '• Categoria: ' + modelo + '\n' +
-    '• Litragem sugerida: ' + (vol ? '~' + vol + ' L' : 'a calcular') + '\n' +
-    '• Quilhas: ' + finRec + '\n' +
-    '• Copinho: ' + copinho + '\n' +
-    '• Perfil: ' + chatState.altura + 'cm · ' + chatState.peso + 'kg · ' + chatState.nivel + '\n' +
-    '• Onda: ' + chatState.onda + '\n' +
-    '• Valor: a partir de ' + precoTxt + ' (conforme o tamanho final)\n\n' +
-    'Cada prancha é única e feita à mão. Depois do pagamento, o Baltazar acerta com você os detalhes finais (arte, cor e medidas).';
-  addMsg(resumo, 'bot');
-
-  const ref = modelo + (vol ? ' ~' + vol + 'L' : '') + ' / ' + finRec + ' / ' + copinho + ' / ' + chatState.altura + 'cm ' + chatState.peso + 'kg';
-  const c = document.getElementById('chatInput');
-  c.innerHTML = '';
-
-  if (LINK_PAGAMENTO) {
-    const a = document.createElement('a');
-    a.href = LINK_PAGAMENTO + (LINK_PAGAMENTO.indexOf('?') !== -1 ? '&' : '?') + 'ref=' + encodeURIComponent(ref);
-    a.target = '_blank'; a.rel = 'noopener';
-    a.className = 'block bg-black text-white text-center py-3 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity';
-    a.textContent = 'Reservar e ir para o pagamento';
-    c.appendChild(a);
-  } else {
-    const b = document.createElement('button');
-    b.className = 'block w-full bg-black text-white text-center py-3 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity';
-    b.textContent = 'Finalizar pedido';
-    b.onclick = () => addMsg('O link de pagamento está sendo configurado. Em breve você fecha tudo por aqui!', 'bot');
-    c.appendChild(b);
-    const note = document.createElement('p');
-    note.className = 'mt-2 font-sans text-[10px] text-neutral-500 text-center';
-    note.textContent = 'Pagamento online em configuração.';
-    c.appendChild(note);
-  }
-  const again = document.createElement('button');
-  again.className = 'w-full mt-2 font-sans text-[10px] uppercase tracking-widest text-neutral-500 underline';
-  again.textContent = 'Recomeçar';
-  again.onclick = () => startChat();
-  c.appendChild(again);
-}
+(function initLeadForm(){
+  var form = document.getElementById('leadForm');
+  if (!form) return;
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    var msg = document.getElementById('leadMsg');
+    var btn = document.getElementById('leadSubmit');
+    var fd = new FormData(form);
+    if (fd.get('website')) return; // honeypot
+    var nome = (fd.get('nome') || '').trim();
+    var contato = (fd.get('contato') || '').trim();
+    if (!nome || !contato) { msg.style.color = '#b00020'; msg.textContent = 'Preencha nome e contato.'; return; }
+    var payload = {
+      nome: nome, contato: contato,
+      modelo: (fd.get('modelo') || '').trim(),
+      altura: (fd.get('altura') || '').trim(),
+      peso: (fd.get('peso') || '').trim(),
+      nivel: (fd.get('nivel') || '').trim(),
+      onda: (fd.get('onda') || '').trim(),
+      mensagem: (fd.get('mensagem') || '').trim(),
+      cupom: 'CARBON1000',
+      origem: location.href
+    };
+    btn.disabled = true; var orig = btn.textContent; btn.textContent = 'Enviando...';
+    msg.style.color = ''; msg.textContent = '';
+    try {
+      var r = await fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      var data = {};
+      try { data = await r.json(); } catch (_) {}
+      if (!r.ok || !data.ok) throw new Error((data && data.error) || ('HTTP ' + r.status));
+      leadSuccess(nome);
+    } catch (err) {
+      btn.disabled = false; btn.textContent = orig;
+      msg.style.color = '#b00020';
+      msg.textContent = 'Não consegui enviar agora. Tenta de novo, ou manda pra baltazar.dev@flowcode.cc';
+    }
+  });
+})();
 
 // ===================== KEYBOARD / SWIPE =====================
 document.addEventListener('keydown', e => {
