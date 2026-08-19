@@ -40,8 +40,19 @@ module.exports = async (req, res) => {
 
     const KEY = process.env.RESEND_API_KEY;
     if (!KEY) { res.status(500).json({ ok: false, error: 'resend_nao_configurado' }); return; }
-    const TO = process.env.LEAD_TO || 'lucas.carmo@flowcode.cc';
+    // LEAD_TO aceita 1 ou vários emails separados por vírgula (depois é só
+    // adicionar o email do César: "lucas.carmo@flowcode.cc, cesar@...").
+    const TO = (process.env.LEAD_TO || 'lucas.carmo@flowcode.cc')
+      .split(',').map(function (x) { return x.trim(); }).filter(Boolean);
     const FROM = process.env.LEAD_FROM || 'Baltazar Site <pedidos@flowcode.cc>';
+
+    // Número de pedido legível: BC-AAAAMMDD-XXXX (data + 4 dígitos).
+    var now = new Date();
+    var pad = function (n) { return String(n).padStart(2, '0'); };
+    var ymd = now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate());
+    var rand = Math.floor(1000 + Math.random() * 9000);
+    var pedidoId = 'BC-' + ymd + '-' + rand;
+    var recebidoEm = now.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'short' }) + ' (Rio)';
 
     const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const row = (k, v) => v
@@ -50,9 +61,12 @@ module.exports = async (req, res) => {
 
     const html = `
       <div style="max-width:540px;margin:0 auto;font-family:sans-serif;color:#111">
-        <h2 style="font-size:18px;margin:0 0 2px">Novo pedido de prancha</h2>
-        <p style="color:#777;font-size:13px;margin:0 0 18px">Enviado pelo formulário do site Baltazar Customs.</p>
+        <p style="font:600 12px sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#999;margin:0 0 2px">Baltazar Customs</p>
+        <h2 style="font-size:20px;margin:0 0 2px">Pedido ${esc(pedidoId)}</h2>
+        <p style="color:#777;font-size:13px;margin:0 0 18px">Recebido pelo formulário do site — ${esc(recebidoEm)}</p>
         <table style="border-collapse:collapse;width:100%">
+          ${row('Pedido', pedidoId)}
+          ${row('Recebido em', recebidoEm)}
           ${row('Nome', nome)}
           ${row('Contato', contato)}
           ${row('Tipo de prancha', modelo)}
@@ -67,7 +81,8 @@ module.exports = async (req, res) => {
       </div>`;
 
     const text = [
-      'Novo pedido de prancha (site Baltazar Customs)',
+      'Pedido ' + pedidoId + ' (site Baltazar Customs)',
+      'Recebido em: ' + recebidoEm,
       '',
       'Nome: ' + nome,
       'Contato: ' + contato,
@@ -85,8 +100,8 @@ module.exports = async (req, res) => {
 
     const payload = {
       from: FROM,
-      to: [TO],
-      subject: 'Novo pedido de prancha — ' + nome,
+      to: TO,
+      subject: 'Pedido ' + pedidoId + ' — ' + nome,
       html: html,
       text: text,
     };
@@ -104,7 +119,7 @@ module.exports = async (req, res) => {
       return;
     }
 
-    res.status(200).json({ ok: true });
+    res.status(200).json({ ok: true, pedido: pedidoId });
   } catch (e) {
     res.status(500).json({ ok: false, error: 'erro_interno' });
   }

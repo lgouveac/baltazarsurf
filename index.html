@@ -856,14 +856,19 @@ function closeChat() {
   document.getElementById('chatModal').classList.add('hidden');
   document.body.style.overflow = '';
 }
-function leadSuccess(nome) {
+function leadSuccess(nome, pedido) {
   var area = document.getElementById('leadArea');
   if (!area) return;
   var first = (nome || '').trim().split(/\s+/)[0] || '';
+  var pedidoHtml = pedido
+    ? '<p class="font-sans text-[10px] uppercase tracking-widest text-neutral-400 mt-6">Nº do pedido:</p>' +
+      '<p class="font-mono text-sm tracking-widest text-black mt-1">' + String(pedido).replace(/[^A-Za-z0-9-]/g, '') + '</p>'
+    : '';
   area.innerHTML =
     '<div class="px-6 py-16 text-center">' +
     '<p class="font-serif italic text-3xl mb-4">Recebido' + (first ? ', ' + first : '') + '!</p>' +
     '<p class="font-sans text-sm text-neutral-600 leading-relaxed max-w-xs mx-auto">Seu pedido chegou pro shaper. Em breve a gente te retorna pra fechar arte, medidas e o pagamento com os 10% do cupom CARBON1000.</p>' +
+    pedidoHtml +
     '<button onclick="closeChat()" class="mt-8 bg-black text-white px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:opacity-80">Fechar</button>' +
     '</div>';
 }
@@ -897,7 +902,7 @@ function leadSuccess(nome) {
       var data = {};
       try { data = await r.json(); } catch (_) {}
       if (!r.ok || !data.ok) throw new Error((data && data.error) || ('HTTP ' + r.status));
-      leadSuccess(nome);
+      leadSuccess(nome, data.pedido);
     } catch (err) {
       btn.disabled = false; btn.textContent = orig;
       msg.style.color = '#b00020';
