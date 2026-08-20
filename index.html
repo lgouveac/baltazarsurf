@@ -79,6 +79,14 @@ summary::-webkit-details-marker { display:none; }
 .no-scrollbar { scrollbar-width: none; }
 #boardFilters .filter-chip { flex-shrink: 0; white-space: nowrap; }
 @media (max-width: 767px) { footer { padding-bottom: 56px; } }
+.ct-frame { position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  filter:grayscale(1) contrast(1.15); opacity:0; transition:opacity 2s ease-in-out; }
+.ct-frame.active { opacity:1; animation:ctZoom 14s ease-out forwards; }
+@keyframes ctZoom { from { transform:scale(1.02); } to { transform:scale(1.14); } }
+@media (prefers-reduced-motion: reduce) {
+  .ct-frame.active { animation:none; }
+  .ct-frame { transition:none; }
+}
 </style>
 
 <!-- ============================================================
@@ -321,10 +329,10 @@ summary::-webkit-details-marker { display:none; }
 
 <main id="top">
 <!-- Hero Section -->
-<section class="w-full bg-surface border-b border-black/5">
+<section class="w-full bg-surface">
 <div class="max-w-7xl mx-auto px-5 md:px-10 pt-16 pb-14 md:py-24 grid md:grid-cols-2 gap-10 md:gap-16 items-center">
 <div>
-<h1 data-cms="hero_tagline" class="font-serif italic text-4xl md:text-6xl leading-tight">Pranchas de surf artesanais feitas à mão. Recreio, Rio de Janeiro.</h1>
+<h1 data-cms="hero_tagline" class="font-serif italic text-4xl md:text-7xl leading-tight">Pranchas de surf artesanais feitas à mão. Recreio, Rio de Janeiro.</h1>
 <p data-cms="hero_subtitle" class="font-sans text-base md:text-lg text-neutral-600 leading-relaxed mt-5 md:mt-6 max-w-md">Cada prancha é única. Você se inspira, a gente faz a sua.</p>
 <div class="mt-8 md:mt-10">
 <button onclick="openChat()" class="bg-black text-white px-10 py-4 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Quero Minha Prancha</button>
@@ -338,12 +346,12 @@ summary::-webkit-details-marker { display:none; }
 </section>
 
 <!-- Showcase Section: A Coleção -->
-<section id="boards" class="scroll-mt-20 py-16 md:py-32 px-5 md:px-10 bg-surface">
+<section id="boards" class="scroll-mt-20 py-24 md:py-40 px-5 md:px-10 bg-surface">
 <div class="max-w-7xl mx-auto">
 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 md:mb-12 gap-6 md:gap-8">
 <div class="max-w-2xl">
 <span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-2 md:mb-4 block">A Coleção</span>
-<h2 data-cms="collection_heading" class="font-serif italic text-3xl md:text-7xl leading-tight">Modelos que já saíram das mãos do shaper.</h2>
+<h2 data-cms="collection_heading" class="font-serif italic text-4xl md:text-7xl leading-tight">Modelos que já saíram das mãos do shaper.</h2>
 <p class="font-sans text-sm md:text-base text-on-surface-variant mt-4 md:mt-6 leading-relaxed">Use como inspiração. Não repetimos pranchas. Você escolhe um modelo com a sua cara e a gente shapeia a sua, do seu jeito. À mão, sob medida, <span class="text-black font-medium">a partir de R$ 2.600</span>.</p>
 </div>
 <img src="/images/brand/tiger-black.png" alt="" aria-hidden="true" class="hidden md:block w-44 lg:w-56 shrink-0"/>
@@ -359,34 +367,6 @@ summary::-webkit-details-marker { display:none; }
 <div class="bg-white px-4 py-4 col-span-2 sm:col-span-1"><p class="font-sans uppercase text-[9px] tracking-widest text-neutral-500">8′6″ – 9′6″</p><p class="font-serif italic text-xl md:text-2xl mt-1">R$ 3.600</p></div>
 </div>
 <p class="font-sans text-[11px] text-neutral-400 mt-3">Arte e acabamentos especiais podem ter custo adicional.</p>
-</div>
-<!-- Destaque: Carbon Trash -->
-<div class="grid md:grid-cols-2 gap-6 md:gap-10 items-center bg-white p-5 md:p-8 mb-10 md:mb-14">
-<div class="aspect-[4/5] md:aspect-[3/4] overflow-hidden">
-<img data-cms-img="carbon_feature" src="/images/IMG_6840.jpeg" alt="Prancha Carbon Trash" class="w-full h-full object-cover grayscale contrast-110"/>
-</div>
-<div>
-<span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 block mb-2">Destaque</span>
-<h3 class="font-serif italic text-3xl md:text-5xl mb-4">Carbon Trash</h3>
-<p data-cms="carbon_desc" class="font-sans text-sm md:text-base text-on-surface-variant leading-relaxed mb-5">Prancha de carbono construída com retalhos descartados, o trash. Os fios são espalhados à mão na resina, e cada padrão é impossível de repetir. Performance, flexibilidade e resistência únicas.</p>
-<div class="mb-6">
-<p class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-3">Construções</p>
-<ul class="font-sans text-sm text-on-surface-variant space-y-1">
-<li>Full</li>
-<li>Full Lite</li>
-<li>Rails</li>
-<li>Rails 12″ nose</li>
-<li>Rails 12″ nose and tail</li>
-<li>Bottom and rails</li>
-<li>Deck and rails</li>
-</ul>
-</div>
-<div class="flex flex-wrap gap-3 items-center">
-<button onclick="openChat()" class="bg-black text-white px-6 py-3 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Quero Minha Prancha</button>
-<button onclick="filterTo('Carbon Trash')" class="font-sans uppercase tracking-widest text-[10px] underline hover:opacity-70">Ver Carbon Trash</button>
-<a href="/carbon-trash" class="font-sans uppercase tracking-widest text-[10px] underline hover:opacity-70">Saiba mais →</a>
-</div>
-</div>
 </div>
 <!-- Filtros por categoria -->
 <div id="boardFilters" class="flex md:flex-wrap gap-2 mb-8 md:mb-12 overflow-x-auto md:overflow-visible no-scrollbar -mx-5 px-5 md:mx-0 md:px-0">
@@ -410,12 +390,40 @@ summary::-webkit-details-marker { display:none; }
 </div>
 </section>
 
+<!-- Carbon Trash: seção cinematográfica full-bleed -->
+<section id="carbon" class="scroll-mt-20 relative w-full min-h-[86svh] flex items-center overflow-hidden bg-black">
+<div class="absolute inset-0" id="ctCine" aria-hidden="true">
+<img data-cms-img="carbon_feature" data-cms-img-i="0" src="/images/IMG_6840.jpeg" alt="" loading="lazy" class="ct-frame active"/>
+<img data-cms-img="carbon_feature" data-cms-img-i="1" src="/images/IMG_6835.jpeg" alt="" loading="lazy" class="ct-frame"/>
+<img data-cms-img="carbon_feature" data-cms-img-i="2" src="/images/IMG_6856.jpeg" alt="" loading="lazy" class="ct-frame"/>
+</div>
+<div class="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/30 pointer-events-none"></div>
+<div class="relative z-10 w-full max-w-7xl mx-auto px-5 md:px-10 py-24 md:py-32">
+<div class="max-w-xl">
+<span class="font-sans uppercase text-[10px] tracking-[0.3em] text-white/50 block mb-5">Linha exclusiva</span>
+<h2 class="font-serif italic text-5xl md:text-8xl leading-[0.95] text-white mb-7">Carbon Trash</h2>
+<p data-cms="carbon_desc" class="font-sans text-base md:text-lg text-white/70 leading-relaxed mb-9 max-w-lg">Prancha de carbono construída com retalhos descartados, o trash. Os fios são espalhados à mão na resina, e cada padrão é impossível de repetir. Performance, flexibilidade e resistência únicas.</p>
+<p class="font-sans uppercase text-[10px] tracking-[0.2em] text-white/40 mb-4">Sete construções</p>
+<ul class="font-sans text-[11px] md:text-xs uppercase tracking-widest text-white/60 flex flex-wrap gap-x-5 gap-y-2 mb-10">
+<li>Full</li><li>Full Lite</li><li>Rails</li><li>Rails 12″ nose</li><li>Rails 12″ nose and tail</li><li>Bottom and rails</li><li>Deck and rails</li>
+</ul>
+<div class="flex flex-wrap gap-6 items-center">
+<button onclick="openChat()" class="bg-white text-black px-9 py-4 font-sans uppercase tracking-widest text-[10px] hover:bg-white/85 transition-colors">Quero Minha Prancha</button>
+<button onclick="filterTo('Carbon Trash')" class="font-sans uppercase tracking-widest text-[10px] text-white/70 underline hover:text-white transition-colors">Ver na coleção</button>
+<a href="/carbon-trash" class="font-sans uppercase tracking-widest text-[10px] text-white/70 underline hover:text-white transition-colors">Saiba mais</a>
+</div>
+</div>
+</div>
+</section>
+
+
+
 <!-- Como Funciona -->
-<section id="como" class="scroll-mt-20 py-16 md:py-32 bg-surface-container-low px-5 md:px-10">
+<section id="como" class="scroll-mt-20 py-24 md:py-40 bg-surface-container-low px-5 md:px-10">
 <div class="max-w-6xl mx-auto">
 <div class="text-center mb-12 md:mb-20">
 <span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-2 md:mb-4 block">Como Funciona</span>
-<h2 data-cms="how_heading" class="font-serif italic text-3xl md:text-6xl">Da inspiração à sua prancha.</h2>
+<h2 data-cms="how_heading" class="font-serif italic text-4xl md:text-7xl">Da inspiração à sua prancha.</h2>
 </div>
 <div class="grid md:grid-cols-3 gap-10 md:gap-16">
 <div>
@@ -438,7 +446,7 @@ summary::-webkit-details-marker { display:none; }
 </section>
 
 <!-- César Baltazar Section -->
-<section id="baltazar" class="scroll-mt-20 py-16 md:py-32 bg-black text-white px-5 md:px-10">
+<section id="baltazar" class="scroll-mt-20 py-24 md:py-40 bg-black text-white px-5 md:px-10">
 <div class="max-w-7xl mx-auto">
 <div class="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
 <div class="aspect-[3/4] overflow-hidden">
@@ -446,7 +454,7 @@ summary::-webkit-details-marker { display:none; }
 </div>
 <div>
 <span class="font-sans uppercase text-[10px] tracking-[0.2em] text-white/50 mb-3 md:mb-5 block">O Shaper</span>
-<h2 class="font-serif italic text-4xl md:text-6xl leading-tight mb-6 md:mb-8">César Baltazar</h2>
+<h2 class="font-serif italic text-4xl md:text-7xl leading-tight mb-6 md:mb-8">César Baltazar</h2>
 <!-- TODO: substituir pelo texto OFICIAL do César (rascunho provisório abaixo) -->
 <p data-cms="about_p1" class="font-sans text-sm md:text-base text-white/70 leading-relaxed mb-4">
 Antes de ser shaper, o César Baltazar é surfista. Foi lendo o mar do Rio de Janeiro que ele entrou na oficina pela primeira vez, atrás da prancha exata que a onda pedia e que não existia na prateleira.
@@ -482,7 +490,7 @@ Do planer à resina, o que sai do shaper é parte ferramenta, parte obra de arte
 
 <!-- FAQ -->
 <!-- Depoimento -->
-<section class="py-16 md:py-28 bg-white px-5 md:px-10">
+<section class="py-24 md:py-40 bg-white px-5 md:px-10">
 <div class="max-w-3xl mx-auto text-center">
 <span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 block mb-6 md:mb-8">Quem rema com uma Baltazar</span>
 <blockquote data-cms="testimonial_1" class="font-serif italic text-2xl md:text-4xl leading-snug">"Carbon Trash é um foguete. Rápida, responde bem e resistente demais."</blockquote>
@@ -490,11 +498,11 @@ Do planer à resina, o que sai do shaper é parte ferramenta, parte obra de arte
 </div>
 </section>
 
-<section id="faq" class="scroll-mt-20 py-16 md:py-32 bg-surface px-5 md:px-10">
+<section id="faq" class="scroll-mt-20 py-24 md:py-40 bg-surface px-5 md:px-10">
 <div class="max-w-4xl mx-auto">
 <div class="text-center mb-10 md:mb-16">
 <span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-2 md:mb-4 block">Dúvidas</span>
-<h2 class="font-serif italic text-3xl md:text-6xl">Perguntas frequentes</h2>
+<h2 class="font-serif italic text-4xl md:text-7xl">Perguntas frequentes</h2>
 </div>
 <div class="border-b border-black/10">
 <details class="border-t border-black/10 group">
@@ -566,10 +574,10 @@ Do planer à resina, o que sai do shaper é parte ferramenta, parte obra de arte
 </section>
 
 <!-- Peça sua prancha (formulário) -->
-<section id="pedido" class="scroll-mt-24 py-16 md:py-28 px-5 md:px-10 bg-white border-t border-black/5">
+<section id="pedido" class="scroll-mt-24 py-24 md:py-40 px-5 md:px-10 bg-white">
 <div class="max-w-xl mx-auto">
 <span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 block mb-3 text-center">Pedido</span>
-<h2 class="font-serif italic text-3xl md:text-5xl text-center mb-3">Peça sua prancha.</h2>
+<h2 class="font-serif italic text-4xl md:text-7xl text-center mb-3">Peça sua prancha.</h2>
 <p class="font-sans text-sm md:text-base text-neutral-600 text-center mb-8 md:mb-10">O shaper te retorna pra fechar os detalhes</p>
 <div id="leadArea" class="border border-black/10 bg-white">
 
@@ -618,7 +626,7 @@ Do planer à resina, o que sai do shaper é parte ferramenta, parte obra de arte
 </label>
 <label class="block">
 <span class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Mensagem</span>
-<textarea name="mensagem" rows="3" class="w-full border border-black/20 focus:border-black bg-transparent p-2 text-sm focus:outline-none resize-none" placeholder="Conta o que você procura, prazo, referências..."></textarea>
+<textarea name="mensagem" rows="3" class="w-full border-b border-black/30 focus:border-black bg-transparent py-2 text-sm focus:outline-none resize-none" placeholder="Conta o que você procura, prazo, referências..."></textarea>
 </label>
 <button type="submit" id="leadSubmit" class="w-full bg-black text-white py-3.5 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Enviar pedido</button>
 <p id="leadMsg" class="font-sans text-[11px] text-center min-h-[1em]"></p>
@@ -631,9 +639,9 @@ Do planer à resina, o que sai do shaper é parte ferramenta, parte obra de arte
 
 
 <!-- Manifesto / fechamento -->
-<section id="contact" class="py-20 md:py-40 bg-surface px-5 md:px-10 border-t border-black/5">
+<section id="contact" class="py-24 md:py-40 bg-surface px-5 md:px-10">
 <div class="max-w-4xl mx-auto text-center">
-<h3 data-cms="manifesto" class="font-serif italic text-2xl md:text-5xl leading-tight">"Uma prancha deve ser tanto uma obra de arte na parede quanto uma ferramenta na água."</h3>
+<h3 data-cms="manifesto" class="font-serif italic text-4xl md:text-7xl leading-tight">"Uma prancha deve ser tanto uma obra de arte na parede quanto uma ferramenta na água."</h3>
 </div>
 </section>
 </main>
@@ -980,6 +988,21 @@ loadTexts();
 loadCatalog().then(() => { renderGallery('Todas'); });
 renderActionGrid();
 loadImages();
+// Carbon Trash: crossfade cinematográfico (Ken Burns)
+(function () {
+  var frames = Array.prototype.slice.call(document.querySelectorAll('#ctCine .ct-frame'));
+  if (frames.length < 2) return;
+  var i = 0;
+  setInterval(function () {
+    frames[i].classList.remove('active');
+    i = (i + 1) % frames.length;
+    var el = frames[i];
+    el.classList.remove('active');
+    void el.offsetWidth;      // reinicia o zoom
+    el.classList.add('active');
+  }, 6500);
+})();
+
 // CTA fixo mobile: aparece depois que a pessoa passa do hero
 (function () {
   var bar = document.getElementById('stickyCta');
