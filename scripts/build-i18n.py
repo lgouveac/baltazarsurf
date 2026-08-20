@@ -75,7 +75,7 @@ EN = [
  ('Fechar', 'Close'),
  ('Ver a Coleção', 'See the Collection'),
  # coleção
- ('Modelos que já saíram das mãos do shaper.', 'Boards that have come out of the shaper’s hands.'),
+ ('Conheça algumas das pranchas únicas já criadas', 'Some of the one-of-a-kind boards already made'),
  ('Use como inspiração. Não repetimos pranchas. Você escolhe um modelo com a sua cara e a gente shapeia a sua, do seu jeito. À mão, sob medida, ',
   'Use them as inspiration. We never repeat a board. You pick a model with your face and we shape yours, your way. By hand, made to measure, '),
  ('a partir de R$ 2.600', 'from R$ 2,600'),
@@ -272,7 +272,7 @@ ES = [
  ('Mensagem', 'Mensaje'),
  ('Fechar', 'Cerrar'),
  ('Ver a Coleção', 'Ver la Colección'),
- ('Modelos que já saíram das mãos do shaper.', 'Modelos que ya salieron de las manos del shaper.'),
+ ('Conheça algumas das pranchas únicas já criadas', 'Algunas de las tablas únicas ya creadas'),
  ('Use como inspiração. Não repetimos pranchas. Você escolhe um modelo com a sua cara e a gente shapeia a sua, do seu jeito. À mão, sob medida, ',
   'Úsalos como inspiración. No repetimos tablas. Eliges un modelo con tu cara y hacemos la tuya, a tu manera. A mano, a medida, '),
  ('a partir de R$ 2.600', 'desde R$ 2.600'),
