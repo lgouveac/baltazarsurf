@@ -6,19 +6,19 @@
 <meta name="description" content="Artigo do blog da Baltazar Customs Surfboards."/>
 <link rel="icon" type="image/png" href="/images/favicon.png"/>
 <meta name="theme-color" content="#f9f9f9"/>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@1,6..72,200..800&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,200..800&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 body{font-family:'Work Sans',sans-serif}.font-serif{font-family:'Newsreader',serif}
 .prose p{margin-bottom:1.15rem;line-height:1.75}
-.prose h2{font-family:'Newsreader',serif;font-style:italic;font-size:1.6rem;margin:2.2rem 0 .9rem}
-.prose h3{font-family:'Newsreader',serif;font-style:italic;font-size:1.25rem;margin:1.6rem 0 .6rem}
+.prose h2{font-family:'Newsreader',serif;font-size:1.6rem;margin:2.2rem 0 .9rem}
+.prose h3{font-family:'Newsreader',serif;font-size:1.25rem;margin:1.6rem 0 .6rem}
 .prose ul{margin:0 0 1.15rem 1.2rem;list-style:disc}
 .prose li{margin-bottom:.4rem}
 .prose a{text-decoration:underline}
 .prose strong{font-weight:600}
-.prose blockquote{border-left:2px solid #000;padding-left:1rem;font-style:italic;color:#555;margin:1.4rem 0}
+.prose blockquote{border-left:2px solid #000;padding-left:1rem;color:#555;margin:1.4rem 0}
 </style>
 </head>
 <body class="bg-[#f9f9f9] text-[#1a1c1c]">
@@ -39,7 +39,7 @@ body{font-family:'Work Sans',sans-serif}.font-serif{font-family:'Newsreader',ser
 
 <footer class="border-t border-black/10 px-5 md:px-10 py-10 mt-16">
   <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-    <div><p class="font-serif italic text-lg">Baltazar Customs Surfboards</p><p class="text-xs text-neutral-500 mt-1">Pranchas artesanais sob medida. Recreio, Rio de Janeiro.</p></div>
+    <div><p class="font-serif text-lg">Baltazar Customs Surfboards</p><p class="text-xs text-neutral-500 mt-1">Pranchas artesanais sob medida. Recreio, Rio de Janeiro.</p></div>
     <nav class="flex flex-wrap gap-x-6 gap-y-2 text-[10px] uppercase tracking-widest text-neutral-500">
       <a href="/" class="hover:text-black">Home</a><a href="/carbon-trash" class="hover:text-black">Carbon Trash</a><a href="/sobre-cesar" class="hover:text-black">Sobre</a><a href="/blog/" class="hover:text-black">Blog</a>
     </nav>
@@ -95,7 +95,7 @@ async function load(){
 
 function notFound(msg){
   return `<span class="font-sans uppercase text-[10px] tracking-widest text-neutral-500">Blog</span>
-    <h1 class="font-serif italic text-4xl md:text-6xl leading-tight mt-2 mb-6">${esc(msg)}</h1>
+    <h1 class="font-serif text-4xl md:text-6xl leading-tight mt-2 mb-6">${esc(msg)}</h1>
     <a href="/blog/" class="bg-black text-white px-6 py-3 uppercase tracking-widest text-[10px] inline-block">Ver todos os artigos</a>`;
 }
 
@@ -131,12 +131,12 @@ function render(p){
   document.getElementById('post').innerHTML = `
     <nav class="text-[10px] uppercase tracking-widest text-neutral-400 mb-8"><a href="/" class="hover:text-black">Home</a>  ·  <a href="/blog/" class="hover:text-black">Blog</a>  ·  ${esc(p.title)}</nav>
     <span class="font-sans uppercase text-[10px] tracking-widest text-neutral-500">${dateStr ? esc(dateStr)+'  ·  ' : ''}${p.read_minutes} MIN</span>
-    <h1 class="font-serif italic text-4xl md:text-6xl leading-tight mt-2 mb-6">${esc(p.title)}</h1>
-    ${p.excerpt ? `<p class="font-serif italic text-lg md:text-2xl text-neutral-600 leading-relaxed mb-10">${esc(p.excerpt)}</p>`:''}
+    <h1 class="font-serif text-4xl md:text-6xl leading-tight mt-2 mb-6">${esc(p.title)}</h1>
+    ${p.excerpt ? `<p class="font-serif text-lg md:text-2xl text-neutral-600 leading-relaxed mb-10">${esc(p.excerpt)}</p>`:''}
     ${cover ? `<img src="${cover}" alt="${esc(p.title)}" class="w-full max-h-[420px] object-cover mb-10"/>`:''}
     <div class="prose text-base md:text-lg text-neutral-800 max-w-none">${mdToHtml(p.body)}</div>
     <div class="border-t border-black/10 mt-14 pt-10">
-      <h2 class="font-serif italic text-2xl md:text-4xl mb-3">Quer a sua prancha?</h2>
+      <h2 class="font-serif text-2xl md:text-4xl mb-3">Quer a sua prancha?</h2>
       <p class="font-sans text-sm text-neutral-600 mb-5">Pedindo pelo site, o cupom CARBON1000 dá 10% de desconto.</p>
       <a href="/" class="bg-black text-white px-8 py-4 uppercase tracking-widest text-[10px] inline-block hover:opacity-80">Fazer meu pedido</a>
     </div>`;

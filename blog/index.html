@@ -12,7 +12,7 @@
 <meta property="og:url" content="https://www.baltazarcustomssurfboards.com/blog/"/>
 <meta property="og:title" content="Blog | Baltazar Customs Surfboards"/>
 <meta property="og:image" content="https://www.baltazarcustomssurfboards.com/images/og-cover.jpg"/>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@1,6..72,200..800&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,200..800&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>body{font-family:'Work Sans',sans-serif}.font-serif{font-family:'Newsreader',serif}</style>
@@ -89,8 +89,8 @@
   <nav class="text-[10px] uppercase tracking-widest text-neutral-400 mb-8"><a href="/" class="hover:text-black">Home</a>  ·  Blog</nav>
 
   <span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 block mb-4">ARTIGOS</span>
-  <h1 class="font-serif italic text-5xl md:text-8xl leading-none mb-8">Blog.</h1>
-  <p class="font-serif italic text-lg md:text-2xl text-neutral-600 leading-relaxed max-w-2xl mb-16">Conteúdo factual sobre shape, materiais, quilhas e como escolher a prancha certa. Direto pra quem quer entender antes de comprar.</p>
+  <h1 class="font-serif text-5xl md:text-8xl leading-none mb-8">Blog.</h1>
+  <p class="font-serif text-lg md:text-2xl text-neutral-600 leading-relaxed max-w-2xl mb-16">Conteúdo factual sobre shape, materiais, quilhas e como escolher a prancha certa. Direto pra quem quer entender antes de comprar.</p>
 
   <!-- Artigos dinâmicos (CMS) -->
   <div id="dynamicPosts" class="space-y-10 md:space-y-14 mb-16 md:mb-20"></div>
@@ -101,7 +101,7 @@
 
     <article class="border-t border-black/10 pt-8 md:pt-10">
       <span class="font-sans uppercase text-[10px] tracking-widest text-neutral-400">EQUIPAMENTO  ·  6 min</span>
-      <h2 class="font-serif italic text-3xl md:text-5xl leading-tight mt-2 mb-4">
+      <h2 class="font-serif text-3xl md:text-5xl leading-tight mt-2 mb-4">
         <a href="/blog/litragem-ideal" class="hover:underline">Como escolher a litragem ideal da prancha.</a>
       </h2>
       <p class="font-sans text-base md:text-lg text-neutral-700 leading-relaxed max-w-2xl">A litragem é a primeira coisa que define se a prancha vai conversar com o teu surf. Como calcular o ponto de partida e o que ajustar conforme o nível e a onda.</p>
@@ -110,7 +110,7 @@
 
     <article class="border-t border-black/10 pt-8 md:pt-10">
       <span class="font-sans uppercase text-[10px] tracking-widest text-neutral-400">EQUIPAMENTO  ·  7 min</span>
-      <h2 class="font-serif italic text-3xl md:text-5xl leading-tight mt-2 mb-4">
+      <h2 class="font-serif text-3xl md:text-5xl leading-tight mt-2 mb-4">
         <a href="/blog/thruster-twin-quad" class="hover:underline">Thruster, twin ou quad: qual escolher.</a>
       </h2>
       <p class="font-sans text-base md:text-lg text-neutral-700 leading-relaxed max-w-2xl">As três configurações de quilha mais comuns, o que cada uma entrega na água, e em que tipo de onda cada uma brilha.</p>
@@ -135,7 +135,7 @@
       document.getElementById('dynamicPosts').innerHTML = data.map(p => `
         <article class="border-t border-black/10 pt-8 md:pt-10">
           <span class="font-sans uppercase text-[10px] tracking-widest text-neutral-400">ARTIGO  ·  ${p.read_minutes||5} min</span>
-          <h2 class="font-serif italic text-3xl md:text-5xl leading-tight mt-2 mb-4">
+          <h2 class="font-serif text-3xl md:text-5xl leading-tight mt-2 mb-4">
             <a href="/blog/post?slug=${encodeURIComponent(p.slug)}" class="hover:underline">${esc(p.title)}</a>
           </h2>
           ${p.excerpt ? `<p class="font-sans text-base md:text-lg text-neutral-700 leading-relaxed max-w-2xl">${esc(p.excerpt)}</p>`:''}
@@ -149,7 +149,7 @@
 
 <footer class="border-t border-black/10 px-5 md:px-10 py-10 mt-16">
   <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-    <div><p class="font-serif italic text-lg">Baltazar Customs Surfboards</p><p class="text-xs text-neutral-500 mt-1">Pranchas artesanais sob medida. Recreio, Rio de Janeiro.</p></div>
+    <div><p class="font-serif text-lg">Baltazar Customs Surfboards</p><p class="text-xs text-neutral-500 mt-1">Pranchas artesanais sob medida. Recreio, Rio de Janeiro.</p></div>
     <nav class="flex flex-wrap gap-x-6 gap-y-2 text-[10px] uppercase tracking-widest text-neutral-500">
       <a href="/" class="hover:text-black">Home</a><a href="/carbon-trash" class="hover:text-black">Carbon Trash</a><a href="/sobre-cesar" class="hover:text-black">Sobre</a><a href="/processo" class="hover:text-black">Processo</a><a href="/glossario" class="hover:text-black">Glossário</a><a href="/blog/" class="hover:text-black">Blog</a>
     </nav>

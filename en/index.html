@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link rel="preload" as="image" href="/images/IMG_6840.jpeg" fetchpriority="high"/>
+<link rel="preload" as="image" href="/images/IMG_6855.jpeg" fetchpriority="high"/>
 <link rel="preload" as="image" href="/images/brand/logo-oval-white.png"/>
 <meta property="og:type" content="website"/>
 <meta property="og:locale" content="en_US"/>
@@ -36,7 +36,7 @@
 <meta name="twitter:title" content="Baltazar Customs | Handmade custom surfboards in Rio"/>
 <meta name="twitter:description" content="Every board is one of a kind, handmade to measure in Recreio, Rio de Janeiro. 10% OFF through the site with code CARBON1000."/>
 <meta name="twitter:image" content="https://www.baltazarcustomssurfboards.com/images/og-cover.jpg"/>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@1,6..72,200..800&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,200..800&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -58,7 +58,10 @@ tailwind.config = {
 </script>
 <style>
 body { font-family: 'Work Sans', sans-serif; }
-.font-serif { font-family: 'Newsreader', serif; }
+.font-serif { font-family: 'Newsreader', serif; font-optical-sizing: auto; letter-spacing: -0.015em; }
+h1, h2, h3 { text-wrap: balance; }
+h1 .hero-line { letter-spacing: -0.03em; text-wrap: balance; }
+p, li { text-wrap: pretty; }
 .grain-overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   pointer-events: none; z-index: 9999;
@@ -341,16 +344,14 @@ summary::-webkit-details-marker { display:none; }
 <section class="w-full bg-surface">
 <div class="max-w-7xl mx-auto px-5 md:px-10 pt-16 pb-14 md:py-24 grid md:grid-cols-2 gap-10 md:gap-16 items-center">
 <div>
-<h1 class="font-serif italic leading-tight"><span data-cms="hero_tagline" class="block text-4xl md:text-7xl">Handmade surfboards shaped</span><span data-cms="hero_reach" class="block font-sans not-italic text-sm md:text-lg tracking-wide text-neutral-500 mt-4 md:mt-5">in Recreio, Rio de Janeiro, for Brazil and the world.</span></h1>
+<h1 class="font-serif leading-tight"><span data-cms="hero_tagline" class="hero-line block text-5xl md:text-8xl leading-[0.98]">Handmade surfboards shaped</span><span data-cms="hero_reach" class="block font-sans text-sm md:text-base tracking-wide text-neutral-500 mt-5 md:mt-6">in Recreio, Rio de Janeiro, for Brazil and the world.</span></h1>
 <p data-cms="hero_subtitle" class="font-sans text-base md:text-lg text-neutral-600 leading-relaxed mt-5 md:mt-6 max-w-md">Every board is one of a kind. You get inspired, we shape yours.</p>
 <div class="mt-8 md:mt-10">
 <button onclick="openChat()" class="bg-black text-white px-10 py-4 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">I Want My Board</button>
 </div>
 <p class="mt-5"><span class="inline-block border border-black/15 bg-white px-4 py-2 font-sans text-[10px] md:text-[11px] tracking-widest text-neutral-600">10% OFF when you order through the site with code <span class="text-black font-semibold">CARBON1000</span></span></p>
 </div>
-<div class="aspect-[4/5] md:aspect-[3/4] max-h-[360px] md:max-h-[620px] w-full overflow-hidden">
-<img data-cms-img="hero" data-cms-img-i="0" src="/images/IMG_6840.jpeg" alt="Pranchas Baltazar Customs no galpão do shaper" width="900" height="1600" fetchpriority="high" class="w-full h-full object-cover grayscale"/>
-</div>
+<div class="mx-auto h-[500px] md:h-[620px] aspect-[5/9] overflow-hidden"><img data-cms-img="hero" data-cms-img-i="0" src="/images/IMG_6855.jpeg" alt="Prancha Carbon Trash da Baltazar Customs no ateliê do Recreio" width="862" height="1577" fetchpriority="high" class="w-full h-full object-cover grayscale"/></div>
 </div>
 </section>
 
@@ -359,7 +360,7 @@ summary::-webkit-details-marker { display:none; }
 <div class="max-w-7xl mx-auto">
 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 md:mb-12 gap-6 md:gap-8">
 <div class="max-w-2xl">
-<h2 data-cms="collection_heading" class="font-serif italic text-4xl md:text-7xl leading-tight">Some of the one-of-a-kind boards already made</h2>
+<h2 data-cms="collection_heading" class="font-serif text-4xl md:text-7xl leading-tight">Some of the one-of-a-kind boards already made</h2>
 <p class="font-sans text-sm md:text-base text-on-surface-variant mt-4 md:mt-6 leading-relaxed">Use them as inspiration. We never repeat a board. You pick a model with your face and we shape yours, your way. By hand, made to measure, <span class="text-black font-medium">from R$ 2,600</span>.</p>
 </div>
 <img src="/images/brand/tiger-black.png" alt="" aria-hidden="true" class="hidden md:block w-44 lg:w-56 shrink-0"/>
@@ -368,11 +369,11 @@ summary::-webkit-details-marker { display:none; }
 <div class="mb-10 md:mb-14">
 <p class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-3 md:mb-4">Price by size</p>
 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-<div class="bg-white px-4 py-4"><p class="font-sans uppercase text-[9px] tracking-widest text-neutral-500">up to 6′3″</p><p class="font-serif italic text-xl md:text-2xl mt-1">R$ 2.600</p></div>
-<div class="bg-white px-4 py-4"><p class="font-sans uppercase text-[9px] tracking-widest text-neutral-500">6′4″ – 7′0″</p><p class="font-serif italic text-xl md:text-2xl mt-1">R$ 2.700</p></div>
-<div class="bg-white px-4 py-4"><p class="font-sans uppercase text-[9px] tracking-widest text-neutral-500">7′1″ – 8′0″</p><p class="font-serif italic text-xl md:text-2xl mt-1">R$ 2.900</p></div>
-<div class="bg-white px-4 py-4"><p class="font-sans uppercase text-[9px] tracking-widest text-neutral-500">8′1″ – 8′5″</p><p class="font-serif italic text-xl md:text-2xl mt-1">R$ 3.200</p></div>
-<div class="bg-white px-4 py-4 col-span-2 sm:col-span-1"><p class="font-sans uppercase text-[9px] tracking-widest text-neutral-500">8′6″ – 9′6″</p><p class="font-serif italic text-xl md:text-2xl mt-1">R$ 3.600</p></div>
+<div class="bg-white px-4 py-4"><p class="font-sans uppercase text-[9px] tracking-widest text-neutral-500">up to 6′3″</p><p class="font-serif text-xl md:text-2xl mt-1">R$ 2.600</p></div>
+<div class="bg-white px-4 py-4"><p class="font-sans uppercase text-[9px] tracking-widest text-neutral-500">6′4″ – 7′0″</p><p class="font-serif text-xl md:text-2xl mt-1">R$ 2.700</p></div>
+<div class="bg-white px-4 py-4"><p class="font-sans uppercase text-[9px] tracking-widest text-neutral-500">7′1″ – 8′0″</p><p class="font-serif text-xl md:text-2xl mt-1">R$ 2.900</p></div>
+<div class="bg-white px-4 py-4"><p class="font-sans uppercase text-[9px] tracking-widest text-neutral-500">8′1″ – 8′5″</p><p class="font-serif text-xl md:text-2xl mt-1">R$ 3.200</p></div>
+<div class="bg-white px-4 py-4 col-span-2 sm:col-span-1"><p class="font-sans uppercase text-[9px] tracking-widest text-neutral-500">8′6″ – 9′6″</p><p class="font-serif text-xl md:text-2xl mt-1">R$ 3.600</p></div>
 </div>
 <p class="font-sans text-[11px] text-neutral-400 mt-3">Custom art and special finishes may cost extra.</p>
 </div>
@@ -409,7 +410,7 @@ summary::-webkit-details-marker { display:none; }
 <div class="relative z-10 w-full max-w-7xl mx-auto px-5 md:px-10 py-24 md:py-32">
 <div class="max-w-xl">
 <span class="font-sans uppercase text-[10px] tracking-[0.3em] text-white/50 block mb-5">Exclusive line</span>
-<h2 class="font-serif italic text-5xl md:text-8xl leading-[0.95] text-white mb-7">Carbon Trash</h2>
+<h2 class="font-serif text-5xl md:text-8xl leading-[0.95] text-white mb-7">Carbon Trash</h2>
 <p data-cms="carbon_desc" class="font-sans text-base md:text-lg text-white/70 leading-relaxed mb-9 max-w-lg">A carbon board built from discarded offcuts, the trash. The fibers are spread by hand into the resin, and every pattern is impossible to repeat. Unique performance, flex and strength.</p>
 <p class="font-sans uppercase text-[10px] tracking-[0.2em] text-white/40 mb-4">Seven constructions</p>
 <ul class="font-sans text-[11px] md:text-xs uppercase tracking-widest text-white/60 flex flex-wrap gap-x-5 gap-y-2 mb-10">
@@ -431,22 +432,22 @@ summary::-webkit-details-marker { display:none; }
 <div class="max-w-6xl mx-auto">
 <div class="text-center mb-12 md:mb-20">
 <span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-2 md:mb-4 block">How It Works</span>
-<h2 data-cms="how_heading" class="font-serif italic text-4xl md:text-7xl">From inspiration to your board.</h2>
+<h2 data-cms="how_heading" class="font-serif text-4xl md:text-7xl">From inspiration to your board.</h2>
 </div>
 <div class="grid md:grid-cols-3 gap-10 md:gap-16">
 <div>
-<p class="font-serif italic text-5xl md:text-6xl text-neutral-300 mb-4">01</p>
-<h3 data-cms="how_step1_title" class="font-serif italic text-xl md:text-2xl mb-3">Get inspired</h3>
+<p class="font-serif text-5xl md:text-6xl text-neutral-300 mb-4">01</p>
+<h3 data-cms="how_step1_title" class="font-serif text-xl md:text-2xl mb-3">Get inspired</h3>
 <p data-cms="how_step1_desc" class="font-sans text-sm text-on-surface-variant leading-relaxed">Browse the collection and pick a model with your face. Every piece is unique. We never repeat a board.</p>
 </div>
 <div>
-<p class="font-serif italic text-5xl md:text-6xl text-neutral-300 mb-4">02</p>
-<h3 data-cms="how_step2_title" class="font-serif italic text-xl md:text-2xl mb-3">Tell us about you</h3>
+<p class="font-serif text-5xl md:text-6xl text-neutral-300 mb-4">02</p>
+<h3 data-cms="how_step2_title" class="font-serif text-xl md:text-2xl mb-3">Tell us about you</h3>
 <p data-cms="how_step2_desc" class="font-sans text-sm text-on-surface-variant leading-relaxed">In the Shaper chat, share your height, weight, level and the kind of wave you surf. We suggest the ideal volume and fins.</p>
 </div>
 <div>
-<p class="font-serif italic text-5xl md:text-6xl text-neutral-300 mb-4">03</p>
-<h3 data-cms="how_step3_title" class="font-serif italic text-xl md:text-2xl mb-3">Book it and get yours</h3>
+<p class="font-serif text-5xl md:text-6xl text-neutral-300 mb-4">03</p>
+<h3 data-cms="how_step3_title" class="font-serif text-xl md:text-2xl mb-3">Book it and get yours</h3>
 <p data-cms="how_step3_desc" class="font-sans text-sm text-on-surface-variant leading-relaxed">Close the order on the site. Then Baltazar settles the final details with you and shapes your board by hand, made to measure.</p>
 </div>
 </div>
@@ -462,7 +463,7 @@ summary::-webkit-details-marker { display:none; }
 </div>
 <div>
 <span class="font-sans uppercase text-[10px] tracking-[0.2em] text-white/50 mb-3 md:mb-5 block">The Shaper</span>
-<h2 class="font-serif italic text-4xl md:text-7xl leading-tight mb-6 md:mb-8">César Baltazar</h2>
+<h2 class="font-serif text-4xl md:text-7xl leading-tight mb-6 md:mb-8">César Baltazar</h2>
 <!-- TODO: substituir pelo texto OFICIAL do César (rascunho provisório abaixo) -->
 <p data-cms="about_p1" class="font-sans text-sm md:text-base text-white/70 leading-relaxed mb-4">
 Before being a shaper, César Baltazar is a surfer. Reading the sea of Rio de Janeiro is what first led him into the workshop, chasing the exact board the wave was asking for and that didn’t exist on the rack.
@@ -501,7 +502,7 @@ From the planer to the resin, what leaves the shaper is part tool, part work of 
 <section class="py-24 md:py-40 bg-white px-5 md:px-10">
 <div class="max-w-3xl mx-auto text-center">
 <span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 block mb-6 md:mb-8">Who rides a Baltazar</span>
-<blockquote data-cms="testimonial_1" class="font-serif italic text-2xl md:text-4xl leading-snug">"The Carbon Trash is a rocket. Fast, responsive and tough as nails."</blockquote>
+<blockquote data-cms="testimonial_1" class="font-serif text-2xl md:text-4xl leading-snug">"The Carbon Trash is a rocket. Fast, responsive and tough as nails."</blockquote>
 <p data-cms="testimonial_1_author" class="font-sans uppercase text-[10px] tracking-widest text-neutral-500 mt-6">Lucas, Recreio</p>
 </div>
 </section>
@@ -510,18 +511,18 @@ From the planer to the resin, what leaves the shaper is part tool, part work of 
 <div class="max-w-4xl mx-auto">
 <div class="text-center mb-10 md:mb-16">
 <span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-2 md:mb-4 block">FAQ</span>
-<h2 class="font-serif italic text-4xl md:text-7xl">Frequently asked questions</h2>
+<h2 class="font-serif text-4xl md:text-7xl">Frequently asked questions</h2>
 </div>
 <div class="border-b border-black/10">
 <details class="border-t border-black/10 group">
-<summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif italic text-lg md:text-2xl">
+<summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif text-lg md:text-2xl">
 <span>How does ordering work?</span>
 <span class="font-sans text-2xl text-neutral-400 transition-transform duration-300 group-open:rotate-45 shrink-0">+</span>
 </summary>
 <p data-cms="faq_a1" class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">You pick a model as inspiration, share your measurements in the form and book on the site. Every board is unique and handmade. After payment, Baltazar settles the final details with you (art, color and measurements).</p>
 </details>
 <details class="border-t border-black/10 group">
-<summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif italic text-lg md:text-2xl">
+<summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif text-lg md:text-2xl">
 <span>How much does it cost?</span>
 <span class="font-sans text-2xl text-neutral-400 transition-transform duration-300 group-open:rotate-45 shrink-0">+</span>
 </summary>
@@ -529,56 +530,56 @@ From the planer to the resin, what leaves the shaper is part tool, part work of 
 </details>
 <!-- TODO: confirmar o prazo real de entrega com o César -->
 <details class="border-t border-black/10 group">
-<summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif italic text-lg md:text-2xl">
+<summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif text-lg md:text-2xl">
 <span>How long does it take?</span>
 <span class="font-sans text-2xl text-neutral-400 transition-transform duration-300 group-open:rotate-45 shrink-0">+</span>
 </summary>
 <p data-cms="faq_a3" class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">Lead time depends on the shaper’s queue. We confirm the exact date with you when you order.</p>
 </details>
 <details class="border-t border-black/10 group">
-<summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif italic text-lg md:text-2xl">
+<summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif text-lg md:text-2xl">
 <span>How do I know the right volume?</span>
 <span class="font-sans text-2xl text-neutral-400 transition-transform duration-300 group-open:rotate-45 shrink-0">+</span>
 </summary>
 <p data-cms="faq_a4" class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">Volume (in liters) defines float and paddling: the more beginner or heavier you are, the more liters; the more advanced, the fewer. In the chat we suggest a volume from your weight and level.</p>
 </details>
 <details class="border-t border-black/10 group">
-<summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif italic text-lg md:text-2xl">
+<summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif text-lg md:text-2xl">
 <span>Single, twin, thruster or quad?</span>
 <span class="font-sans text-2xl text-neutral-400 transition-transform duration-300 group-open:rotate-45 shrink-0">+</span>
 </summary>
 <p data-cms="faq_a5" class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">Single: classic, smooth glide. Twin: loose and fast in small waves. Thruster (3 fins): the most versatile and controllable. Quad (4 fins): fast in hollow, barreling waves.</p>
 </details>
 <details class="border-t border-black/10 group">
-<summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif italic text-lg md:text-2xl">
+<summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif text-lg md:text-2xl">
 <span>Fish, mid-length or longboard?</span>
 <span class="font-sans text-2xl text-neutral-400 transition-transform duration-300 group-open:rotate-45 shrink-0">+</span>
 </summary>
 <p data-cms="faq_a6" class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">Fish: short and wide, perfect for small waves. Mid-length: versatile and easy to paddle. Longboard: classic glide, great for beginners and mellow waves.</p>
 </details>
 <details class="border-t border-black/10 group">
-<summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif italic text-lg md:text-2xl">
+<summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif text-lg md:text-2xl">
 <span>What is the fin box (“copinho”)?</span>
 <span class="font-sans text-2xl text-neutral-400 transition-transform duration-300 group-open:rotate-45 shrink-0">+</span>
 </summary>
 <p data-cms="faq_a7" class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">It’s the fin system, the box where the fin locks in. The most common are FCS II (tool-free) and Futures (single, very firm plug), plus the single-fin box.</p>
 </details>
 <details class="border-t border-black/10 group">
-<summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif italic text-lg md:text-2xl">
+<summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif text-lg md:text-2xl">
 <span>What is Carbon Trash?</span>
 <span class="font-sans text-2xl text-neutral-400 transition-transform duration-300 group-open:rotate-45 shrink-0">+</span>
 </summary>
 <p data-cms="faq_a8" class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">We build the Carbon Trash by reusing discarded carbon offcuts, the trash. The fibers are spread by hand into the resin, so every pattern is unique. Unique performance, flex and strength.</p>
 </details>
 <details class="border-t border-black/10 group">
-<summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif italic text-lg md:text-2xl">
+<summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif text-lg md:text-2xl">
 <span>Is there a discount?</span>
 <span class="font-sans text-2xl text-neutral-400 transition-transform duration-300 group-open:rotate-45 shrink-0">+</span>
 </summary>
 <p data-cms="faq_a9" class="pb-6 font-sans text-sm md:text-base text-on-surface-variant leading-relaxed">Yes. Order through the site and the CARBON1000 code takes 10% off the board. You send the request through the form and the discount is applied when the shaper closes your quote.</p>
 </details>
 <details class="border-t border-black/10 group">
-<summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif italic text-lg md:text-2xl">
+<summary class="flex justify-between items-center gap-4 cursor-pointer py-5 md:py-6 font-serif text-lg md:text-2xl">
 <span>Do you ship outside Rio?</span>
 <span class="font-sans text-2xl text-neutral-400 transition-transform duration-300 group-open:rotate-45 shrink-0">+</span>
 </summary>
@@ -592,7 +593,7 @@ From the planer to the resin, what leaves the shaper is part tool, part work of 
 <section id="pedido" class="scroll-mt-24 py-24 md:py-40 px-5 md:px-10 bg-white">
 <div class="max-w-xl mx-auto">
 <span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 block mb-3 text-center">Order</span>
-<h2 class="font-serif italic text-4xl md:text-7xl text-center mb-3">Order your board.</h2>
+<h2 class="font-serif text-4xl md:text-7xl text-center mb-3">Order your board.</h2>
 <p class="font-sans text-sm md:text-base text-neutral-600 text-center mb-8 md:mb-10">The shaper gets back to you with the details. We deliver across Brazil and ship worldwide.</p>
 <div id="leadArea" class="border border-black/10 bg-white">
 
@@ -656,7 +657,7 @@ From the planer to the resin, what leaves the shaper is part tool, part work of 
 <!-- Manifesto / fechamento -->
 <section id="contact" class="py-24 md:py-40 bg-surface px-5 md:px-10">
 <div class="max-w-4xl mx-auto text-center">
-<h3 data-cms="manifesto" class="font-serif italic text-4xl md:text-7xl leading-tight">“A surfboard should be as much a work of art on the wall as a tool in the water.”</h3>
+<h3 data-cms="manifesto" class="font-serif text-4xl md:text-7xl leading-tight">“A surfboard should be as much a work of art on the wall as a tool in the water.”</h3>
 </div>
 </section>
 </main>
@@ -690,7 +691,7 @@ From the planer to the resin, what leaves the shaper is part tool, part work of 
 <button onclick="nextSlide()" class="absolute right-10 top-1/2 -translate-y-1/2 text-white text-5xl hover:opacity-60 z-[110]">&#8250;</button>
 <div class="flex flex-col items-center max-w-2xl w-full px-6">
 <img id="modalImgDesktop" class="max-h-[70vh] object-contain" src="" alt=""/>
-<p id="modalTitleDesktop" class="font-serif italic text-2xl text-white mt-6"></p>
+<p id="modalTitleDesktop" class="font-serif text-2xl text-white mt-6"></p>
 <p id="modalDescDesktop" class="font-sans text-[10px] uppercase tracking-widest text-white/60 mt-2"></p>
 <button onclick="wantThis()" class="mt-6 bg-white text-black px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:bg-neutral-200 transition-colors">I Want My Board</button>
 </div>
@@ -704,7 +705,7 @@ From the planer to the resin, what leaves the shaper is part tool, part work of 
 <button onclick="prevSlide()" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white w-8 h-8 flex items-center justify-center text-lg">&#8249;</button>
 <button onclick="nextSlide()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white w-8 h-8 flex items-center justify-center text-lg">&#8250;</button>
 </div>
-<p id="modalTitleMobile" class="font-serif italic text-xl mt-4 text-center"></p>
+<p id="modalTitleMobile" class="font-serif text-xl mt-4 text-center"></p>
 <p id="modalDescMobile" class="font-sans text-[10px] uppercase tracking-widest text-neutral-500 mt-1 text-center"></p>
 <button onclick="wantThis()" class="w-full mt-4 bg-black text-white py-3 font-sans uppercase tracking-widest text-[10px]">I Want My Board</button>
 </div>
@@ -926,7 +927,7 @@ function leadSuccess(nome, pedido) {
     : '';
   area.innerHTML =
     '<div class="px-6 py-14 text-center">' +
-    '<p class="font-serif italic text-3xl mb-4">Got it' + (first ? ', ' + first : '') + '!</p>' +
+    '<p class="font-serif text-3xl mb-4">Got it' + (first ? ', ' + first : '') + '!</p>' +
     '<p class="font-sans text-sm text-neutral-600 leading-relaxed max-w-xs mx-auto">Your request reached the shaper. We will get back to you soon to sort out art, measurements and payment with the 10% CARBON1000 code.</p>' +
     pedidoHtml +
     '</div>';
