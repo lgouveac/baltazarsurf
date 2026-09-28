@@ -1,0 +1,33 @@
+name: Teste do formulário no site ao vivo
+
+# Roda o Playwright contra o site publicado e envia um pedido de teste real.
+# Dispara sozinho quando este teste muda, ou manualmente em Actions → Run workflow.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/live-form-test.yml'
+      - '.github/live-form-test.mjs'
+
+jobs:
+  teste:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Instalar Playwright
+        run: |
+          npm init -y >/dev/null
+          npm i playwright@1.48.2 >/dev/null
+          npx playwright install --with-deps chromium >/dev/null
+      - name: Enviar pedido de teste pelo site
+        run: node .github/live-form-test.mjs
+      - name: Guardar prints
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: prints-site-ao-vivo
+          path: live-*.png
