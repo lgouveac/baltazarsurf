@@ -684,13 +684,13 @@ From the planer to the resin, what leaves the shaper is part tool, part work of 
 <div id="boardModal" class="fixed inset-0 z-[100] hidden bg-black/90 backdrop-blur-sm modal-fade" onclick="if(event.target===this)closeBoardModal()">
 <div class="absolute inset-0 hidden md:flex items-center justify-center">
 <button onclick="closeBoardModal()" class="absolute top-6 right-8 text-white text-3xl hover:opacity-60 z-[110]">&times;</button>
-<button onclick="prevSlide()" class="absolute left-10 top-1/2 -translate-y-1/2 text-white text-5xl hover:opacity-60 z-[110]">&#8249;</button>
-<button onclick="nextSlide()" class="absolute right-10 top-1/2 -translate-y-1/2 text-white text-5xl hover:opacity-60 z-[110]">&#8250;</button>
+<button id="lbPrevD" onclick="prevSlide()" aria-label="Previous photo" class="absolute left-10 top-1/2 -translate-y-1/2 text-white text-5xl hover:opacity-60 z-[110]">&#8249;</button>
+<button id="lbNextD" onclick="nextSlide()" aria-label="Next photo" class="absolute right-10 top-1/2 -translate-y-1/2 text-white text-5xl hover:opacity-60 z-[110]">&#8250;</button>
 <div class="flex flex-col items-center max-w-2xl w-full px-6">
 <img id="modalImgDesktop" class="max-h-[70vh] object-contain" src="" alt=""/>
 <p id="modalTitleDesktop" class="font-serif text-2xl text-white mt-6"></p>
 <p id="modalDescDesktop" class="font-sans text-[10px] uppercase tracking-widest text-white/60 mt-2"></p>
-<button onclick="wantThis()" class="mt-6 bg-white text-black px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:bg-neutral-200 transition-colors">I Want My Board</button>
+<div class="mt-6 flex flex-wrap gap-3 justify-center"><button onclick="wantThis()" class="bg-white text-black px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:bg-neutral-200 transition-colors">I Want My Board</button><button onclick="moreModels()" class="lb-more hidden border border-white/40 text-white px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:bg-white hover:text-black transition-colors">See more models</button></div>
 </div>
 </div>
 <div class="md:hidden absolute bottom-0 left-0 right-0 bg-white bottom-sheet-enter rounded-t-2xl" style="max-height:88vh;">
@@ -699,12 +699,12 @@ From the planer to the resin, what leaves the shaper is part tool, part work of 
 <div class="px-5 pb-6 pt-2">
 <div class="relative">
 <img id="modalImgMobile" class="w-full max-h-[58svh] min-h-[40svh] object-contain bg-neutral-100" src="" alt=""/>
-<button onclick="prevSlide()" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white w-8 h-8 flex items-center justify-center text-lg">&#8249;</button>
-<button onclick="nextSlide()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white w-8 h-8 flex items-center justify-center text-lg">&#8250;</button>
+<button id="lbPrevM" onclick="prevSlide()" aria-label="Previous photo" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white w-8 h-8 flex items-center justify-center text-lg">&#8249;</button>
+<button id="lbNextM" onclick="nextSlide()" aria-label="Next photo" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white w-8 h-8 flex items-center justify-center text-lg">&#8250;</button>
 </div>
 <p id="modalTitleMobile" class="font-serif text-xl mt-4 text-center"></p>
 <p id="modalDescMobile" class="font-sans text-[10px] uppercase tracking-widest text-neutral-500 mt-1 text-center"></p>
-<button onclick="wantThis()" class="w-full mt-4 bg-black text-white py-3 font-sans uppercase tracking-widest text-[10px]">I Want My Board</button>
+<button onclick="wantThis()" class="w-full mt-4 bg-black text-white py-3 font-sans uppercase tracking-widest text-[10px]">I Want My Board</button><button onclick="moreModels()" class="lb-more hidden w-full mt-2 border border-black/20 text-black py-3 font-sans uppercase tracking-widest text-[10px]">See more models</button>
 </div>
 </div>
 </div>
@@ -874,8 +874,11 @@ let lbList = [], lbPos = 0;
 function visibleIndices() {
   return gallery.map((_, i) => i).filter(i => currentFilter === 'Todas' || gallery[i].c === currentFilter || gallery[i].line === currentFilter);
 }
+// O carrossel mostra só as pranchas do mesmo modelo (categoria) da que foi clicada.
+// Sem loop: na última foto a seta some e aparece "Ver mais modelos".
 function openLightbox(galleryIndex) {
-  lbList = visibleIndices();
+  const modelo = gallery[galleryIndex].c;
+  lbList = visibleIndices().filter(i => gallery[i].c === modelo);
   lbPos = lbList.indexOf(galleryIndex);
   if (lbPos < 0) lbPos = 0;
   renderLightbox();
@@ -890,22 +893,30 @@ function renderLightbox() {
   const item = gallery[lbList[lbPos]];
   const src = boardImg(item.p);
   const parts = [];
-  parts.push('Prancha ' + (lbPos + 1) + ' de ' + lbList.length);
+  parts.push((lbPos + 1) + ' of ' + lbList.length);
   if (item.line) parts.push(item.line);
-  parts.push(item.c);
   if (!sameLabel(item.f, item.c)) parts.push(item.f);
-  parts.push('a partir de ' + precoCategoria(item.c));
+  parts.push('from ' + precoCategoria(item.c));
   const sub = parts.join(' · ');
   const set = (id, fn) => { const el = document.getElementById(id); if (el) fn(el); };
   set('modalImgDesktop', el => el.src = src);
   set('modalImgMobile', el => el.src = src);
-  set('modalTitleDesktop', el => el.textContent = item.c);
-  set('modalTitleMobile', el => el.textContent = item.c);
+  set('modalTitleDesktop', el => el.textContent = 'Model ' + item.c);
+  set('modalTitleMobile', el => el.textContent = 'Model ' + item.c);
   set('modalDescDesktop', el => el.textContent = sub);
   set('modalDescMobile', el => el.textContent = sub);
+  const first = lbPos === 0, last = lbPos === lbList.length - 1;
+  ['lbPrevD','lbPrevM'].forEach(id => set(id, el => el.classList.toggle('hidden', first)));
+  ['lbNextD','lbNextM'].forEach(id => set(id, el => el.classList.toggle('hidden', last)));
+  document.querySelectorAll('.lb-more').forEach(el => el.classList.toggle('hidden', !last));
 }
-function nextSlide() { if (!lbList.length) return; lbPos = (lbPos + 1) % lbList.length; renderLightbox(); }
-function prevSlide() { if (!lbList.length) return; lbPos = (lbPos - 1 + lbList.length) % lbList.length; renderLightbox(); }
+function nextSlide() { if (lbPos < lbList.length - 1) { lbPos++; renderLightbox(); } }
+function prevSlide() { if (lbPos > 0) { lbPos--; renderLightbox(); } }
+function moreModels() {
+  closeBoardModal();
+  const f = document.getElementById('boardFilters');
+  if (f) f.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 function wantThis() {
   const item = gallery[lbList[lbPos]];
   closeBoardModal();
