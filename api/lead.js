@@ -38,6 +38,17 @@ module.exports = async (req, res) => {
     const mensagem = clean(body.mensagem, 2000);
     const origem = clean(body.origem, 300);
 
+    // Referências: pranchas da coleção que o cliente juntou no site (máx. 8).
+    const refs = (Array.isArray(body.referencias) ? body.referencias : []).slice(0, 8).map(function (r) {
+      r = r || {};
+      const img = clean(r.imagem, 400);
+      return {
+        modelo: clean(r.modelo, 60),
+        detalhes: clean(r.detalhes, 160),
+        imagem: /^https:\/\//.test(img) ? img : '',
+      };
+    }).filter(function (r) { return r.modelo || r.imagem; });
+
     const KEY = process.env.RESEND_API_KEY;
     if (!KEY) { res.status(500).json({ ok: false, error: 'resend_nao_configurado' }); return; }
     // LEAD_TO aceita 1 ou vários emails separados por vírgula.
@@ -76,8 +87,19 @@ module.exports = async (req, res) => {
           ${row('Onda', onda)}
           ${row('Cupom informado', 'CARBON1000 (10%)')}
           ${row('Mensagem', mensagem)}
+          ${row('Referências', refs.length ? refs.length + ' prancha(s), fotos abaixo' : '')}
           ${row('Origem', origem)}
         </table>
+        ${refs.length ? `
+        <p style="font:600 12px sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#999;margin:26px 0 10px">Pranchas que o cliente curtiu</p>
+        <table style="border-collapse:collapse"><tr>
+          ${refs.map(function (r) { return `
+          <td style="padding:0 10px 10px 0;vertical-align:top;width:120px">
+            ${r.imagem ? `<a href="${esc(r.imagem)}"><img src="${esc(r.imagem)}" width="110" style="display:block;width:110px;height:auto;border:0" alt="${esc(r.modelo)}"/></a>` : ''}
+            <div style="font:12px sans-serif;color:#111;margin-top:6px"><strong>${esc(r.modelo)}</strong></div>
+            <div style="font:11px sans-serif;color:#777">${esc(r.detalhes)}</div>
+          </td>`; }).join('')}
+        </tr></table>` : ''}
       </div>`;
 
     const text = [
@@ -93,6 +115,7 @@ module.exports = async (req, res) => {
       onda ? 'Onda: ' + onda : '',
       'Cupom: CARBON1000 (10%)',
       mensagem ? 'Mensagem: ' + mensagem : '',
+      refs.length ? '\nReferências:\n' + refs.map(function (r, i) { return (i + 1) + '. ' + r.detalhes + (r.imagem ? ' - ' + r.imagem : ''); }).join('\n') : '',
       origem ? 'Origem: ' + origem : '',
     ].filter(Boolean).join('\n');
 

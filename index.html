@@ -598,6 +598,11 @@ Do planer à resina, o que sai do shaper é parte ferramenta, parte obra de arte
 <p class="font-sans text-[11px] tracking-wide">Comprando pelo site: <span class="font-semibold">10% OFF</span> com o cupom <span class="font-mono tracking-widest">CARBON1000</span></p>
 </div>
 <form id="leadForm" class="px-5 py-5 space-y-4" novalidate>
+<div id="refsBox">
+<p class="font-sans text-[10px] uppercase tracking-widest text-neutral-500 mb-2">Suas referências</p>
+<div id="refsList" class="grid grid-cols-4 gap-2"></div>
+<p id="refsEmpty" class="font-sans text-xs text-neutral-400 leading-relaxed">Gostou de alguma prancha da coleção? Abra a foto e toque em <span class="text-neutral-600">+ Adicionar às referências</span>. Ela aparece aqui e vai junto com o seu pedido.</p>
+</div>
 <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true"/>
 <label class="block">
 <span class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Nome *</span>
@@ -690,7 +695,7 @@ Do planer à resina, o que sai do shaper é parte ferramenta, parte obra de arte
 <img id="modalImgDesktop" class="max-h-[70vh] object-contain" src="" alt=""/>
 <p id="modalTitleDesktop" class="font-serif text-2xl text-white mt-6"></p>
 <p id="modalDescDesktop" class="font-sans text-[10px] uppercase tracking-widest text-white/60 mt-2"></p>
-<div class="mt-6 flex flex-wrap gap-3 justify-center"><button onclick="wantThis()" class="bg-white text-black px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:bg-neutral-200 transition-colors">Quero Minha Prancha</button><button onclick="moreModels()" class="lb-more hidden border border-white/40 text-white px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:bg-white hover:text-black transition-colors">Ver mais modelos</button></div>
+<div class="mt-6 flex flex-wrap gap-3 justify-center"><button onclick="wantThis()" class="bg-white text-black px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:bg-neutral-200 transition-colors">Quero Minha Prancha</button><button onclick="toggleRef()" class="lb-ref border border-white/40 text-white px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:bg-white hover:text-black transition-colors">+ Adicionar às referências</button><button onclick="moreModels()" class="lb-more hidden border border-white/40 text-white px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:bg-white hover:text-black transition-colors">Ver mais modelos</button></div>
 </div>
 </div>
 <div class="md:hidden absolute bottom-0 left-0 right-0 bg-white bottom-sheet-enter rounded-t-2xl" style="max-height:88vh;">
@@ -704,15 +709,19 @@ Do planer à resina, o que sai do shaper é parte ferramenta, parte obra de arte
 </div>
 <p id="modalTitleMobile" class="font-serif text-xl mt-4 text-center"></p>
 <p id="modalDescMobile" class="font-sans text-[10px] uppercase tracking-widest text-neutral-500 mt-1 text-center"></p>
-<button onclick="wantThis()" class="w-full mt-4 bg-black text-white py-3 font-sans uppercase tracking-widest text-[10px]">Quero Minha Prancha</button><button onclick="moreModels()" class="lb-more hidden w-full mt-2 border border-black/20 text-black py-3 font-sans uppercase tracking-widest text-[10px]">Ver mais modelos</button>
+<button onclick="wantThis()" class="w-full mt-4 bg-black text-white py-3 font-sans uppercase tracking-widest text-[10px]">Quero Minha Prancha</button><button onclick="toggleRef()" class="lb-ref w-full mt-2 border border-black text-black py-3 font-sans uppercase tracking-widest text-[10px]">+ Adicionar às referências</button><button onclick="moreModels()" class="lb-more hidden w-full mt-2 border border-black/20 text-black py-3 font-sans uppercase tracking-widest text-[10px]">Ver mais modelos</button>
 </div>
 </div>
 </div>
 
+<!-- Referências: pílula (desktop) + aviso -->
+<button id="refsPill" onclick="openChat()" class="hidden fixed bottom-6 right-6 z-40 bg-black text-white px-5 py-3 font-sans uppercase tracking-widest text-[10px] shadow-lg hover:opacity-80">Referências (<span class="refs-count">0</span>) · ver pedido</button>
+<div id="refsToast" class="hidden fixed top-24 left-1/2 -translate-x-1/2 z-[120] bg-black text-white px-5 py-3 font-sans text-[11px] tracking-wide shadow-lg"></div>
+
 <!-- CTA fixo (mobile) -->
 <div id="stickyCta" class="fixed bottom-0 inset-x-0 z-40 md:hidden translate-y-full transition-transform duration-300">
 <button onclick="openChat()" class="w-full bg-black text-white py-4 font-sans uppercase tracking-widest text-[10px] flex items-center justify-center gap-2">
-<span>Quero Minha Prancha</span><span class="text-white/50">·</span><span class="text-white/80">10% OFF no site</span>
+<span>Quero Minha Prancha</span><span class="text-white/50">·</span><span class="text-white/80 sticky-off">10% OFF no site</span><span class="text-white/80 sticky-refs hidden">Referências (<span class="refs-count">0</span>)</span>
 </button>
 </div>
 
@@ -909,6 +918,7 @@ function renderLightbox() {
   ['lbPrevD','lbPrevM'].forEach(id => set(id, el => el.classList.toggle('hidden', first)));
   ['lbNextD','lbNextM'].forEach(id => set(id, el => el.classList.toggle('hidden', last)));
   document.querySelectorAll('.lb-more').forEach(el => el.classList.toggle('hidden', !last));
+  refsSyncButton();
 }
 function nextSlide() { if (lbPos < lbList.length - 1) { lbPos++; renderLightbox(); } }
 function prevSlide() { if (lbPos > 0) { lbPos--; renderLightbox(); } }
@@ -919,8 +929,91 @@ function moreModels() {
 }
 function wantThis() {
   const item = gallery[lbList[lbPos]];
+  refAdd(item);
   closeBoardModal();
   openChat(item.c);
+}
+
+// ===================== REFERÊNCIAS (carrinho) =====================
+// O cliente junta as pranchas que curtiu; elas aparecem no formulário e vão
+// no pedido. Guardado no navegador dele (localStorage), no máximo 8.
+var REFS_KEY = 'bc_refs', REFS_MAX = 8;
+function refsLoad() { try { return JSON.parse(localStorage.getItem(REFS_KEY)) || []; } catch (e) { return []; } }
+function refsSave(list) { try { localStorage.setItem(REFS_KEY, JSON.stringify(list)); } catch (e) {} }
+var refs = refsLoad();
+function refHas(p) { return refs.some(function (r) { return r.p === p; }); }
+function refAdd(item) {
+  if (refHas(item.p)) return false;
+  if (refs.length >= REFS_MAX) { refsToast('Você já tem ' + REFS_MAX + ' referências. Tire alguma no pedido pra adicionar outra.'); return false; }
+  refs.push({ p: item.p, c: item.c, f: item.f || '', line: item.line || '' });
+  refsSave(refs); refsRender(); return true;
+}
+function refRemove(p) {
+  refs = refs.filter(function (r) { return r.p !== p; });
+  refsSave(refs); refsRender();
+}
+function refDetails(r) {
+  var d = [];
+  if (r.line) d.push(r.line);
+  d.push(r.c);
+  if (r.f && !sameLabel(r.f, r.c)) d.push(r.f);
+  return d.join(' · ');
+}
+function toggleRef() {
+  var item = gallery[lbList[lbPos]];
+  if (!item) return;
+  if (refHas(item.p)) { refRemove(item.p); refsToast('Removida das referências'); }
+  else if (refAdd(item)) { refsToast('Adicionada às referências. Ela vai junto com o seu pedido.'); }
+  refsSyncButton();
+}
+function refsSyncButton() {
+  var item = gallery[lbList[lbPos]];
+  var on = item && refHas(item.p);
+  document.querySelectorAll('.lb-ref').forEach(function (b) {
+    b.textContent = on ? '✓ Nas referências' : '+ Adicionar às referências';
+  });
+}
+var refsToastTimer;
+function refsToast(msg) {
+  var t = document.getElementById('refsToast'); if (!t) return;
+  t.textContent = msg; t.classList.remove('hidden');
+  clearTimeout(refsToastTimer);
+  refsToastTimer = setTimeout(function () { t.classList.add('hidden'); }, 2600);
+}
+function refsRender() {
+  var n = refs.length;
+  document.querySelectorAll('.refs-count').forEach(function (el) { el.textContent = n; });
+  var pill = document.getElementById('refsPill'); if (pill) pill.classList.toggle('hidden', n === 0);
+  document.querySelectorAll('.sticky-off').forEach(function (el) { el.classList.toggle('hidden', n > 0); });
+  document.querySelectorAll('.sticky-refs').forEach(function (el) { el.classList.toggle('hidden', n === 0); });
+  var list = document.getElementById('refsList'), empty = document.getElementById('refsEmpty');
+  if (!list) return;
+  if (empty) empty.classList.toggle('hidden', n > 0);
+  list.innerHTML = '';
+  refs.forEach(function (r) {
+    var cell = document.createElement('div');
+    cell.className = 'relative';
+    var img = document.createElement('img');
+    img.src = boardImg(r.p); img.alt = 'Referência ' + r.c; img.loading = 'lazy';
+    img.className = 'w-full aspect-[3/4] object-cover grayscale bg-neutral-100';
+    var cap = document.createElement('p');
+    cap.className = 'font-sans text-[9px] uppercase tracking-widest text-neutral-500 mt-1 truncate';
+    cap.textContent = refDetails(r);
+    var x = document.createElement('button');
+    x.type = 'button'; x.setAttribute('aria-label', 'Remover referência');
+    x.className = 'absolute top-1 right-1 bg-black text-white w-6 h-6 text-sm leading-none flex items-center justify-center';
+    x.textContent = '×';
+    x.onclick = function () { refRemove(r.p); };
+    cell.appendChild(img); cell.appendChild(x); cell.appendChild(cap);
+    list.appendChild(cell);
+  });
+}
+function refsPayload() {
+  return refs.map(function (r) {
+    var src = boardImg(r.p);
+    if (src.charAt(0) === '/') src = location.origin + src;
+    return { modelo: r.c, detalhes: refDetails(r), imagem: src };
+  });
 }
 
 // ===================== FORMULÁRIO DE PEDIDO =====================
@@ -972,6 +1065,7 @@ function leadSuccess(nome, pedido) {
       onda: (fd.get('onda') || '').trim(),
       mensagem: (fd.get('mensagem') || '').trim(),
       cupom: 'CARBON1000',
+      referencias: refsPayload(),
       origem: location.href
     };
     btn.disabled = true; var orig = btn.textContent; btn.textContent = 'Enviando...';
@@ -981,6 +1075,7 @@ function leadSuccess(nome, pedido) {
       var data = {};
       try { data = await r.json(); } catch (_) {}
       if (!r.ok || !data.ok) throw new Error((data && data.error) || ('HTTP ' + r.status));
+      refs = []; refsSave(refs); refsRender();
       leadSuccess(nome, data.pedido);
     } catch (err) {
       btn.disabled = false; btn.textContent = orig;
@@ -1020,6 +1115,7 @@ function filterTo(type) {
 
 // ===================== INIT =====================
 loadTexts();
+refsRender();
 loadCatalog().then(() => { renderGallery('Todas'); });
 renderActionGrid();
 loadImages();
