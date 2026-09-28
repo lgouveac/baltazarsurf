@@ -39,13 +39,19 @@ module.exports = async (req, res) => {
     const origem = clean(body.origem, 300);
 
     // Referências: pranchas da coleção que o cliente juntou no site (máx. 8).
+    // A foto é montada aqui a partir do caminho: /images/... vira link do site;
+    // links https (fotos do bucket do Supabase) passam. Qualquer outra coisa é
+    // descartada, então ninguém injeta endereço arbitrário no email.
+    const SITE = (process.env.SITE_URL || 'https://www.baltazarcustomssurfboards.com').replace(/\/$/, '');
     const refs = (Array.isArray(body.referencias) ? body.referencias : []).slice(0, 8).map(function (r) {
       r = r || {};
-      const img = clean(r.imagem, 400);
+      const raw = clean(r.imagem, 400);
+      const img = /^https:\/\//.test(raw) ? raw
+        : (/^\/images\/[A-Za-z0-9._\/-]+$/.test(raw) && raw.indexOf('..') < 0 ? SITE + raw : '');
       return {
         modelo: clean(r.modelo, 60),
         detalhes: clean(r.detalhes, 160),
-        imagem: /^https:\/\//.test(img) ? img : '',
+        imagem: img,
       };
     }).filter(function (r) { return r.modelo || r.imagem; });
 

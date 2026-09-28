@@ -601,7 +601,16 @@ Del planer a la resina, lo que sale del shaper es parte herramienta, parte obra 
 <div id="refsBox">
 <p class="font-sans text-[10px] uppercase tracking-widest text-neutral-500 mb-2">Tus referencias</p>
 <div id="refsList" class="grid grid-cols-4 gap-2"></div>
-<p id="refsEmpty" class="font-sans text-xs text-neutral-400 leading-relaxed">¿Te gustó alguna tabla de la colección? Abre la foto y toca <span class="text-neutral-600">+ Agregar a referencias</span>. Aparece aquí y va junto con tu pedido.</p>
+<p id="refsEmpty" class="font-sans text-xs text-neutral-400 leading-relaxed">¿Alguna tabla de la colección te inspiró? Elígela aquí mismo: va junto con tu pedido y ayuda al shaper a entender lo que buscas.</p>
+<button type="button" id="refsPickBtn" onclick="refsPickerToggle()" class="mt-3 border border-black/20 px-4 py-2 font-sans uppercase tracking-widest text-[10px] hover:bg-black hover:text-white transition-colors">Elegir de la colección</button>
+<div id="refsPicker" class="hidden mt-4 border-t border-black/10 pt-4">
+<div id="refsPickerChips" class="flex gap-2 overflow-x-auto no-scrollbar mb-3"></div>
+<div id="refsPickerGrid" class="grid grid-cols-4 gap-2"></div>
+<div class="flex justify-between items-center mt-3">
+<button type="button" id="refsPickerMore" onclick="refsPickerMore()" class="hidden font-sans uppercase tracking-widest text-[10px] underline">Ver más</button>
+<button type="button" onclick="refsPickerToggle(false)" class="ml-auto font-sans uppercase tracking-widest text-[10px] underline">Listo</button>
+</div>
+</div>
 </div>
 <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true"/>
 <label class="block">
@@ -716,7 +725,7 @@ Del planer a la resina, lo que sale del shaper es parte herramienta, parte obra 
 
 <!-- Referências: pílula (desktop) + aviso -->
 <button id="refsPill" onclick="openChat()" class="hidden fixed bottom-6 right-6 z-40 bg-black text-white px-5 py-3 font-sans uppercase tracking-widest text-[10px] shadow-lg hover:opacity-80">Referencias (<span class="refs-count">0</span>) · ver pedido</button>
-<div id="refsToast" class="hidden fixed top-24 left-1/2 -translate-x-1/2 z-[120] bg-black text-white px-5 py-3 font-sans text-[11px] tracking-wide shadow-lg"></div>
+<div id="refsToast" class="hidden fixed top-24 left-1/2 -translate-x-1/2 z-[120] bg-black text-white px-5 py-3 font-sans text-[11px] tracking-wide shadow-lg flex items-center gap-4 max-w-[92vw]"><span id="refsToastMsg"></span><button id="refsToastGo" type="button" onclick="refsGoToForm()" class="hidden shrink-0 underline uppercase tracking-widest text-[10px]">Ver en el pedido</button></div>
 
 <!-- CTA fixo (mobile) -->
 <div id="stickyCta" class="fixed bottom-0 inset-x-0 z-40 md:hidden translate-y-full transition-transform duration-300">
@@ -963,7 +972,7 @@ function toggleRef() {
   var item = gallery[lbList[lbPos]];
   if (!item) return;
   if (refHas(item.p)) { refRemove(item.p); refsToast('Quitada de referencias'); }
-  else if (refAdd(item)) { refsToast('Agregada a referencias. Irá junto con tu pedido.'); }
+  else if (refAdd(item)) { refsToast('¡Agregada! Ya aparece en el formulario de tu pedido.', true); }
   refsSyncButton();
 }
 function refsSyncButton() {
@@ -974,11 +983,63 @@ function refsSyncButton() {
   });
 }
 var refsToastTimer;
-function refsToast(msg) {
+function refsToast(msg, showGo) {
   var t = document.getElementById('refsToast'); if (!t) return;
-  t.textContent = msg; t.classList.remove('hidden');
+  document.getElementById('refsToastMsg').textContent = msg;
+  document.getElementById('refsToastGo').classList.toggle('hidden', !showGo);
+  t.classList.remove('hidden');
   clearTimeout(refsToastTimer);
-  refsToastTimer = setTimeout(function () { t.classList.add('hidden'); }, 2600);
+  refsToastTimer = setTimeout(function () { t.classList.add('hidden'); }, showGo ? 4200 : 2600);
+}
+function refsGoToForm() {
+  document.getElementById('refsToast').classList.add('hidden');
+  if (!document.getElementById('boardModal').classList.contains('hidden')) closeBoardModal();
+  openChat();
+}
+
+// Seletor no formulário: quem chega sem ter escolhido nada escolhe por aqui.
+var pickFilter = 'Todas', pickShown = 12;
+function refsPickerToggle(force) {
+  var box = document.getElementById('refsPicker'); if (!box) return;
+  var open = (typeof force === 'boolean') ? force : box.classList.contains('hidden');
+  box.classList.toggle('hidden', !open);
+  if (open) { pickShown = 12; refsPickerRender(); }
+}
+function refsPickerMore() { pickShown += 12; refsPickerRender(); }
+function refsPickerRender() {
+  var grid = document.getElementById('refsPickerGrid'), chips = document.getElementById('refsPickerChips');
+  if (!grid || !chips) return;
+  var cats = ['Todas'];
+  gallery.forEach(function (g) { if (cats.indexOf(g.c) < 0) cats.push(g.c); });
+  chips.innerHTML = '';
+  cats.forEach(function (c) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'shrink-0 border px-3 py-1.5 font-sans uppercase tracking-widest text-[9px] ' + (c === pickFilter ? 'bg-black text-white border-black' : 'border-black/20');
+    b.textContent = (c === 'Todas') ? ((document.querySelector('.filter-chip[data-type="Todas"]') || {}).textContent || c) : c;
+    b.onclick = function () { pickFilter = c; pickShown = 12; refsPickerRender(); };
+    chips.appendChild(b);
+  });
+  var list = gallery.filter(function (g) { return pickFilter === 'Todas' || g.c === pickFilter; });
+  grid.innerHTML = '';
+  list.slice(0, pickShown).forEach(function (g) {
+    var on = refHas(g.p);
+    var cell = document.createElement('button');
+    cell.type = 'button';
+    cell.className = 'relative text-left';
+    cell.setAttribute('aria-pressed', on ? 'true' : 'false');
+    cell.innerHTML =
+      '<img src="' + boardImg(g.p) + '" alt="" loading="lazy" class="w-full aspect-[3/4] object-cover grayscale bg-neutral-100 ' + (on ? 'ring-2 ring-black' : 'opacity-90 hover:opacity-100') + '"/>' +
+      '<span class="absolute top-1 right-1 w-5 h-5 flex items-center justify-center text-[11px] ' + (on ? 'bg-black text-white' : 'bg-white/90 text-black border border-black/20') + '">' + (on ? '✓' : '+') + '</span>';
+    var cap = document.createElement('span');
+    cap.className = 'block font-sans text-[9px] uppercase tracking-widest text-neutral-500 mt-1 truncate';
+    cap.textContent = refDetails({ c: g.c, f: g.f, line: g.line });
+    cell.appendChild(cap);
+    cell.onclick = function () { if (refHas(g.p)) refRemove(g.p); else refAdd(g); refsPickerRender(); };
+    grid.appendChild(cell);
+  });
+  var more = document.getElementById('refsPickerMore');
+  if (more) more.classList.toggle('hidden', list.length <= pickShown);
 }
 function refsRender() {
   var n = refs.length;
@@ -989,6 +1050,8 @@ function refsRender() {
   var list = document.getElementById('refsList'), empty = document.getElementById('refsEmpty');
   if (!list) return;
   if (empty) empty.classList.toggle('hidden', n > 0);
+  var pickBtn = document.getElementById('refsPickBtn');
+  if (pickBtn) pickBtn.textContent = n > 0 ? '+ Elegir más de la colección' : 'Elegir de la colección';
   list.innerHTML = '';
   refs.forEach(function (r) {
     var cell = document.createElement('div');
@@ -1010,9 +1073,7 @@ function refsRender() {
 }
 function refsPayload() {
   return refs.map(function (r) {
-    var src = boardImg(r.p);
-    if (src.charAt(0) === '/') src = location.origin + src;
-    return { modelo: r.c, detalhes: refDetails(r), imagem: src };
+    return { modelo: r.c, detalhes: refDetails(r), imagem: boardImg(r.p) };
   });
 }
 
