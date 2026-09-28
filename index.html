@@ -342,24 +342,14 @@ summary::-webkit-details-marker { display:none; }
 <main id="top">
 <!-- Hero Section -->
 <section class="w-full bg-surface">
-<div class="max-w-7xl mx-auto px-5 md:px-10 pt-16 pb-14 md:py-24 grid md:grid-cols-2 gap-10 md:gap-16 items-center">
-<div>
-<span data-cms="hero_reach" class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-3 md:mb-4 block">Recreio, Rio de Janeiro, para o Brasil e o mundo</span>
+<div class="max-w-4xl mx-auto px-5 md:px-10 pt-16 pb-10 md:pt-28 md:pb-14 text-center">
+<span data-cms="hero_reach" class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-4 md:mb-6 block">Recreio, Rio de Janeiro, para o Brasil e o mundo</span>
 <h1 class="font-serif leading-tight"><span data-cms="hero_tagline" class="hero-line block text-5xl md:text-8xl leading-[0.98]">Pranchas de surf artesanais</span></h1>
-<p data-cms="hero_subtitle" class="font-sans text-base md:text-lg text-neutral-600 leading-relaxed mt-5 md:mt-6 max-w-md">Cada prancha é única. Você se inspira, a gente faz a sua.</p>
-<div class="mt-8 md:mt-10">
+<p data-cms="hero_subtitle" class="font-sans text-base md:text-lg text-neutral-600 leading-relaxed mt-6 md:mt-7 max-w-lg mx-auto">Cada prancha é única. Você se inspira, a gente faz a sua.</p>
+<div class="mt-9 md:mt-11">
 <button onclick="openChat()" class="bg-black text-white px-10 py-4 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Quero Minha Prancha</button>
 </div>
 <p class="mt-5"><span class="inline-block border border-black/15 bg-white px-4 py-2 font-sans text-[10px] md:text-[11px] tracking-widest text-neutral-600">10% OFF comprando pelo site com o cupom <span class="text-black font-semibold">CARBON1000</span></span></p>
-</div>
-<div id="heroCine" data-cine="7000" class="relative mx-auto h-[500px] md:h-[620px] aspect-[5/9] overflow-hidden">
-<img data-cms-img="hero" data-cms-img-i="0" src="/images/IMG_6855.jpeg" alt="Prancha Carbon Trash da Baltazar Customs no ateliê do Recreio" width="862" height="1577" fetchpriority="high" class="ct-frame active"/>
-<img data-cms-img="hero" data-cms-img-i="1" src="/images/IMG_6888.jpeg" alt="" aria-hidden="true" width="708" height="692" loading="lazy" decoding="async" fetchpriority="low" class="ct-frame"/>
-<img data-cms-img="hero" data-cms-img-i="2" src="/images/IMG_6856.jpeg" alt="" aria-hidden="true" width="854" height="1566" loading="lazy" decoding="async" fetchpriority="low" class="ct-frame"/>
-<img data-cms-img="hero" data-cms-img-i="3" src="/images/IMG_6862.jpeg" alt="" aria-hidden="true" width="720" height="720" loading="lazy" decoding="async" fetchpriority="low" class="ct-frame"/>
-<img data-cms-img="hero" data-cms-img-i="4" src="/images/IMG_6848.jpeg" alt="" aria-hidden="true" width="900" height="1600" loading="lazy" decoding="async" fetchpriority="low" class="ct-frame"/>
-<img data-cms-img="hero" data-cms-img-i="5" src="/images/IMG_6889.jpeg" alt="" aria-hidden="true" width="720" height="720" loading="lazy" decoding="async" fetchpriority="low" class="ct-frame"/>
-</div>
 </div>
 </section>
 
@@ -819,6 +809,11 @@ const CATEGORIAS = ['Thruster','Twin','Mid-Length','Longboard','Quad','Asymmetri
 
 // ===================== RENDER CATÁLOGO + FILTRO =====================
 let currentFilter = 'Todas';
+// Evita rótulo repetido: uma prancha da categoria Twin com quilha 'Twin'
+// mostrava 'Twin · Twin'. Só exibe a quilha quando ela acrescenta informação.
+function sameLabel(a, b) {
+  return String(a || '').trim().toLowerCase() === String(b || '').trim().toLowerCase();
+}
 const GALLERY_STEP = 8;
 let galleryVisible = GALLERY_STEP;
 function renderGallery(filter) {
@@ -836,7 +831,7 @@ function renderGallery(filter) {
         '<img src="' + boardImg(b.p) + '" alt="Prancha ' + b.c + '" loading="lazy" class="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"/>' +
         '<div class="absolute top-2 left-2 bg-black text-white px-2 py-0.5 font-sans text-[7px] md:text-[8px] tracking-widest uppercase">' + b.c + '</div>' +
         '<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 flex justify-between items-end opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">' +
-          '<span class="font-sans text-[8px] md:text-[9px] tracking-widest uppercase text-white/80">' + b.f + '</span>' +
+          '<span class="font-sans text-[8px] md:text-[9px] tracking-widest uppercase text-white/80">' + (sameLabel(b.f, b.c) ? '' : b.f) + '</span>' +
           '<span class="font-sans text-[8px] md:text-[9px] tracking-widest uppercase text-white">' + precoCategoria(b.c) + '</span>' +
         '</div>' +
       '</div>';
@@ -894,7 +889,13 @@ function closeBoardModal() {
 function renderLightbox() {
   const item = gallery[lbList[lbPos]];
   const src = boardImg(item.p);
-  const sub = (item.line ? item.line + ' · ' : '') + item.c + ' · ' + item.f + ' · a partir de ' + precoCategoria(item.c);
+  const parts = [];
+  parts.push('Prancha ' + (lbPos + 1) + ' de ' + lbList.length);
+  if (item.line) parts.push(item.line);
+  parts.push(item.c);
+  if (!sameLabel(item.f, item.c)) parts.push(item.f);
+  parts.push('a partir de ' + precoCategoria(item.c));
+  const sub = parts.join(' · ');
   const set = (id, fn) => { const el = document.getElementById(id); if (el) fn(el); };
   set('modalImgDesktop', el => el.src = src);
   set('modalImgMobile', el => el.src = src);
