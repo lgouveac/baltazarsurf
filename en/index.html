@@ -702,7 +702,7 @@ From the planer to the resin, what leaves the shaper is part tool, part work of 
 <button id="lbNextD" onclick="nextSlide()" aria-label="Next photo" class="absolute right-10 top-1/2 -translate-y-1/2 text-white text-5xl hover:opacity-60 z-[110]">&#8250;</button>
 <div class="flex flex-col items-center max-w-2xl w-full px-6">
 <img id="modalImgDesktop" class="max-h-[70vh] object-contain" src="" alt=""/>
-<p id="modalTitleDesktop" class="font-serif text-2xl text-white mt-6"></p>
+<div class="flex items-center gap-3 mt-6"><p id="modalTitleDesktop" class="font-serif text-2xl text-white"></p><button type="button" onclick="shareBoard()" aria-label="Share this board" title="Share" class="text-white/50 hover:text-white transition-colors p-1"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg></button></div>
 <p id="modalDescDesktop" class="font-sans text-[10px] uppercase tracking-widest text-white/60 mt-2"></p>
 <div class="mt-6 flex flex-wrap gap-3 justify-center"><button onclick="wantThis()" class="bg-white text-black px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:bg-neutral-200 transition-colors">I Want My Board</button><button onclick="toggleRef()" class="lb-ref border border-white/40 text-white px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:bg-white hover:text-black transition-colors">+ Add to references</button><button onclick="moreModels()" class="lb-more hidden border border-white/40 text-white px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:bg-white hover:text-black transition-colors">See more models</button></div>
 </div>
@@ -716,7 +716,7 @@ From the planer to the resin, what leaves the shaper is part tool, part work of 
 <button id="lbPrevM" onclick="prevSlide()" aria-label="Previous photo" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white w-8 h-8 flex items-center justify-center text-lg">&#8249;</button>
 <button id="lbNextM" onclick="nextSlide()" aria-label="Next photo" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white w-8 h-8 flex items-center justify-center text-lg">&#8250;</button>
 </div>
-<p id="modalTitleMobile" class="font-serif text-xl mt-4 text-center"></p>
+<div class="flex items-center justify-center gap-2 mt-4"><p id="modalTitleMobile" class="font-serif text-xl text-center"></p><button type="button" onclick="shareBoard()" aria-label="Share this board" title="Share" class="text-neutral-400 hover:text-black transition-colors p-1"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg></button></div>
 <p id="modalDescMobile" class="font-sans text-[10px] uppercase tracking-widest text-neutral-500 mt-1 text-center"></p>
 <button onclick="wantThis()" class="w-full mt-4 bg-black text-white py-3 font-sans uppercase tracking-widest text-[10px]">I Want My Board</button><button onclick="toggleRef()" class="lb-ref w-full mt-2 border border-black text-black py-3 font-sans uppercase tracking-widest text-[10px]">+ Add to references</button><button onclick="moreModels()" class="lb-more hidden w-full mt-2 border border-black/20 text-black py-3 font-sans uppercase tracking-widest text-[10px]">See more models</button>
 </div>
@@ -906,6 +906,55 @@ function openLightbox(galleryIndex) {
 function closeBoardModal() {
   document.getElementById('boardModal').classList.add('hidden');
   document.body.style.overflow = '';
+  setBoardInUrl(null);
+}
+
+// ===================== COMPARTILHAR PRANCHA =====================
+// Cada prancha tem um link único: ?prancha=<nome do arquivo da foto>.
+// Usa o nome do arquivo (e não o id do banco) porque ele não muda se o
+// catálogo for recriado. O link abre o site já com a prancha no carrossel.
+function boardKey(p) {
+  return String(p || '').split('/').pop().replace(/\.[a-z0-9]+$/i, '');
+}
+function boardUrl(item) {
+  // Link limpo: só a página e a prancha. Sem utm/fbclid de quem compartilha,
+  // pra não atribuir a visita de quem recebe à origem de quem mandou.
+  const u = new URL(location.origin + location.pathname);
+  u.searchParams.set('prancha', boardKey(item.p));
+  return u.toString();
+}
+function setBoardInUrl(item) {
+  try {
+    const u = new URL(location.href);
+    if (item) u.searchParams.set('prancha', boardKey(item.p)); else u.searchParams.delete('prancha');
+    history.replaceState(null, '', u.pathname + u.search + u.hash);
+  } catch (e) {}
+}
+function shareBoard() {
+  const item = gallery[lbList[lbPos]];
+  if (!item) return;
+  const url = boardUrl(item);
+  const title = 'Model ' + item.c + ' · Baltazar Customs';
+  if (navigator.share) {
+    navigator.share({ title: title, text: title, url: url }).catch(function () {});
+    return;
+  }
+  const done = function () { refsToast('Board link copied'); };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(done, function () { window.prompt('Copy the board link:', url); });
+  } else {
+    window.prompt('Copy the board link:', url);
+  }
+}
+// Quem chega por um link compartilhado cai direto na prancha.
+function openBoardFromUrl() {
+  const key = new URLSearchParams(location.search).get('prancha');
+  if (!key) return;
+  const i = gallery.findIndex(function (g) { return boardKey(g.p) === key; });
+  if (i < 0) { setBoardInUrl(null); return; }
+  const sec = document.getElementById('boards');
+  if (sec) sec.scrollIntoView({ block: 'start' });
+  openLightbox(i);
 }
 function renderLightbox() {
   const item = gallery[lbList[lbPos]];
@@ -928,6 +977,7 @@ function renderLightbox() {
   ['lbNextD','lbNextM'].forEach(id => set(id, el => el.classList.toggle('hidden', last)));
   document.querySelectorAll('.lb-more').forEach(el => el.classList.toggle('hidden', !last));
   refsSyncButton();
+  setBoardInUrl(item);
 }
 function nextSlide() { if (lbPos < lbList.length - 1) { lbPos++; renderLightbox(); } }
 function prevSlide() { if (lbPos > 0) { lbPos--; renderLightbox(); } }
@@ -1177,7 +1227,7 @@ function filterTo(type) {
 // ===================== INIT =====================
 loadTexts();
 refsRender();
-loadCatalog().then(() => { renderGallery('Todas'); });
+loadCatalog().then(() => { renderGallery('Todas'); openBoardFromUrl(); });
 renderActionGrid();
 loadImages();
 // Crossfade cinematográfico (Ken Burns): hero e Carbon Trash
