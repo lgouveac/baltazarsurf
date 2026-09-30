@@ -834,11 +834,21 @@ function sameLabel(a, b) {
 }
 const GALLERY_STEP = 8;
 let galleryVisible = GALLERY_STEP;
+// Carbon Trash é uma construção, não um formato: no cadastro ela aparece no
+// campo de detalhe ou de linha, com grafias variadas ('CARBON TRASH',
+// 'Carbon Trash Rails', 'Full Carbon ...'). Por isso o filtro procura em
+// qualquer campo, sem diferenciar maiúsculas.
+function isCarbon(g) { return /carbon/i.test((g.line || '') + ' ' + (g.f || '')); }
+function matchesFilter(g, filter) {
+  if (filter === 'Todas') return true;
+  if (filter === 'Carbon Trash') return isCarbon(g);
+  return g.c === filter || g.line === filter;
+}
 function renderGallery(filter) {
   currentFilter = filter;
   const g = document.getElementById('boardGrid');
   g.innerHTML = '';
-  const idx = gallery.map((_, i) => i).filter(i => filter === 'Todas' || gallery[i].c === filter || gallery[i].line === filter);
+  const idx = gallery.map((_, i) => i).filter(i => matchesFilter(gallery[i], filter));
   idx.slice(0, galleryVisible).forEach(i => {
     const b = gallery[i];
     const card = document.createElement('div');
@@ -890,13 +900,15 @@ function renderActionGrid() {
 // ===================== LIGHTBOX (navega na lista filtrada) =====================
 let lbList = [], lbPos = 0;
 function visibleIndices() {
-  return gallery.map((_, i) => i).filter(i => currentFilter === 'Todas' || gallery[i].c === currentFilter || gallery[i].line === currentFilter);
+  return gallery.map((_, i) => i).filter(i => matchesFilter(gallery[i], currentFilter));
 }
 // O carrossel mostra só as pranchas do mesmo modelo (categoria) da que foi clicada.
 // Sem loop: na última foto a seta some e aparece "Ver mais modelos".
+let lbCarbon = false;
 function openLightbox(galleryIndex) {
   const modelo = gallery[galleryIndex].c;
-  lbList = visibleIndices().filter(i => gallery[i].c === modelo);
+  lbCarbon = currentFilter === 'Carbon Trash';
+  lbList = lbCarbon ? visibleIndices() : visibleIndices().filter(i => gallery[i].c === modelo);
   lbPos = lbList.indexOf(galleryIndex);
   if (lbPos < 0) lbPos = 0;
   renderLightbox();
@@ -961,6 +973,7 @@ function renderLightbox() {
   const src = boardImg(item.p);
   const parts = [];
   parts.push((lbPos + 1) + ' of ' + lbList.length);
+  if (lbCarbon) parts.push(item.c);
   if (item.line) parts.push(item.line);
   if (!sameLabel(item.f, item.c)) parts.push(item.f);
   parts.push('from ' + precoCategoria(item.c));
@@ -968,8 +981,9 @@ function renderLightbox() {
   const set = (id, fn) => { const el = document.getElementById(id); if (el) fn(el); };
   set('modalImgDesktop', el => el.src = src);
   set('modalImgMobile', el => el.src = src);
-  set('modalTitleDesktop', el => el.textContent = 'Model ' + item.c);
-  set('modalTitleMobile', el => el.textContent = 'Model ' + item.c);
+  const lbTitle = lbCarbon ? 'Carbon Trash' : 'Model ' + item.c;
+  set('modalTitleDesktop', el => el.textContent = lbTitle);
+  set('modalTitleMobile', el => el.textContent = lbTitle);
   set('modalDescDesktop', el => el.textContent = sub);
   set('modalDescMobile', el => el.textContent = sub);
   const first = lbPos === 0, last = lbPos === lbList.length - 1;
