@@ -376,7 +376,7 @@ summary::-webkit-details-marker { display:none; }
 <p class="font-sans text-[11px] text-neutral-400 mt-3">El arte y los acabados especiales pueden tener costo adicional.</p>
 </div>
 <!-- Filtros por categoria -->
-<div id="boardFilters" class="flex md:flex-wrap gap-2 mb-8 md:mb-12 overflow-x-auto md:overflow-visible no-scrollbar -mx-5 px-5 md:mx-0 md:px-0">
+<div id="boardFilters" class="scroll-mt-24 md:scroll-mt-32 flex md:flex-wrap gap-2 mb-8 md:mb-12 overflow-x-auto md:overflow-visible no-scrollbar -mx-5 px-5 md:mx-0 md:px-0">
 <button class="filter-chip active border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Todas">Todas</button>
 <button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Thruster">Thruster</button>
 <button class="filter-chip border border-black/20 px-4 py-2 font-sans uppercase text-[10px] tracking-widest transition-colors" data-type="Twin">Twin</button>
@@ -857,7 +857,10 @@ function renderGallery(filter) {
     card.innerHTML =
       '<div class="aspect-[3/4] overflow-hidden bg-surface-container relative">' +
         '<img src="' + boardImg(b.p) + '" alt="Prancha ' + b.c + '" loading="lazy" class="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"/>' +
-        '<div class="absolute top-2 left-2 bg-black text-white px-2 py-0.5 font-sans text-[7px] md:text-[8px] tracking-widest uppercase">' + b.c + '</div>' +
+        '<div class="absolute top-2 left-2 flex flex-col items-start gap-1">' +
+          '<span class="bg-black text-white px-2 py-0.5 font-sans text-[7px] md:text-[8px] tracking-widest uppercase">' + b.c + '</span>' +
+          (isCarbon(b) ? '<span class="bg-white text-black px-2 py-0.5 font-sans text-[7px] md:text-[8px] tracking-widest uppercase">Carbon Trash</span>' : '') +
+        '</div>' +
         '<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 flex justify-between items-end opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">' +
           '<span class="font-sans text-[8px] md:text-[9px] tracking-widest uppercase text-white/80">' + (sameLabel(b.f, b.c) ? '' : b.f) + '</span>' +
           '<span class="font-sans text-[8px] md:text-[9px] tracking-widest uppercase text-white">' + precoCategoria(b.c) + '</span>' +
@@ -974,6 +977,7 @@ function renderLightbox() {
   const parts = [];
   parts.push((lbPos + 1) + ' de ' + lbList.length);
   if (lbCarbon) parts.push(item.c);
+  else if (isCarbon(item) && !/carbon trash/i.test((item.f || '') + ' ' + (item.line || ''))) parts.push('Carbon Trash');
   if (item.line) parts.push(item.line);
   if (!sameLabel(item.f, item.c)) parts.push(item.f);
   parts.push('desde ' + precoCategoria(item.c));

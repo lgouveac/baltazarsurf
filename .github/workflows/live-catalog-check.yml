@@ -1,0 +1,26 @@
+name: Checar coleção no site ao vivo
+
+# Playwright no site publicado: filtro Carbon Trash, etiquetas dos cards e
+# rolagem até os filtros. Não envia nada.
+on:
+  workflow_dispatch:
+
+jobs:
+  checar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Instalar Playwright
+        run: |
+          mkdir -p /tmp/pw && cd /tmp/pw && npm init -y >/dev/null && npm i playwright@1.48.2 >/dev/null
+          npx --prefix /tmp/pw playwright install --with-deps chromium >/dev/null
+      - name: Checar
+        run: NODE_PATH=/tmp/pw/node_modules node --experimental-default-type=module .github/live-carbon-check.mjs || (cp .github/live-carbon-check.mjs /tmp/pw/c.mjs && cd /tmp/pw && node c.mjs)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: print-carbon
+          path: live-carbon.png

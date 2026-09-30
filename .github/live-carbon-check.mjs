@@ -1,0 +1,24 @@
+// Confere no site publicado o filtro Carbon Trash e as etiquetas dos cards.
+import { chromium } from 'playwright';
+const S = 'https://www.baltazarcustomssurfboards.com';
+const b = await chromium.launch();
+const p = await (await b.newContext({ viewport: { width: 1280, height: 800 } })).newPage();
+let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS  ' : 'FALHOU') + '  ' + m); if (!c) fails++; };
+await p.goto(S + '/', { waitUntil: 'networkidle', timeout: 60000 });
+await p.locator('.filter-chip[data-type="Carbon Trash"]').click();
+await p.waitForTimeout(800);
+const cards = await p.locator('#boardGrid > div').count();
+const labels = await p.evaluate(() => [...document.querySelectorAll('#boardGrid > div')].map(c => [...c.querySelectorAll('span')].slice(0, 2).map(s => s.textContent).join(' + ')));
+console.log('Filtro Carbon Trash:'); labels.forEach(l => console.log('   ' + l));
+ok(cards > 0, `filtro Carbon Trash mostra ${cards} prancha(s)`);
+ok(labels.every(l => /\+ Carbon Trash$/.test(l)), 'todas com formato + etiqueta "Carbon Trash"');
+const fr = await p.evaluate(() => ({ h: document.querySelector('header').getBoundingClientRect().bottom, f: document.getElementById('boardFilters').getBoundingClientRect().top }));
+await p.locator('#boardGrid > div').first().click(); await p.waitForTimeout(600);
+ok((await p.textContent('#modalTitleDesktop')) === 'Carbon Trash', 'carrossel com título "Carbon Trash"');
+await p.screenshot({ path: 'live-carbon.png' });
+await p.keyboard.press('Escape');
+await p.evaluate(() => { document.documentElement.style.scrollBehavior = 'auto'; filterTo('Carbon Trash'); }); await p.waitForTimeout(800);
+const fr2 = await p.evaluate(() => ({ h: document.querySelector('header').getBoundingClientRect().bottom, f: document.getElementById('boardFilters').getBoundingClientRect().top }));
+ok(fr2.f >= fr2.h, `filtros visíveis abaixo do header (header ${Math.round(fr2.h)}px, filtros ${Math.round(fr2.f)}px)`);
+await b.close();
+console.log(fails ? `\nFALHOU (${fails})` : '\nTUDO OK'); process.exit(fails ? 1 : 0);
