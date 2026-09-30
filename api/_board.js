@@ -39,6 +39,8 @@ export async function findBoard(key, origin) {
       const c = await fetch(SUPA + '/rest/v1/categories?select=name&slug=eq.' + encodeURIComponent(b.category_slug), { headers: H });
       const rows = c.ok ? await c.json() : [];
       if (rows[0] && rows[0].name) cat = rows[0].name;
+      // categoria cadastrada toda em minúsculas ('5 fins set up') vira '5 Fins Set Up'
+      if (!/[A-Z]/.test(cat)) cat = cat.replace(/(^|\s)([a-zà-ú])/g, (m, a, b) => a + b.toUpperCase());
     }
     const p = b.image_path;
     const img = /^https?:/.test(p) ? p
