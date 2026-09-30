@@ -1,0 +1,34 @@
+name: Relatório do catálogo
+
+# Lê o catálogo público do Supabase (a mesma leitura que o site faz) e mostra
+# como as pranchas estão cadastradas: categoria, quilha e linha.
+on:
+  workflow_dispatch:
+
+jobs:
+  relatorio:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ler pranchas do Supabase
+        run: |
+          URL="https://eylnwwerbssfaaaxsccw.supabase.co"
+          KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5bG53d2VyYnNzZmFhYXhzY2N3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MDU3NjYsImV4cCI6MjA5NzI4MTc2Nn0.XMYTNxGEj5Jjt89Q9GCQasnD9sR9q0lt4wdlXUNrJgc"
+          curl -sS "$URL/rest/v1/boards?select=image_path,category_slug,fin_setup,line,sort_order&active=eq.true&order=sort_order" \
+            -H "apikey: $KEY" -H "Authorization: Bearer $KEY" > boards.json
+          curl -sS "$URL/rest/v1/categories?select=slug,name,active" \
+            -H "apikey: $KEY" -H "Authorization: Bearer $KEY" > cats.json
+          python3 - <<'PY'
+          import json, collections
+          b = json.load(open('boards.json')); c = json.load(open('cats.json'))
+          print(f"PRANCHAS ATIVAS: {len(b)}")
+          print("\nCATEGORIAS CADASTRADAS:", ', '.join(f"{x['name']}({x['slug']}{'' if x['active'] else ', inativa'})" for x in c))
+          for campo in ('category_slug', 'fin_setup', 'line'):
+              cnt = collections.Counter((x.get(campo) or '(vazio)') for x in b)
+              print(f"\nCAMPO {campo}:")
+              for k, v in cnt.most_common(): print(f"  {v:3d}  {k}")
+          ct = [x for x in b if 'carbon' in json.dumps(x).lower()]
+          print(f"\nPRANCHAS COM 'carbon' EM QUALQUER CAMPO: {len(ct)}")
+          for x in ct: print('  ', x)
+          print("\nTODAS (foto | categoria | quilha | linha):")
+          for x in b: print(f"  {x['image_path'][-28:]:>28} | {x.get('category_slug')} | {x.get('fin_setup')} | {x.get('line')}")
+          PY
