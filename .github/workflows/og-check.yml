@@ -34,6 +34,12 @@ jobs:
           echo "imagem: $CT | $DIM"
           [[ "$CT" == image/png* && "$DIM" == *"1200 x 630"* ]] && ok "imagem 1200x630 gerada" || ko "imagem não gerada"
 
+          for F in story:1080x1920 feed:1080x1350; do
+            N=${F%%:*}; D=${F##*:}; D="${D/x/ x }"
+            curl -sS -o "$N.png" "$S/api/og?prancha=$K&format=$N"
+            file "$N.png" | grep -q "$D" && ok "arte $N ($D) gerada" || ko "arte $N: $(file $N.png)"
+          done
+
           E=$(curl -sSL -A "$UA" "$S/en?prancha=$K" | meta og:title); echo "en og:title = $E"
           [[ "$E" == Model* || "$E" == Carbon* ]] && ok "versão em inglês" || ko "inglês"
 
@@ -51,4 +57,7 @@ jobs:
         if: always()
         with:
           name: previa-og
-          path: og.png
+          path: |
+            og.png
+            story.png
+            feed.png

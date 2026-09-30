@@ -702,7 +702,7 @@ Del planer a la resina, lo que sale del shaper es parte herramienta, parte obra 
 <button id="lbNextD" onclick="nextSlide()" aria-label="Foto siguiente" class="absolute right-10 top-1/2 -translate-y-1/2 text-white text-5xl hover:opacity-60 z-[110]">&#8250;</button>
 <div class="flex flex-col items-center max-w-2xl w-full px-6">
 <img id="modalImgDesktop" class="max-h-[70vh] object-contain" src="" alt=""/>
-<div class="flex items-center gap-3 mt-6"><p id="modalTitleDesktop" class="font-serif text-2xl text-white"></p><button type="button" onclick="shareBoard()" aria-label="Compartir esta tabla" title="Compartir" class="text-white/50 hover:text-white transition-colors p-1"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg></button></div>
+<div class="flex items-center gap-3 mt-6"><p id="modalTitleDesktop" class="font-serif text-2xl text-white"></p><button type="button" onclick="toggleShareMenu()" aria-label="Compartir esta tabla" title="Compartir" class="text-white/50 hover:text-white transition-colors p-1"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg></button></div><div class="share-menu hidden mt-3 flex items-center justify-center gap-6 font-sans text-[10px] uppercase tracking-widest text-white/70"><button type="button" onclick="shareBoard()" class="hover:text-white underline underline-offset-4 uppercase tracking-widest">Link</button><button type="button" onclick="shareArt('story')" class="hover:text-white underline underline-offset-4 uppercase tracking-widest">Stories</button><button type="button" onclick="shareArt('feed')" class="hover:text-white underline underline-offset-4 uppercase tracking-widest">Feed</button></div>
 <p id="modalDescDesktop" class="font-sans text-[10px] uppercase tracking-widest text-white/60 mt-2"></p>
 <div class="mt-6 flex flex-wrap gap-3 justify-center"><button onclick="wantThis()" class="bg-white text-black px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:bg-neutral-200 transition-colors">Quiero Mi Tabla</button><button onclick="toggleRef()" class="lb-ref border border-white/40 text-white px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:bg-white hover:text-black transition-colors">+ Agregar a referencias</button><button onclick="moreModels()" class="lb-more hidden border border-white/40 text-white px-8 py-3 font-sans uppercase tracking-widest text-[10px] hover:bg-white hover:text-black transition-colors">Ver más modelos</button></div>
 </div>
@@ -716,7 +716,7 @@ Del planer a la resina, lo que sale del shaper es parte herramienta, parte obra 
 <button id="lbPrevM" onclick="prevSlide()" aria-label="Foto anterior" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white w-8 h-8 flex items-center justify-center text-lg">&#8249;</button>
 <button id="lbNextM" onclick="nextSlide()" aria-label="Foto siguiente" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white w-8 h-8 flex items-center justify-center text-lg">&#8250;</button>
 </div>
-<div class="flex items-center justify-center gap-2 mt-4"><p id="modalTitleMobile" class="font-serif text-xl text-center"></p><button type="button" onclick="shareBoard()" aria-label="Compartir esta tabla" title="Compartir" class="text-neutral-400 hover:text-black transition-colors p-1"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg></button></div>
+<div class="flex items-center justify-center gap-2 mt-4"><p id="modalTitleMobile" class="font-serif text-xl text-center"></p><button type="button" onclick="toggleShareMenu()" aria-label="Compartir esta tabla" title="Compartir" class="text-neutral-400 hover:text-black transition-colors p-1"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg></button></div><div class="share-menu hidden mt-3 flex items-center justify-center gap-6 font-sans text-[10px] uppercase tracking-widest text-neutral-500"><button type="button" onclick="shareBoard()" class="hover:text-black underline underline-offset-4 uppercase tracking-widest">Link</button><button type="button" onclick="shareArt('story')" class="hover:text-black underline underline-offset-4 uppercase tracking-widest">Stories</button><button type="button" onclick="shareArt('feed')" class="hover:text-black underline underline-offset-4 uppercase tracking-widest">Feed</button></div>
 <p id="modalDescMobile" class="font-sans text-[10px] uppercase tracking-widest text-neutral-500 mt-1 text-center"></p>
 <button onclick="wantThis()" class="w-full mt-4 bg-black text-white py-3 font-sans uppercase tracking-widest text-[10px]">Quiero Mi Tabla</button><button onclick="toggleRef()" class="lb-ref w-full mt-2 border border-black text-black py-3 font-sans uppercase tracking-widest text-[10px]">+ Agregar a referencias</button><button onclick="moreModels()" class="lb-more hidden w-full mt-2 border border-black/20 text-black py-3 font-sans uppercase tracking-widest text-[10px]">Ver más modelos</button>
 </div>
@@ -922,6 +922,7 @@ function closeBoardModal() {
   document.getElementById('boardModal').classList.add('hidden');
   document.body.style.overflow = '';
   setBoardInUrl(null);
+  toggleShareMenu(false);
 }
 
 // ===================== COMPARTILHAR PRANCHA =====================
@@ -961,6 +962,58 @@ function shareBoard() {
     window.prompt('Copia el enlace de la tabla:', url);
   }
 }
+// Artes para Instagram (Stories 1080x1920 e Feed 1080x1350), geradas em
+// /api/og. No celular abrem o menu do aparelho com a imagem (é só escolher
+// Instagram); onde não dá pra compartilhar arquivo, a imagem é baixada.
+// Ao abrir o menu as duas já começam a ser geradas, pra o toque ser imediato
+// (o navegador só permite compartilhar logo depois do toque).
+var artCache = {};
+function artUrl(item, format) {
+  var lang = (document.documentElement.lang || 'pt').slice(0, 2);
+  if (lang !== 'en' && lang !== 'es') lang = 'pt';
+  return '/api/og?prancha=' + encodeURIComponent(boardKey(item.p)) + '&lang=' + lang + '&format=' + format;
+}
+function artBlob(item, format) {
+  var k = boardKey(item.p) + '|' + format;
+  if (!artCache[k]) {
+    artCache[k] = fetch(artUrl(item, format)).then(function (r) {
+      if (!r.ok || !/image\//.test(r.headers.get('content-type') || '')) throw new Error('arte');
+      return r.blob();
+    });
+    artCache[k].catch(function () { delete artCache[k]; });
+  }
+  return artCache[k];
+}
+function toggleShareMenu(force) {
+  var menus = document.querySelectorAll('.share-menu');
+  var open = (typeof force === 'boolean') ? force : menus[0] && menus[0].classList.contains('hidden');
+  menus.forEach(function (m) { m.classList.toggle('hidden', !open); });
+  if (open) {
+    var item = gallery[lbList[lbPos]];
+    if (item) { artBlob(item, 'story'); artBlob(item, 'feed'); }
+  }
+}
+async function shareArt(format) {
+  var item = gallery[lbList[lbPos]];
+  if (!item) return;
+  var name = 'baltazar-' + boardKey(item.p) + '-' + (format === 'story' ? 'stories' : 'feed') + '.png';
+  var slow = setTimeout(function () { refsToast('Preparando la imagen...'); }, 400);
+  var blob;
+  try { blob = await artBlob(item, format); }
+  catch (e) { clearTimeout(slow); refsToast('No se pudo generar la imagen ahora. Inténtalo de nuevo.'); return; }
+  clearTimeout(slow);
+  var file = new File([blob], name, { type: blob.type || 'image/png' });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try { await navigator.share({ files: [file] }); document.getElementById('refsToast').classList.add('hidden'); return; }
+    catch (e) { if (e && e.name === 'AbortError') return; }
+  }
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click();
+  setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+  refsToast('Imagen descargada. Solo publícala en Instagram.');
+}
+
 // Quem chega por um link compartilhado cai direto na prancha.
 function openBoardFromUrl() {
   const key = new URLSearchParams(location.search).get('prancha');
@@ -996,6 +1049,7 @@ function renderLightbox() {
   document.querySelectorAll('.lb-more').forEach(el => el.classList.toggle('hidden', !last));
   refsSyncButton();
   setBoardInUrl(item);
+  toggleShareMenu(false);
 }
 function nextSlide() { if (lbPos < lbList.length - 1) { lbPos++; renderLightbox(); } }
 function prevSlide() { if (lbPos > 0) { lbPos--; renderLightbox(); } }
