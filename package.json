@@ -1,0 +1,9 @@
+{
+  "name": "baltazarsurf",
+  "private": true,
+  "description": "Site da Baltazar Customs. Estático; as dependências servem só às funções do Vercel (prévia por prancha).",
+  "dependencies": {
+    "@vercel/edge": "^1.3.3",
+    "@vercel/og": "0.11.1"
+  }
+}

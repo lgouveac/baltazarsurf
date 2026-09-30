@@ -1,0 +1,54 @@
+name: Checar prévia por prancha
+
+# Confere, no site publicado, que o link de uma prancha gera a prévia com a
+# foto dela (o que WhatsApp/Instagram/iMessage leem) e que o resto não mudou.
+on:
+  workflow_dispatch:
+    inputs:
+      prancha:
+        description: 'Chave da prancha (nome do arquivo da foto, sem extensão)'
+        default: 'IMG_6846'
+
+jobs:
+  checar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prévia no site ao vivo
+        env:
+          K: ${{ inputs.prancha || 'IMG_6846' }}
+        run: |
+          S=https://www.baltazarcustomssurfboards.com
+          UA="WhatsApp/2.23.20.0 A"
+          fail=0
+          ok(){ echo "PASS    $1"; }; ko(){ echo "FALHOU  $1"; fail=1; }
+          meta(){ grep -o "<meta property=\"$1\" content=\"[^\"]*\"" | head -1 | sed 's/.*content="//;s/"$//'; }
+
+          H=$(curl -sSL -A "$UA" "$S/?prancha=$K")
+          IMG=$(echo "$H" | meta og:image | sed 's/&amp;/\&/g'); TIT=$(echo "$H" | meta og:title)
+          echo "og:title = $TIT"; echo "og:image = $IMG"
+          [[ "$IMG" == *"/api/og?prancha=$K"* ]] && ok "link da prancha aponta pra imagem própria" || ko "og:image não é a da prancha"
+          echo "$H" | grep -q 'id="boardGrid"' && ok "página completa continua sendo servida" || ko "corpo da página mudou"
+
+          curl -sS -o og.png -D og.h "$IMG"
+          CT=$(grep -i '^content-type' og.h | tr -d '\r' | awk '{print $2}'); DIM=$(file og.png)
+          echo "imagem: $CT | $DIM"
+          [[ "$CT" == image/png* && "$DIM" == *"1200 x 630"* ]] && ok "imagem 1200x630 gerada" || ko "imagem não gerada"
+
+          E=$(curl -sSL -A "$UA" "$S/en?prancha=$K" | meta og:title); echo "en og:title = $E"
+          [[ "$E" == Model* || "$E" == Carbon* ]] && ok "versão em inglês" || ko "inglês"
+
+          B=$(curl -sSL -A "$UA" "$S/" | meta og:image); echo "home og:image = $B"
+          [[ "$B" == *og-cover.jpg ]] && ok "home sem ?prancha continua com a prévia geral" || ko "home mudou"
+
+          X=$(curl -sSL -A "$UA" "$S/?prancha=NAO-EXISTE" | meta og:image)
+          [[ "$X" == *og-cover.jpg ]] && ok "prancha inexistente cai na prévia geral" || ko "prancha inexistente"
+
+          L=$(curl -sS -X POST -H 'content-type: application/json' -d '{}' "$S/api/lead")
+          echo "api/lead: $L"
+          [[ "$L" == *nome_e_contato_obrigatorios* ]] && ok "formulário (api/lead) segue respondendo" || ko "api/lead quebrou"
+          exit $fail
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: previa-og
+          path: og.png
