@@ -5,7 +5,7 @@
 //   RESEND_API_KEY  = a API key do Resend da Flowcode (re_...)   [obrigatório]
 //   LEAD_TO         = para quem vai o email (default lucas.carmo@flowcode.cc)
 //   LEAD_FROM       = remetente verificado no Resend
-//                     (default "Baltazar Site <pedidos@flowcode.cc>")
+//                     (default "Baltazar Customs <pedidos@baltazarcustomssurfboards.com>")
 //                     O domínio do FROM precisa estar verificado no Resend.
 
 module.exports = async (req, res) => {
@@ -61,7 +61,7 @@ module.exports = async (req, res) => {
     // Padrão: Lucas (parceria) + César (shaper).
     const TO = (process.env.LEAD_TO || 'lucas.carmo@flowcode.cc, baltazarferro4@gmail.com')
       .split(',').map(function (x) { return x.trim(); }).filter(Boolean);
-    const FROM = process.env.LEAD_FROM || 'Baltazar Site <pedidos@flowcode.cc>';
+    const FROM = process.env.LEAD_FROM || 'Baltazar Customs <pedidos@baltazarcustomssurfboards.com>';
 
     // Número de pedido legível: BC-AAAAMMDD-XXXX (data + 4 dígitos).
     var now = new Date();

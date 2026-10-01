@@ -1,0 +1,26 @@
+name: Checar DNS do email
+
+# Mostra onde o DNS do domínio é gerenciado e se os registros que o Resend
+# pede (SPF, DKIM, MX de retorno, DMARC) já estão publicados.
+on:
+  workflow_dispatch:
+
+jobs:
+  dns:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consultar
+        run: |
+          D=baltazarcustomssurfboards.com
+          q(){ printf '%-32s %-5s ' "$1" "$2"; r=$(dig +short "$1" "$2" @1.1.1.1 | tr '\n' ' '); echo "${r:-(nada)}"; }
+          echo "== Onde o DNS é gerenciado =="
+          q $D NS
+          echo; echo "== Site =="
+          q $D A; q www.$D CNAME
+          echo; echo "== Email (Resend) =="
+          q $D MX
+          q $D TXT
+          q send.$D MX
+          q send.$D TXT
+          q resend._domainkey.$D TXT
+          q _dmarc.$D TXT
