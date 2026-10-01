@@ -28,9 +28,23 @@ if (cards > 0) {
   await p.locator('#boardModal button:has-text("Quero Minha Prancha"):visible').first().click();
   await p.waitForTimeout(1500);
   check(await p.locator('#refsList > div').count() >= 1, 'referência aparece no formulário');
+
+  // completa 3 referências pelo seletor do próprio formulário
+  const alvo = Number(process.env.REFS || 3);
+  await p.locator('#refsPickBtn').click();
+  await p.waitForTimeout(800);
+  const livres = p.locator('#refsPickerGrid > button[aria-pressed="false"]');
+  while ((await p.locator('#refsList > div').count()) < alvo && (await livres.count()) > 0) {
+    await livres.first().click();
+    await p.waitForTimeout(300);
+  }
+  const refs = await p.locator('#refsList p').allTextContents();
+  console.log('Referências escolhidas:'); refs.forEach(r => console.log('   ' + r));
+  check(refs.length === alvo, `${alvo} referências no formulário`);
+  await p.screenshot({ path: 'live-2b-refs.png' });
 }
 
-await p.fill('#leadForm input[name=nome]', 'TESTE AUTOMATICO (pode ignorar)');
+await p.fill('#leadForm input[name=nome]', 'TESTE com referências (pode ignorar)');
 await p.fill('#leadForm input[name=contato]', 'lucas.carmo@flowcode.cc');
 await p.fill('#leadForm textarea[name=mensagem]', 'Pedido de teste enviado pelo Playwright no GitHub Actions para validar o formulário ao vivo.');
 await p.locator('#leadSubmit').click();
