@@ -60,8 +60,9 @@ tailwind.config = {
 body { font-family: 'Work Sans', sans-serif; }
 .font-serif { font-family: 'Newsreader', serif; font-optical-sizing: auto; letter-spacing: -0.015em; }
 h1, h2, h3 { text-wrap: balance; }
-#heroMotif .motif { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; visibility: hidden; }
-#heroMotif .motif.on { visibility: visible; }
+#heroMotifs .motif { position: absolute; left: 0; top: 0; width: 116px; height: 68px; object-fit: contain; visibility: hidden; will-change: transform; }
+#heroMotifs .motif.on { visibility: visible; }
+@media (min-width: 768px) { #heroMotifs .motif { width: 172px; height: 104px; } }
 h1 .hero-line { letter-spacing: -0.03em; text-wrap: balance; }
 p, li { text-wrap: pretty; }
 .grain-overlay {
@@ -343,14 +344,14 @@ summary::-webkit-details-marker { display:none; }
 
 <main id="top">
 <!-- Hero Section -->
-<section class="w-full bg-surface">
-<div class="max-w-4xl mx-auto px-6 md:px-10 pt-32 pb-16 md:pt-48 md:pb-24 text-center">
-<div id="heroMotif" class="relative mx-auto mb-8 md:mb-10 w-48 h-28 md:w-72 md:h-44" aria-hidden="true">
+<section class="relative w-full bg-surface overflow-hidden">
+<div id="heroMotifs" class="absolute inset-0 pointer-events-none" aria-hidden="true">
 <img class="motif" src="/images/brand/motif-tiger.png" alt="" width="440" height="356" decoding="async"/>
 <img class="motif" src="/images/brand/motif-surfer.png" alt="" width="440" height="359" decoding="async" fetchpriority="low"/>
 <img class="motif" src="/images/brand/motif-kanji.png" alt="" width="440" height="230" decoding="async" fetchpriority="low"/>
 <img class="motif" src="/images/brand/motif-logo.png" alt="" width="440" height="182" decoding="async" fetchpriority="low"/>
 </div>
+<div class="hero-inner relative max-w-4xl mx-auto px-6 md:px-10 pt-40 pb-24 md:pt-56 md:pb-32 text-center">
 <span data-cms="hero_reach" class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-6 md:mb-8 block leading-relaxed max-w-[17rem] md:max-w-none mx-auto [text-wrap:balance]">Recreio, Río de Janeiro, para Brasil y el mundo</span>
 <h1 class="font-serif leading-tight"><span data-cms="hero_tagline" class="hero-line block text-5xl md:text-8xl leading-[0.98]">Tablas de surf artesanales</span></h1>
 <p data-cms="hero_subtitle" class="font-sans text-base md:text-lg text-neutral-600 leading-relaxed mt-7 md:mt-8 max-w-sm md:max-w-lg mx-auto">Cada tabla es única. Te inspiras y nosotros hacemos la tuya.</p>
@@ -1417,37 +1418,82 @@ loadImages();
   });
 })();
 
-// Stop motion do hero: os motivos da marca (tigre, surfista, 侘寂, logo) se
-// alternam em cortes secos, no ritmo. Cada quadro treme um pouco, como desenho
-// fotografado à mão, e a troca de motivo leva uma batida. Pausa fora da tela
-// e fica parado pra quem pede menos movimento no sistema.
+// Stop motion do hero: cada motivo da marca (tigre, surfista, 侘寂, logo) é
+// posto num ponto do espaço em branco do hero, segura um instante e sai
+// andando em passos secos até a borda mais próxima, enquanto o próximo
+// aparece em outro ponto. Os pontos livres são medidos na tela (faixa acima
+// do texto, faixa abaixo do cupom e, se couber, as margens laterais), então
+// nunca passam por cima do texto. Pausa fora da tela; quem pede menos
+// movimento no sistema vê um motivo parado.
 (function () {
-  var box = document.getElementById('heroMotif');
-  if (!box) return;
-  var frames = Array.prototype.slice.call(box.querySelectorAll('.motif'));
+  var layer = document.getElementById('heroMotifs');
+  if (!layer) return;
+  var hero = layer.parentElement;
+  var frames = Array.prototype.slice.call(layer.querySelectorAll('.motif'));
   if (!frames.length) return;
-  var BEAT = 125, HOLD = 6;          // 6 quadros de 125ms por motivo (~0,75s)
-  var i = 0, t = 0, timer = null, onScreen = true;
-  frames[0].classList.add('on');
+  var BEAT = 125, HOLD = 10, WALK = 12;   // 1,25s parado, 1,5s andando, em passos de 125ms
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduce) return;
-  function pose(el, accent) {
-    var r = (Math.random() * 5 - 2.5).toFixed(2);
-    var x = (Math.random() * 4 - 2).toFixed(1), y = (Math.random() * 4 - 2).toFixed(1);
-    var s = accent ? 1.07 : (0.985 + Math.random() * 0.03).toFixed(3);
-    el.style.transform = 'translate(' + x + 'px,' + y + 'px) rotate(' + r + 'deg) scale(' + s + ')';
+
+  function spots() {
+    var H = hero.offsetHeight, W = hero.offsetWidth, hr = hero.getBoundingClientRect();
+    var hdr = document.querySelector('header'); var hb = hdr ? Math.max(0, hdr.getBoundingClientRect().bottom - hr.top) : 0;
+    var top = hero.querySelector('[data-cms=hero_reach]'), cup = hero.querySelector('.hero-inner > p:last-child'), inner = hero.querySelector('.hero-inner');
+    var mw = frames[0].offsetWidth || 116, mh = frames[0].offsetHeight || 68, pad = 10;
+    var out = [];
+    function lane(y0, y1, side) {           // faixa horizontal: cabe inteiro ou reduzido até 70%
+      var free = y1 - y0 - 2 * pad; if (free <= 0) return;
+      var sc = Math.min(1, free / mh); if (sc < 0.6) return;
+      var y = y0 + pad + (free - mh * sc) / 2;
+      var span = Math.max(0, W * 0.5 - mw * sc - 2 * pad);   // metade da faixa, pra variar o ponto
+      var x = side === 'left' ? pad + Math.random() * span : W - mw * sc - pad - Math.random() * span;
+      out.push({ x: x, y: y, side: side, sc: sc, lane: y0 });
+    }
+    if (top) { var t = top.getBoundingClientRect().top - hr.top; lane(hb, t, 'left'); lane(hb, t, 'right'); }
+    if (cup) { var c = cup.getBoundingClientRect().bottom - hr.top; lane(c, H, 'left'); lane(c, H, 'right'); }
+    if (inner && top && cup) {              // margens laterais, só quando o motivo cabe
+      var ir = inner.getBoundingClientRect(), il = ir.left - hr.left, irt = ir.right - hr.left;
+      var y0 = top.getBoundingClientRect().top - hr.top, y1 = cup.getBoundingClientRect().bottom - hr.top;
+      if (il >= mw + 2 * pad) out.push({ x: (il - mw) / 2, y: y0 + (y1 - y0 - mh) * Math.random(), side: 'left', sc: 1, lane: 'ml' });
+      if (W - irt >= mw + 2 * pad) out.push({ x: irt + (W - irt - mw) / 2, y: y0 + (y1 - y0 - mh) * Math.random(), side: 'right', sc: 1, lane: 'mr' });
+    }
+    return { list: out, mw: mw, W: W };
+  }
+
+  var idx = -1, recent = [], active = [], timer = null, onScreen = true;
+  function put(el, x, y, sc) { el.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) scale(' + sc + ')'; el.style.transformOrigin = '0 0'; }
+  function place() {
+    var sp = spots(); if (!sp.list.length) return;
+    var key = function (p) { return p.lane + '/' + p.side; };
+    var cands = sp.list.filter(function (p) { return recent.indexOf(key(p)) < 0; });
+    var p = (cands.length ? cands : sp.list)[Math.floor(Math.random() * (cands.length ? cands : sp.list).length)];
+    recent = [key(p)].concat(recent).slice(0, 2);
+    idx = (idx + 1) % frames.length;
+    var el = frames[idx];
+    if (active.some(function (a) { return a.el === el; })) return;   // ainda saindo; tenta na próxima batida
+    var dist = p.side === 'left' ? p.x + sp.mw * p.sc + 20 : sp.W - p.x + 20;
+    put(el, p.x, p.y, p.sc); el.classList.add('on');
+    active.push({ el: el, x: p.x, y: p.y, sc: p.sc, dir: p.side === 'left' ? -1 : 1, step: dist / WALK, t: 0 });
+  }
+  if (reduce) {                              // parado, um motivo só (reposiciona quando o layout muda)
+    var still = function () { var sp0 = spots(); if (!sp0.list.length) return; var p0 = sp0.list[0]; put(frames[0], p0.x, p0.y, p0.sc); frames[0].classList.add('on'); };
+    still(); window.addEventListener('load', still); window.addEventListener('resize', still);
+    return;
   }
   function tick() {
-    t++;
-    var change = t % HOLD === 0;
-    if (change) { frames[i].classList.remove('on'); i = (i + 1) % frames.length; frames[i].classList.add('on'); }
-    pose(frames[i], change);
+    var placed = false;
+    for (var k = active.length - 1; k >= 0; k--) {
+      var a = active[k]; a.t++;
+      if (a.t === HOLD && !placed && active.length < 2) { place(); placed = true; }   // o próximo entra quando este começa a andar
+      if (a.t > HOLD) { a.x += a.dir * a.step; put(a.el, a.x, a.y, a.sc); }
+      if (a.t >= HOLD + WALK) { a.el.classList.remove('on'); active.splice(k, 1); }
+    }
+    if (!active.length) place();
   }
-  function start() { if (!timer) timer = setInterval(tick, BEAT); }
+  function start() { if (!timer) { if (!active.length) place(); timer = setInterval(tick, BEAT); } }
   function stop() { clearInterval(timer); timer = null; }
   document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else if (onScreen) start(); });
   if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (es) { onScreen = es[0].isIntersecting; if (onScreen && !document.hidden) start(); else stop(); }).observe(box);
+    new IntersectionObserver(function (es) { onScreen = es[0].isIntersecting; if (onScreen && !document.hidden) start(); else stop(); }).observe(hero);
   } else { start(); }
 })();
 
