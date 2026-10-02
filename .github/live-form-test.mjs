@@ -38,7 +38,7 @@ if (cards > 0) {
     await livres.first().click();
     await p.waitForTimeout(300);
   }
-  const refs = await p.locator('#refsList p').allTextContents();
+  const refs = await p.locator('#refsList .ref-card .ref-cap').allTextContents();
   console.log('Referências escolhidas:'); refs.forEach(r => console.log('   ' + r));
   check(refs.length === alvo, `${alvo} referências no formulário`);
 
