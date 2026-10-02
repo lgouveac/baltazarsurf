@@ -60,6 +60,8 @@ tailwind.config = {
 body { font-family: 'Work Sans', sans-serif; }
 .font-serif { font-family: 'Newsreader', serif; font-optical-sizing: auto; letter-spacing: -0.015em; }
 h1, h2, h3 { text-wrap: balance; }
+#heroMotif .motif { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; visibility: hidden; }
+#heroMotif .motif.on { visibility: visible; }
 h1 .hero-line { letter-spacing: -0.03em; text-wrap: balance; }
 p, li { text-wrap: pretty; }
 .grain-overlay {
@@ -343,6 +345,12 @@ summary::-webkit-details-marker { display:none; }
 <!-- Hero Section -->
 <section class="w-full bg-surface">
 <div class="max-w-4xl mx-auto px-6 md:px-10 pt-32 pb-16 md:pt-48 md:pb-24 text-center">
+<div id="heroMotif" class="relative mx-auto mb-8 md:mb-10 w-48 h-28 md:w-72 md:h-44" aria-hidden="true">
+<img class="motif" src="/images/brand/motif-tiger.png" alt="" width="440" height="356" decoding="async"/>
+<img class="motif" src="/images/brand/motif-surfer.png" alt="" width="440" height="359" decoding="async" fetchpriority="low"/>
+<img class="motif" src="/images/brand/motif-kanji.png" alt="" width="440" height="230" decoding="async" fetchpriority="low"/>
+<img class="motif" src="/images/brand/motif-logo.png" alt="" width="440" height="182" decoding="async" fetchpriority="low"/>
+</div>
 <span data-cms="hero_reach" class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500 mb-6 md:mb-8 block leading-relaxed max-w-[17rem] md:max-w-none mx-auto [text-wrap:balance]">Recreio, Río de Janeiro, para Brasil y el mundo</span>
 <h1 class="font-serif leading-tight"><span data-cms="hero_tagline" class="hero-line block text-5xl md:text-8xl leading-[0.98]">Tablas de surf artesanales</span></h1>
 <p data-cms="hero_subtitle" class="font-sans text-base md:text-lg text-neutral-600 leading-relaxed mt-7 md:mt-8 max-w-sm md:max-w-lg mx-auto">Cada tabla es única. Te inspiras y nosotros hacemos la tuya.</p>
@@ -1407,6 +1415,40 @@ loadImages();
       el.classList.add('active');
     }, ms);
   });
+})();
+
+// Stop motion do hero: os motivos da marca (tigre, surfista, 侘寂, logo) se
+// alternam em cortes secos, no ritmo. Cada quadro treme um pouco, como desenho
+// fotografado à mão, e a troca de motivo leva uma batida. Pausa fora da tela
+// e fica parado pra quem pede menos movimento no sistema.
+(function () {
+  var box = document.getElementById('heroMotif');
+  if (!box) return;
+  var frames = Array.prototype.slice.call(box.querySelectorAll('.motif'));
+  if (!frames.length) return;
+  var BEAT = 125, HOLD = 6;          // 6 quadros de 125ms por motivo (~0,75s)
+  var i = 0, t = 0, timer = null, onScreen = true;
+  frames[0].classList.add('on');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+  function pose(el, accent) {
+    var r = (Math.random() * 5 - 2.5).toFixed(2);
+    var x = (Math.random() * 4 - 2).toFixed(1), y = (Math.random() * 4 - 2).toFixed(1);
+    var s = accent ? 1.07 : (0.985 + Math.random() * 0.03).toFixed(3);
+    el.style.transform = 'translate(' + x + 'px,' + y + 'px) rotate(' + r + 'deg) scale(' + s + ')';
+  }
+  function tick() {
+    t++;
+    var change = t % HOLD === 0;
+    if (change) { frames[i].classList.remove('on'); i = (i + 1) % frames.length; frames[i].classList.add('on'); }
+    pose(frames[i], change);
+  }
+  function start() { if (!timer) timer = setInterval(tick, BEAT); }
+  function stop() { clearInterval(timer); timer = null; }
+  document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else if (onScreen) start(); });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) { onScreen = es[0].isIntersecting; if (onScreen && !document.hidden) start(); else stop(); }).observe(box);
+  } else { start(); }
 })();
 
 // CTA fixo mobile: aparece depois que a pessoa passa do hero
