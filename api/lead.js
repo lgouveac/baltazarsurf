@@ -97,7 +97,7 @@ module.exports = async (req, res) => {
           ${row('Nível', nivel)}
           ${row('Onda', onda)}
           ${row('Cupom informado', 'CARBON1000 (10%)')}
-          ${row('Mensagem', mensagem)}
+          ${row('Observações gerais', mensagem)}
           ${row('Referências', refs.length ? refs.length + ' prancha(s), fotos abaixo' : '')}
           ${row('Origem', origem)}
         </table>
@@ -133,7 +133,7 @@ module.exports = async (req, res) => {
       nivel ? 'Nível: ' + nivel : '',
       onda ? 'Onda: ' + onda : '',
       'Cupom: CARBON1000 (10%)',
-      mensagem ? 'Mensagem: ' + mensagem : '',
+      mensagem ? 'Observações gerais: ' + mensagem : '',
       refs.length ? '\nReferências:\n' + refs.map(function (r, i) {
         return (i + 1) + '. ' + r.detalhes + (r.imagem ? ' - ' + r.imagem : '')
           + (r.tamanho ? '\n   Tamanho: ' + r.tamanho : '') + (r.medidas ? '\n   Medidas: ' + r.medidas : '')
