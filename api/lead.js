@@ -50,6 +50,11 @@ module.exports = async (req, res) => {
         : (/^\/images\/[A-Za-z0-9._\/-]+$/.test(raw) && raw.indexOf('..') < 0 ? SITE + raw : '');
       return {
         modelo: clean(r.modelo, 60),
+        tamanho: clean(r.tamanho, 120),
+        medidas: clean(r.medidas, 160),
+        pintura: clean(r.pintura, 300),
+        quilhas: clean(r.quilhas, 160),
+        obs: clean(r.obs, 1000),
         detalhes: clean(r.detalhes, 160),
         imagem: img,
       };
@@ -98,14 +103,22 @@ module.exports = async (req, res) => {
         </table>
         ${refs.length ? `
         <p style="font:600 12px sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#999;margin:26px 0 10px">Pranchas que o cliente curtiu</p>
-        <table style="border-collapse:collapse"><tr>
-          ${refs.map(function (r) { return `
-          <td style="padding:0 10px 10px 0;vertical-align:top;width:120px">
-            ${r.imagem ? `<a href="${esc(r.imagem)}"><img src="${esc(r.imagem)}" width="110" style="display:block;width:110px;height:auto;border:0" alt="${esc(r.modelo)}"/></a>` : ''}
-            <div style="font:12px sans-serif;color:#111;margin-top:6px"><strong>${esc(r.modelo)}</strong></div>
-            <div style="font:11px sans-serif;color:#777">${esc(r.detalhes)}</div>
-          </td>`; }).join('')}
-        </tr></table>` : ''}
+        ${refs.map(function (r, i) {
+          const spec = (k, v) => v ? `<tr><td style="padding:3px 12px 3px 0;color:#777;font:12px sans-serif;vertical-align:top;white-space:nowrap">${k}</td><td style="padding:3px 0;font:12px sans-serif;color:#111"><strong>${esc(v)}</strong></td></tr>` : '';
+          return `
+        <table style="border-collapse:collapse;width:100%;margin:0 0 14px;border-top:1px solid #eee"><tr>
+          <td style="padding:12px 14px 0 0;vertical-align:top;width:110px">
+            ${r.imagem ? `<a href="${esc(r.imagem)}"><img src="${esc(r.imagem)}" width="100" style="display:block;width:100px;height:auto;border:0" alt="${esc(r.modelo)}"/></a>` : ''}
+          </td>
+          <td style="padding:12px 0 0;vertical-align:top">
+            <div style="font:11px sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#999">Referência ${i + 1}</div>
+            <div style="font:14px sans-serif;color:#111;margin:3px 0 2px"><strong>${esc(r.modelo)}</strong></div>
+            <div style="font:12px sans-serif;color:#777;margin-bottom:8px">${esc(r.detalhes)}</div>
+            <table style="border-collapse:collapse">
+              ${spec('Tamanho', r.tamanho)}${spec('Medidas', r.medidas)}${spec('Pintura', r.pintura)}${spec('Quilhas', r.quilhas)}${spec('Observações', r.obs)}
+            </table>
+          </td>
+        </tr></table>`; }).join('')}` : ''}
       </div>`;
 
     const text = [
@@ -121,7 +134,12 @@ module.exports = async (req, res) => {
       onda ? 'Onda: ' + onda : '',
       'Cupom: CARBON1000 (10%)',
       mensagem ? 'Mensagem: ' + mensagem : '',
-      refs.length ? '\nReferências:\n' + refs.map(function (r, i) { return (i + 1) + '. ' + r.detalhes + (r.imagem ? ' - ' + r.imagem : ''); }).join('\n') : '',
+      refs.length ? '\nReferências:\n' + refs.map(function (r, i) {
+        return (i + 1) + '. ' + r.detalhes + (r.imagem ? ' - ' + r.imagem : '')
+          + (r.tamanho ? '\n   Tamanho: ' + r.tamanho : '') + (r.medidas ? '\n   Medidas: ' + r.medidas : '')
+          + (r.pintura ? '\n   Pintura: ' + r.pintura : '') + (r.quilhas ? '\n   Quilhas: ' + r.quilhas : '')
+          + (r.obs ? '\n   Observações: ' + r.obs : '');
+      }).join('\n') : '',
       origem ? 'Origem: ' + origem : '',
     ].filter(Boolean).join('\n');
 

@@ -41,6 +41,18 @@ if (cards > 0) {
   const refs = await p.locator('#refsList p').allTextContents();
   console.log('Referências escolhidas:'); refs.forEach(r => console.log('   ' + r));
   check(refs.length === alvo, `${alvo} referências no formulário`);
+
+  // responde as 4 perguntas de cada referência (mistura texto e atalhos)
+  const cards = p.locator('#refsList .ref-card');
+  for (let i = 0; i < await cards.count(); i++) {
+    const c = cards.nth(i);
+    await c.locator('input[data-spec="tamanho"]').fill(i === 0 ? "5'10\"" : '');
+    if (i !== 0) await c.locator('input[data-spec="tamanho"] + div button', { hasText: 'Igual à referência' }).click();
+    await c.locator('input[data-spec="medidas"] + div button', { hasText: 'O shaper decide' }).click();
+    await c.locator('input[data-spec="pintura"]').fill(i === 0 ? 'Carbon Trash nos rails, deck branco' : 'Sem pintura');
+    await c.locator('input[data-spec="quilhas"] + div button', { hasText: 'Igual à referência' }).click();
+    if (i === 0) await c.locator('textarea[data-spec="obs"]').fill('Teste: bico um pouco mais fino que a referência.');
+  }
   await p.screenshot({ path: 'live-2b-refs.png' });
 }
 
