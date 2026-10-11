@@ -1,0 +1,34 @@
+name: Rodar SQL no Supabase
+
+# Roda um arquivo .sql da pasta supabase/ no banco de produção, pela API de
+# gestão do Supabase. O token fica no segredo SUPABASE_ACCESS_TOKEN do
+# repositório (Settings → Secrets and variables → Actions); nunca no código.
+on:
+  workflow_dispatch:
+    inputs:
+      arquivo:
+        description: 'Arquivo da pasta supabase/ (ex: schema-propostas.sql)'
+        required: true
+        default: 'schema-propostas.sql'
+
+jobs:
+  sql:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rodar
+        env:
+          TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          ARQ: ${{ inputs.arquivo }}
+        run: |
+          set -e
+          [ -n "$TOKEN" ] || { echo "Falta o segredo SUPABASE_ACCESS_TOKEN no repositório."; exit 1; }
+          [[ "$ARQ" =~ ^[a-z0-9-]+\.sql$ ]] || { echo "Nome de arquivo inválido: $ARQ"; exit 1; }
+          F="supabase/$ARQ"; [ -f "$F" ] || { echo "Não existe: $F"; exit 1; }
+          echo "Rodando $F ($(wc -l < "$F") linhas)"
+          jq -Rs '{query: .}' "$F" > body.json
+          code=$(curl -sS -o resp.json -w '%{http_code}' -X POST \
+            "https://api.supabase.com/v1/projects/eylnwwerbssfaaaxsccw/database/query" \
+            -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" --data @body.json)
+          echo "HTTP $code"; head -c 2000 resp.json; echo
+          [[ "$code" == 2* ]] || exit 1
