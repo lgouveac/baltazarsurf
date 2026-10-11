@@ -1,0 +1,28 @@
+name: Checar proposta
+
+# Diagnóstico: chama as funções do banco do mesmo jeito que a página /proposta
+# (chave pública), pra saber se a proposta existe e se as funções estão no ar.
+on:
+  workflow_dispatch:
+    inputs:
+      token:
+        description: 'Token da proposta (o que vem depois de ?t=)'
+        required: true
+
+jobs:
+  checar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consultar
+        env:
+          T: ${{ inputs.token }}
+        run: |
+          URL="https://eylnwwerbssfaaaxsccw.supabase.co"
+          KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5bG53d2VyYnNzZmFhYXhzY2N3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MDU3NjYsImV4cCI6MjA5NzI4MTc2Nn0.XMYTNxGEj5Jjt89Q9GCQasnD9sR9q0lt4wdlXUNrJgc"
+          H=(-H "apikey: $KEY" -H "Authorization: Bearer $KEY" -H "Content-Type: application/json")
+          echo "== get_proposal =="
+          curl -sS -w "\nHTTP %{http_code}\n" "${H[@]}" -X POST "$URL/rest/v1/rpc/get_proposal" -d "{\"t\":\"$T\"}" | head -c 1500; echo
+          echo "== tabela proposals (anon não deve ler) =="
+          curl -sS -w "\nHTTP %{http_code}\n" "${H[@]}" "$URL/rest/v1/proposals?select=id&limit=1" | head -c 400; echo
+          echo "== tabela leads (anon não deve ler) =="
+          curl -sS -w "\nHTTP %{http_code}\n" "${H[@]}" "$URL/rest/v1/leads?select=id&limit=1" | head -c 400; echo
