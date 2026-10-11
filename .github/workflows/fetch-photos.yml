@@ -1,0 +1,35 @@
+name: Baixar fotos da coleção (temporário)
+
+# Baixa fotos do bucket público e publica num branch temporário, pra revisar
+# fora do ambiente de produção. Apagar o branch depois de usar.
+on:
+  workflow_dispatch:
+    inputs:
+      arquivos:
+        description: 'Nomes dos arquivos no bucket boards, separados por espaço'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  baixar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar e publicar
+        env:
+          ARQS: ${{ inputs.arquivos }}
+          REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          mkdir fotos && cd fotos
+          for f in $ARQS; do
+            [[ "$f" =~ ^[A-Za-z0-9._-]+$ ]] || { echo "nome inválido: $f"; exit 1; }
+            curl -sSf -o "$f" "https://eylnwwerbssfaaaxsccw.supabase.co/storage/v1/object/public/boards/$f"
+            echo "$f: $(file -b "$f")"
+          done
+          git init -q && git checkout -q -b tmp-fotos
+          git config user.name github-actions && git config user.email actions@github.com
+          git add . && git commit -qm "fotos temporárias"
+          git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git" tmp-fotos
