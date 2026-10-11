@@ -124,3 +124,6 @@ update public.proposals
 
 -- Link da proposta do Eduardo:
 -- https://www.baltazarcustomssurfboards.com/proposta?t=d323316e-1616-48ec-95e8-f57570aecbba
+
+-- Faz a API do Supabase enxergar as tabelas e funções novas na hora.
+notify pgrst, 'reload schema';
