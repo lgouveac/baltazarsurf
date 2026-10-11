@@ -360,7 +360,7 @@ function openProposta(id, pedido) {
     modelo: l && l.modelo ? l.modelo : (ref0 ? ref0.modelo : ''), imagem: ref0 ? ref0.imagem : '', detalhes: ref0 ? ref0.detalhes : '',
     tamanho: ref0 ? ref0.tamanho : '', medidas: ref0 ? ref0.medidas : '', pintura: ref0 ? ref0.pintura : '', quilhas: ref0 ? ref0.quilhas : '',
     observacoes: '', nota_shaper: '', prazo: '', cupom: l && l.cupom ? l.cupom : '', desconto_pct: l && l.cupom ? 10 : 0,
-    preco_tabela: '', preco_final: '', status: 'enviada',
+    preco_tabela: '', preco_final: '', status: 'enviada', escolhe_cores: false, escolhe_quilhas: false,
   };
   const campo = (name, label, val, opts) => {
     opts = opts || {};
@@ -389,6 +389,7 @@ function openProposta(id, pedido) {
         ${p ? `<div class="px-5 md:px-6 pt-4 flex flex-wrap gap-2 items-center">
             <span class="text-[10px] uppercase tracking-widest px-2 py-1 ${STATUS[p.status][1]}">${STATUS[p.status][0]}</span>
             ${p.status === 'aceita' ? `<span class="text-xs text-neutral-600">por ${esc(p.aceito_nome || '')} em ${fmtData(p.aceito_em)}</span>` : ''}
+            ${(p.escolha_quilhas || p.escolha_cores) ? `<span class="basis-full text-xs text-black mt-1">Escolhas do cliente: ${[p.escolha_quilhas && 'quilhas ' + esc(p.escolha_quilhas), p.escolha_cores && 'cores ' + esc(p.escolha_cores)].filter(Boolean).join(' · ')}</span>` : ''}
             <a href="${propostaLink(p)}" target="_blank" class="text-[11px] underline ml-auto">Abrir a página</a>
             <button type="button" onclick="copiarLink('${p.id}')" class="text-[11px] underline">Copiar link</button>
             ${whatsLink(p) ? `<a href="${whatsLink(p)}" target="_blank" class="bg-black text-white px-3 py-1.5 text-[10px] uppercase tracking-widest">Enviar no WhatsApp</a>` : ''}
@@ -402,6 +403,11 @@ function openProposta(id, pedido) {
           ${campo('medidas', 'Medidas / litragem', v.medidas)}
           ${campo('pintura', 'Pintura / arte', v.pintura)}
           ${campo('quilhas', 'Quilhas', v.quilhas)}
+          <div class="md:col-span-2 flex flex-wrap gap-x-6 gap-y-2 bg-neutral-50 border border-black/10 p-3">
+            <span class="text-[10px] uppercase tracking-widest text-neutral-500 basis-full">Na página, o cliente escolhe:</span>
+            <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="escolhe_quilhas" ${v.escolhe_quilhas ? 'checked' : ''} class="w-4 h-4 accent-black"/> Quilhas (com a explicação de cada uma)</label>
+            <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="escolhe_cores" ${v.escolhe_cores ? 'checked' : ''} class="w-4 h-4 accent-black"/> Cores</label>
+          </div>
           ${campo('observacoes', 'Observações pro cliente', v.observacoes, { area: true, wide: true })}
           ${campo('nota_shaper', 'Palavra do shaper (aparece em destaque)', v.nota_shaper, { area: true, rows: 3, wide: true })}
           ${campo('prazo', 'Prazo (opcional)', v.prazo, { ph: 'ex: 30 dias após o pagamento' })}
@@ -458,6 +464,9 @@ function openProposta(id, pedido) {
   f.preco_final.addEventListener('input', () => recalc('final'));
   f.cupom.addEventListener('input', () => { if (f.cupom.value.trim() && !Number(f.desconto_pct.value)) { f.desconto_pct.value = 10; recalc('desconto'); } });
   if (!p) recalc();
+  const generico = t => !t.trim() || /^a combinar/i.test(t.trim());
+  f.escolhe_quilhas.addEventListener('change', () => { if (f.escolhe_quilhas.checked && generico(f.quilhas.value)) f.quilhas.value = 'Você escolhe (logo abaixo, com a diferença entre elas)'; });
+  f.escolhe_cores.addEventListener('change', () => { if (f.escolhe_cores.checked && generico(f.pintura.value)) f.pintura.value = 'Você escolhe as cores (logo abaixo)'; });
   f.addEventListener('submit', (e) => saveProposta(e, p));
 }
 
@@ -506,6 +515,7 @@ async function saveProposta(e, existing) {
     imagem: g('imagem'), detalhes: g('detalhes'), cupom: g('cupom') || null,
     preco_tabela: Number(g('preco_tabela')), desconto_pct: Number(g('desconto_pct') || 0), preco_final: Number(g('preco_final')),
     status: f.status.value,
+    escolhe_cores: f.escolhe_cores.checked, escolhe_quilhas: f.escolhe_quilhas.checked,
   };
   if (!row.cliente_nome || !row.modelo || !row.tamanho || !row.preco_tabela || !row.preco_final) {
     msg.style.color = '#b00020'; msg.textContent = 'Preencha cliente, modelo, tamanho e os valores.'; return;

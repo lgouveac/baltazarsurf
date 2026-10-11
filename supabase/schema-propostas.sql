@@ -62,6 +62,12 @@ create table if not exists public.proposals (
   aceito_em        timestamptz,
   aceito_nome      text
 );
+-- Escolhas que o cliente faz na própria página, junto com o de acordo.
+alter table public.proposals add column if not exists escolhe_cores   boolean not null default false;
+alter table public.proposals add column if not exists escolhe_quilhas boolean not null default false;
+alter table public.proposals add column if not exists escolha_cores   text;
+alter table public.proposals add column if not exists escolha_quilhas text;
+
 alter table public.proposals enable row level security;
 
 drop policy if exists proposals_admin_all on public.proposals;
@@ -80,21 +86,25 @@ returns setof public.proposals language sql security definer set search_path = p
   select * from public.proposals where id = t and status in ('enviada','aceita');
 $$;
 
--- "De acordo": registra uma vez (aceitar de novo não muda data nem nome).
-create or replace function public.accept_proposal(t uuid, nome text)
+-- "De acordo": registra uma vez (aceitar de novo não muda data, nome nem escolhas).
+-- Cores e quilhas só são gravadas quando a proposta deixa o cliente escolher.
+drop function if exists public.accept_proposal(uuid, text);
+create or replace function public.accept_proposal(t uuid, nome text, cores text default null, quilhas text default null)
 returns setof public.proposals language sql security definer set search_path = public as $$
   update public.proposals
      set status = 'aceita',
          aceito_em = coalesce(aceito_em, now()),
-         aceito_nome = coalesce(aceito_nome, left(nullif(trim(nome), ''), 120))
+         aceito_nome = coalesce(aceito_nome, left(nullif(trim(nome), ''), 120)),
+         escolha_cores = case when escolhe_cores then coalesce(escolha_cores, left(nullif(trim(cores), ''), 500)) else escolha_cores end,
+         escolha_quilhas = case when escolhe_quilhas then coalesce(escolha_quilhas, left(nullif(trim(quilhas), ''), 120)) else escolha_quilhas end
    where id = t and status in ('enviada','aceita')
   returning *;
 $$;
 
 revoke all on function public.get_proposal(uuid) from public;
-revoke all on function public.accept_proposal(uuid, text) from public;
+revoke all on function public.accept_proposal(uuid, text, text, text) from public;
 grant execute on function public.get_proposal(uuid) to anon, authenticated;
-grant execute on function public.accept_proposal(uuid, text) to anon, authenticated;
+grant execute on function public.accept_proposal(uuid, text, text, text) to anon, authenticated;
 
 -- ---------------------------------------------------------------- Eduardo (BC-20261011-8432)
 insert into public.leads (pedido, created_at, nome, contato, altura, peso, nivel, mensagem, cupom, origem)

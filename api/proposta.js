@@ -1,5 +1,6 @@
 // "De acordo" do cliente numa proposta.
-// POST /api/proposta  { t: "<token da proposta>", nome: "Nome de quem aceitou" }
+// POST /api/proposta  { t: "<token>", nome: "Nome de quem aceitou", cores?: "...", quilhas?: "..." }
+// cores e quilhas só valem quando a proposta deixa o cliente escolher (o banco decide).
 // Registra o aceite no Supabase (função accept_proposal, que só grava uma vez)
 // e avisa a equipe por email (Resend), com o resumo e o valor final.
 
@@ -19,13 +20,15 @@ module.exports = async (req, res) => {
     body = body || {};
     const t = String(body.t || '').trim();
     const nome = String(body.nome || '').trim().slice(0, 120);
+    const cores = String(body.cores || '').trim().slice(0, 500);
+    const quilhas = String(body.quilhas || '').trim().slice(0, 120);
     if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(t)) { res.status(400).json({ ok: false, error: 'token_invalido' }); return; }
     if (!nome) { res.status(400).json({ ok: false, error: 'nome_obrigatorio' }); return; }
 
     const r = await fetch(SUPA + '/rest/v1/rpc/accept_proposal', {
       method: 'POST',
       headers: { apikey: ANON, Authorization: 'Bearer ' + ANON, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ t: t, nome: nome }),
+      body: JSON.stringify({ t: t, nome: nome, cores: cores || null, quilhas: quilhas || null }),
     });
     if (!r.ok) { res.status(502).json({ ok: false, error: 'falha_registro' }); return; }
     const rows = await r.json();
@@ -46,7 +49,9 @@ module.exports = async (req, res) => {
           <p style="color:#777;font-size:13px;margin:0 0 18px">${esc(p.aceito_nome || nome)} deu "de acordo" em ${esc(quando)}. Próximo passo: enviar o link de pagamento.</p>
           <table style="border-collapse:collapse;width:100%">
             ${row('Pedido', p.lead_pedido)}${row('Cliente', p.cliente_nome)}${row('Contato', p.cliente_contato)}
-            ${row('Modelo', p.modelo)}${row('Tamanho', p.tamanho)}${row('Medidas', p.medidas)}${row('Pintura', p.pintura)}${row('Quilhas', p.quilhas)}
+            ${row('Modelo', p.modelo)}${row('Tamanho', p.tamanho)}${row('Medidas', p.medidas)}
+            ${row(p.escolhe_cores ? 'Cores (escolha do cliente)' : 'Pintura', p.escolhe_cores ? (p.escolha_cores || 'não informou') : p.pintura)}
+            ${row(p.escolhe_quilhas ? 'Quilhas (escolha do cliente)' : 'Quilhas', p.escolhe_quilhas ? (p.escolha_quilhas || 'não informou') : p.quilhas)}
             ${row('Valor de tabela', brl(p.preco_tabela))}${row('Desconto', p.desconto_pct ? p.desconto_pct + '%' + (p.cupom ? ' (' + p.cupom + ')' : '') : '')}
             ${row('Valor final', brl(p.preco_final))}
           </table>
@@ -57,6 +62,8 @@ module.exports = async (req, res) => {
         (p.aceito_nome || nome) + ' deu "de acordo" em ' + quando + '.',
         'Próximo passo: enviar o link de pagamento.',
         '', 'Contato: ' + (p.cliente_contato || ''), 'Modelo: ' + p.modelo, 'Tamanho: ' + (p.tamanho || ''),
+        p.escolhe_cores ? 'Cores escolhidas: ' + (p.escolha_cores || 'não informou') : '',
+        p.escolhe_quilhas ? 'Quilhas escolhidas: ' + (p.escolha_quilhas || 'não informou') : '',
         'Valor final: ' + brl(p.preco_final), '', SITE + '/proposta?t=' + p.id,
       ].join('\n');
       await fetch('https://api.resend.com/emails', {
@@ -66,7 +73,7 @@ module.exports = async (req, res) => {
       }).catch(() => {});
     }
 
-    res.status(200).json({ ok: true, status: p.status, aceito_em: p.aceito_em, aceito_nome: p.aceito_nome });
+    res.status(200).json({ ok: true, status: p.status, aceito_em: p.aceito_em, aceito_nome: p.aceito_nome, escolha_cores: p.escolha_cores, escolha_quilhas: p.escolha_quilhas });
   } catch (e) {
     res.status(500).json({ ok: false, error: 'erro_interno' });
   }
