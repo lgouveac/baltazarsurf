@@ -106,8 +106,8 @@ on conflict (pedido) do nothing;
 insert into public.proposals (id, lead_pedido, cliente_nome, cliente_contato, modelo, imagem, detalhes, tamanho, medidas, pintura, quilhas,
                               observacoes, nota_shaper, preco_tabela, cupom, desconto_pct, preco_final)
 values ('d323316e-1616-48ec-95e8-f57570aecbba', 'BC-20261011-8432', 'Eduardo', '21995630013',
-        'Fun Board 8''6" sob medida', 'upload-1785694545661-ib1700.jpg',
-        'Na foto, um Fun Board 8''6" que já saiu do ateliê: é a base da sua.', '8''6"',
+        'Fun Board 8''6" sob medida', 'upload-1786317673649-0p0476.jpg',
+        'Na foto, um Fun Board da coleção, como referência do formato. A sua sai em 8''6".', '8''6"',
         'Volume calculado pelo shaper para 182 cm, 105 kg e nível iniciante',
         'A combinar com o shaper', 'A combinar com o shaper',
         'Você comentou 8''6" e 100 litros. O tamanho fica em 8''6"; a litragem sai das suas medidas.',
@@ -118,8 +118,8 @@ on conflict (id) do nothing;
 -- Se a proposta já existia (SQL rodado antes), atualiza modelo e foto.
 update public.proposals
    set modelo = 'Fun Board 8''6" sob medida',
-       imagem = 'upload-1785694545661-ib1700.jpg',
-       detalhes = 'Na foto, um Fun Board 8''6" que já saiu do ateliê: é a base da sua.'
+       imagem = 'upload-1786317673649-0p0476.jpg',
+       detalhes = 'Na foto, um Fun Board da coleção, como referência do formato. A sua sai em 8''6".'
  where id = 'd323316e-1616-48ec-95e8-f57570aecbba' and imagem = '';
 
 -- Link da proposta do Eduardo:

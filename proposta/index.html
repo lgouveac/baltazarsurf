@@ -77,9 +77,9 @@ function render(p) {
     <h1 class="font-serif text-4xl md:text-6xl leading-[1.05] mt-3">Olá, ${esc(first(p.cliente_nome))}. Sua prancha está pronta pra sair do papel.</h1>
     <p class="font-sans text-base md:text-lg text-neutral-600 leading-relaxed mt-5 max-w-xl">O shaper revisou o seu pedido. Confira abaixo como ela vai ficar e o valor final. Estando tudo certo, é só dar o seu de acordo.</p>
 
-    <section class="mt-12 md:mt-16 bg-white border border-black/10 grid md:grid-cols-[14rem_1fr]">
-      <div class="bg-[#f3f1ed] flex items-center justify-center ${foto ? '' : 'p-10'} min-h-[14rem]">
-        ${foto ? `<img src="${esc(foto)}" alt="${esc(p.modelo)}" class="w-full h-full max-h-[22rem] object-cover"/>`
+    <section id="propCard" class="mt-12 md:mt-16 bg-white border border-black/10 grid md:grid-cols-[16rem_1fr]">
+      <div id="propFoto" class="bg-[#f3f1ed] flex items-center justify-center p-4 md:p-5 ${foto ? '' : 'min-h-[14rem]'}">
+        ${foto ? `<img src="${esc(foto)}" alt="${esc(p.modelo)}" class="block w-auto max-w-full h-auto max-h-[30rem] md:max-h-[34rem] object-contain"/>`
                : `<img src="/images/brand/motif-tiger.png" alt="" class="w-40 opacity-90"/>`}
       </div>
       <div class="p-6 md:p-8">
@@ -113,6 +113,22 @@ function render(p) {
 
     <section id="aceite" class="mt-10 md:mt-14"></section>`;
   renderAceite(p);
+  ajustaFoto();
+}
+
+// A foto nunca é cortada. Vertical (o normal de prancha): coluna ao lado,
+// inteira. Horizontal: vai pra cima, na largura do cartão.
+function ajustaFoto() {
+  const card = document.getElementById('propCard'), box = document.getElementById('propFoto');
+  const im = box && box.querySelector('img'); if (!im) return;
+  const aplica = () => {
+    if (!im.naturalWidth) return;
+    const horizontal = im.naturalWidth > im.naturalHeight * 1.15;
+    card.style.gridTemplateColumns = horizontal ? '1fr' : '';
+    card.dataset.foto = horizontal ? 'horizontal' : 'vertical';
+    im.style.maxHeight = horizontal ? '26rem' : '';
+  };
+  if (im.complete) aplica(); else im.addEventListener('load', aplica);
 }
 
 function renderAceite(p) {
