@@ -405,7 +405,17 @@ function openProposta(id, pedido) {
           ${campo('observacoes', 'Observações pro cliente', v.observacoes, { area: true, wide: true })}
           ${campo('nota_shaper', 'Palavra do shaper (aparece em destaque)', v.nota_shaper, { area: true, rows: 3, wide: true })}
           ${campo('prazo', 'Prazo (opcional)', v.prazo, { ph: 'ex: 30 dias após o pagamento' })}
-          ${campo('imagem', 'Foto (opcional)', v.imagem, { ph: '/images/... ou deixe vazio', hint: 'Vazio mostra o tigre da marca.' })}
+          <div class="md:col-span-2">
+            <div class="flex gap-3 items-end">
+              <div id="propFotoPrev" class="w-16 h-20 bg-neutral-100 shrink-0 bg-cover bg-center" style="${v.imagem ? `background-image:url('${esc(boardImg(v.imagem))}')` : ''}"></div>
+              <div class="flex-1">${campo('imagem', 'Foto da prancha (opcional)', v.imagem, { ph: 'escolha da coleção ou deixe vazio', hint: 'Vazio mostra o tigre da marca.' })}</div>
+              <button type="button" onclick="toggleFotoPicker()" class="border border-black px-3 py-2.5 text-[10px] uppercase tracking-widest shrink-0">Escolher da coleção</button>
+            </div>
+            <div id="fotoPicker" class="hidden mt-3 border border-black/10 p-3">
+              <input id="fotoBusca" placeholder="Filtrar por tamanho ou modelo (ex: 8'6, fun board)" class="w-full border border-black/20 px-3 py-2 text-sm mb-3"/>
+              <div id="fotoGrid" class="grid grid-cols-4 md:grid-cols-6 gap-2 max-h-80 overflow-y-auto"></div>
+            </div>
+          </div>
           ${campo('detalhes', 'Detalhe abaixo do modelo (opcional)', v.detalhes, { wide: true })}
           <div class="md:col-span-2 border-t border-black/10 pt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
             ${campo('preco_tabela', 'Tabela (R$) *', v.preco_tabela, { type: 'number' })}
@@ -449,6 +459,32 @@ function openProposta(id, pedido) {
   f.cupom.addEventListener('input', () => { if (f.cupom.value.trim() && !Number(f.desconto_pct.value)) { f.desconto_pct.value = 10; recalc('desconto'); } });
   if (!p) recalc();
   f.addEventListener('submit', (e) => saveProposta(e, p));
+}
+
+function toggleFotoPicker() {
+  const box = document.getElementById('fotoPicker'); if (!box) return;
+  box.classList.toggle('hidden');
+  if (box.classList.contains('hidden')) return;
+  const busca = document.getElementById('fotoBusca');
+  const nomeCat = slug => (categories.find(c => c.slug === slug) || {}).name || slug || '';
+  const desc = b => [b.line, nomeCat(b.category_slug), b.fin_setup].filter(Boolean).join(' · ');
+  const draw = () => {
+    const q = busca.value.trim().toLowerCase().replace(/[’′]/g, "'");
+    const lista = boards.filter(b => !q || desc(b).toLowerCase().replace(/[’′]/g, "'").includes(q));
+    document.getElementById('fotoGrid').innerHTML = lista.map(b => `
+      <button type="button" data-img="${esc(b.image_path)}" data-desc="${esc(desc(b))}" class="text-left group">
+        <img src="${esc(boardImg(b.image_path))}" loading="lazy" class="w-full aspect-[3/4] object-cover bg-neutral-100 group-hover:opacity-80"/>
+        <span class="block text-[9px] text-neutral-500 mt-1 truncate">${esc(desc(b))}</span>
+      </button>`).join('') || '<p class="col-span-4 text-sm text-neutral-500">Nada com esse filtro.</p>';
+    document.querySelectorAll('#fotoGrid button').forEach(btn => btn.onclick = () => {
+      const f = document.getElementById('propForm');
+      f.imagem.value = btn.dataset.img;
+      if (!f.detalhes.value) f.detalhes.value = 'Na foto: ' + btn.dataset.desc + ', como referência.';
+      document.getElementById('propFotoPrev').style.backgroundImage = "url('" + boardImg(btn.dataset.img) + "')";
+      document.getElementById('fotoPicker').classList.add('hidden');
+    });
+  };
+  busca.oninput = draw; draw(); busca.focus();
 }
 
 function copiarLink(id) {

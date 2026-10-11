@@ -103,16 +103,24 @@ values ('BC-20261011-8432', '2026-10-11 17:31:00-03', 'Eduardo', '21995630013', 
         'CARBON1000', 'https://www.baltazarcustomssurfboards.com/')
 on conflict (pedido) do nothing;
 
-insert into public.proposals (id, lead_pedido, cliente_nome, cliente_contato, modelo, tamanho, medidas, pintura, quilhas,
+insert into public.proposals (id, lead_pedido, cliente_nome, cliente_contato, modelo, imagem, detalhes, tamanho, medidas, pintura, quilhas,
                               observacoes, nota_shaper, preco_tabela, cupom, desconto_pct, preco_final)
 values ('d323316e-1616-48ec-95e8-f57570aecbba', 'BC-20261011-8432', 'Eduardo', '21995630013',
-        'Prancha 8''6" sob medida', '8''6"',
+        'Fun Board 8''6" sob medida', 'upload-1785694545661-ib1700.jpg',
+        'Na foto, um Fun Board 8''6" que já saiu do ateliê: é a base da sua.', '8''6"',
         'Volume calculado pelo shaper para 182 cm, 105 kg e nível iniciante',
         'A combinar com o shaper', 'A combinar com o shaper',
         'Você comentou 8''6" e 100 litros. O tamanho fica em 8''6"; a litragem sai das suas medidas.',
         'Não precisa se preocupar com o volume: ele vai estar de acordo com as suas medidas. Vou fazer a sua prancha em 8''6".',
         3600, 'CARBON1000', 10, 3240)
 on conflict (id) do nothing;
+
+-- Se a proposta já existia (SQL rodado antes), atualiza modelo e foto.
+update public.proposals
+   set modelo = 'Fun Board 8''6" sob medida',
+       imagem = 'upload-1785694545661-ib1700.jpg',
+       detalhes = 'Na foto, um Fun Board 8''6" que já saiu do ateliê: é a base da sua.'
+ where id = 'd323316e-1616-48ec-95e8-f57570aecbba' and imagem = '';
 
 -- Link da proposta do Eduardo:
 -- https://www.baltazarcustomssurfboards.com/proposta?t=d323316e-1616-48ec-95e8-f57570aecbba
