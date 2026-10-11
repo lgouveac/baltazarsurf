@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       arquivos:
-        description: 'Nomes dos arquivos no bucket boards, separados por espaço'
+        description: 'Nomes dos arquivos no bucket boards, separados por espaço (ou "limpar" pra apagar o branch tmp-fotos)'
         required: true
 
 permissions:
@@ -23,6 +23,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -e
+          if [ "$ARQS" = "limpar" ]; then
+            git push -q "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git" --delete tmp-fotos && echo "branch tmp-fotos apagado"; exit 0
+          fi
           mkdir fotos && cd fotos
           for f in $ARQS; do
             [[ "$f" =~ ^[A-Za-z0-9._-]+$ ]] || { echo "nome inválido: $f"; exit 1; }
