@@ -60,6 +60,9 @@ let boards = [];
 let siteTexts = {};      // { 'pt': {key:value}, 'en':..., 'es':... }
 let siteImages = {};     // { slot: [{id, sort_order, image_path}] }
 let blogPosts = [];      // artigos do blog
+let leads = [];          // pedidos que chegaram pelo site
+let proposals = [];      // propostas montadas a partir dos pedidos
+let pedidosErro = '';    // aviso se as tabelas ainda não existem
 let filter = 'Todas';
 let tab = 'boards';      // boards | categories | texts | images | blog
 
@@ -115,7 +118,7 @@ async function init() {
   if (!session) { renderLogin(); return; }
   await loadProfile();
   if (!profile) { renderNoProfile(); return; }
-  await Promise.all([loadCategories(), loadBoards(), loadSiteTexts(), loadSiteImages(), loadBlogPosts()]);
+  await Promise.all([loadCategories(), loadBoards(), loadSiteTexts(), loadSiteImages(), loadBlogPosts(), loadPedidos()]);
   renderApp();
 }
 
@@ -255,7 +258,7 @@ function renderApp() {
 
   document.getElementById('app').innerHTML = `
     <div class="flex gap-1 md:gap-2 border-b border-black/10 mb-6 -mx-4 px-4 md:mx-0 md:px-0 overflow-x-auto">
-      ${tabBtn('boards','Pranchas')}${tabBtn('categories','Categorias')}${tabBtn('texts','Textos')}${tabBtn('images','Imagens')}${tabBtn('blog','Blog')}
+      ${tabBtn('boards','Pranchas')}${tabBtn('categories','Categorias')}${tabBtn('texts','Textos')}${tabBtn('images','Imagens')}${tabBtn('blog','Blog')}${tabBtn('pedidos','Pedidos' + (leadsSemProposta() ? ' (' + leadsSemProposta() + ')' : ''))}
     </div>
     <div id="tabBody"></div>
   `;
@@ -263,7 +266,224 @@ function renderApp() {
   else if (tab === 'categories') renderCategoriesView();
   else if (tab === 'texts') renderTextsView();
   else if (tab === 'images') renderImagesView();
+  else if (tab === 'pedidos') renderPedidosView();
   else renderBlogView();
+}
+
+// ============================================================
+// PEDIDOS E PROPOSTAS
+// Cada pedido do site vira uma proposta que o cliente aprova por um link
+// próprio (/proposta?t=<id>). O preço sai da tabela por tamanho e o cupom do
+// site dá 10%. Quando o cliente dá "de acordo", chega um email pra equipe.
+// ============================================================
+const SITE_URL = 'https://www.baltazarcustomssurfboards.com';
+const TABELA = [            // até (polegadas) -> preço
+  { ate: 75,  preco: 2600, faixa: "até 6'3\"" },
+  { ate: 84,  preco: 2700, faixa: "6'4\" – 7'0\"" },
+  { ate: 96,  preco: 2900, faixa: "7'1\" – 8'0\"" },
+  { ate: 101, preco: 3200, faixa: "8'1\" – 8'5\"" },
+  { ate: 999, preco: 3600, faixa: "8'6\" – 9'6\"" },
+];
+function polegadas(t) {
+  const m = String(t || '').match(/(\d{1,2})\s*['′’]\s*(\d{1,2})?/);
+  return m ? Number(m[1]) * 12 + Number(m[2] || 0) : null;
+}
+function precoPorTamanho(t) {
+  const p = polegadas(t); if (p == null) return null;
+  return TABELA.find(x => p <= x.ate);
+}
+const brl = n => 'R$ ' + Number(n || 0).toLocaleString('pt-BR');
+function propostaLink(p) { return SITE_URL + '/proposta?t=' + p.id; }
+function soDigitos(s) { return String(s || '').replace(/\D/g, ''); }
+function whatsLink(p) {
+  let n = soDigitos(p.cliente_contato); if (!n) return '';
+  if (n.length <= 11) n = '55' + n;
+  const msg = 'Olá, ' + String(p.cliente_nome || '').split(' ')[0] + '! Aqui é da Baltazar Customs. O César revisou o seu pedido e a proposta da sua prancha está pronta: '
+    + propostaLink(p) + ' . Confere com calma e, estando tudo certo, é só dar o seu de acordo por lá. Depois a gente te manda o link de pagamento.';
+  return 'https://wa.me/' + n + '?text=' + encodeURIComponent(msg);
+}
+function leadsSemProposta() { return leads.filter(l => !proposals.some(p => p.lead_pedido === l.pedido)).length; }
+
+async function loadPedidos() {
+  pedidosErro = '';
+  const [l, p] = await Promise.all([
+    supa.from('leads').select('*').order('created_at', { ascending: false }),
+    supa.from('proposals').select('*').order('created_at', { ascending: false }),
+  ]);
+  if (l.error || p.error) { pedidosErro = 'As tabelas de pedidos ainda não existem. Rode o arquivo supabase/schema-propostas.sql no SQL Editor do Supabase.'; leads = []; proposals = []; return; }
+  leads = l.data || []; proposals = p.data || [];
+}
+
+function fmtData(d) { return d ? new Date(d).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : ''; }
+const STATUS = { rascunho: ['Rascunho', 'bg-neutral-200 text-neutral-600'], enviada: ['Enviada', 'bg-white border border-black/30 text-black'], aceita: ['Aceita', 'bg-black text-white'], cancelada: ['Cancelada', 'bg-neutral-100 text-neutral-400 line-through'] };
+
+function renderPedidosView() {
+  const body = document.getElementById('tabBody');
+  if (pedidosErro) { body.innerHTML = `<p class="text-sm text-red-700 max-w-xl">${esc(pedidosErro)}</p>`; return; }
+  const linhaLead = l => {
+    const p = proposals.find(x => x.lead_pedido === l.pedido);
+    const st = p ? STATUS[p.status] : null;
+    const resumo = [l.altura && l.altura + ' cm', l.peso && l.peso + ' kg', l.nivel, l.modelo].filter(Boolean).join(' · ');
+    const refsN = Array.isArray(l.referencias) ? l.referencias.length : 0;
+    return `<div class="border border-black/10 bg-white p-4 flex flex-col md:flex-row md:items-center gap-3">
+      <div class="flex-1 min-w-0">
+        <p class="font-medium">${esc(l.nome || 'Sem nome')} <span class="text-neutral-400 font-normal text-xs ml-1">${esc(l.pedido || '')} · ${fmtData(l.created_at)}</span></p>
+        <p class="text-xs text-neutral-500 mt-1">${esc(l.contato || '')}${resumo ? ' · ' + esc(resumo) : ''}${refsN ? ' · ' + refsN + ' referência(s)' : ''}</p>
+        ${l.mensagem ? `<p class="text-xs text-neutral-700 mt-1 italic">"${esc(l.mensagem)}"</p>` : ''}
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        ${st ? `<span class="text-[10px] uppercase tracking-widest px-2 py-1 ${st[1]}">${st[0]}</span>` : ''}
+        <button onclick="openProposta(${p ? `'${p.id}', null` : `null, '${esc(l.pedido)}'`})" class="bg-black text-white px-4 py-2 uppercase tracking-widest text-[10px] hover:opacity-80">${p ? 'Ver proposta' : 'Montar proposta'}</button>
+      </div></div>`;
+  };
+  const avulsas = proposals.filter(p => !leads.some(l => l.pedido === p.lead_pedido));
+  body.innerHTML = `
+    <div class="max-w-3xl">
+      <div class="flex justify-between items-center mb-5 gap-3">
+        <p class="text-sm text-neutral-600">${leads.length} pedido(s) · ${proposals.filter(p => p.status === 'aceita').length} proposta(s) aceita(s)</p>
+        <button onclick="openProposta(null, null)" class="border border-black px-4 py-2 uppercase tracking-widest text-[10px] hover:bg-black hover:text-white">+ Proposta avulsa</button>
+      </div>
+      <div class="space-y-2">${leads.length ? leads.map(linhaLead).join('') : '<p class="text-sm text-neutral-500">Nenhum pedido ainda. Os próximos que chegarem pelo site aparecem aqui.</p>'}</div>
+      ${avulsas.length ? `<p class="text-[10px] uppercase tracking-widest text-neutral-400 mt-8 mb-2">Propostas avulsas</p><div class="space-y-2">${avulsas.map(p => `
+        <div class="border border-black/10 bg-white p-4 flex items-center gap-3"><div class="flex-1"><p class="font-medium">${esc(p.cliente_nome)}</p><p class="text-xs text-neutral-500">${esc(p.modelo)} · ${brl(p.preco_final)}</p></div>
+        <span class="text-[10px] uppercase tracking-widest px-2 py-1 ${STATUS[p.status][1]}">${STATUS[p.status][0]}</span>
+        <button onclick="openProposta('${p.id}', null)" class="bg-black text-white px-4 py-2 uppercase tracking-widest text-[10px]">Ver</button></div>`).join('')}</div>` : ''}
+    </div>`;
+}
+
+function openProposta(id, pedido) {
+  const p = id ? proposals.find(x => x.id === id) : null;
+  const l = p ? leads.find(x => x.pedido === p.lead_pedido) : (pedido ? leads.find(x => x.pedido === pedido) : null);
+  const ref0 = l && Array.isArray(l.referencias) && l.referencias[0];
+  const v = p || {
+    cliente_nome: l ? l.nome : '', cliente_contato: l ? l.contato : '', lead_pedido: l ? l.pedido : '',
+    modelo: l && l.modelo ? l.modelo : (ref0 ? ref0.modelo : ''), imagem: ref0 ? ref0.imagem : '', detalhes: ref0 ? ref0.detalhes : '',
+    tamanho: ref0 ? ref0.tamanho : '', medidas: ref0 ? ref0.medidas : '', pintura: ref0 ? ref0.pintura : '', quilhas: ref0 ? ref0.quilhas : '',
+    observacoes: '', nota_shaper: '', prazo: '', cupom: l && l.cupom ? l.cupom : '', desconto_pct: l && l.cupom ? 10 : 0,
+    preco_tabela: '', preco_final: '', status: 'enviada',
+  };
+  const campo = (name, label, val, opts) => {
+    opts = opts || {};
+    const input = opts.area
+      ? `<textarea name="${name}" rows="${opts.rows || 2}" class="w-full border border-black/20 px-3 py-2 mt-1 text-sm">${esc(val || '')}</textarea>`
+      : `<input name="${name}" value="${esc(val == null ? '' : val)}" ${opts.type ? `type="${opts.type}"` : ''} ${opts.ph ? `placeholder="${esc(opts.ph)}"` : ''} class="w-full border border-black/20 px-3 py-2.5 mt-1 text-sm"/>`;
+    return `<label class="block ${opts.wide ? 'md:col-span-2' : ''}"><span class="text-[10px] uppercase tracking-widest text-neutral-500">${label}</span>${input}${opts.hint ? `<span class="block text-[11px] text-neutral-400 mt-1">${opts.hint}</span>` : ''}</label>`;
+  };
+  const pedidoInfo = l ? `<div class="bg-neutral-50 border border-black/10 p-3 text-xs text-neutral-600 leading-relaxed md:col-span-2">
+      <strong class="text-black">Pedido ${esc(l.pedido)}</strong> · ${esc(l.nome || '')} · ${esc(l.contato || '')}<br/>
+      ${[l.altura && l.altura + ' cm', l.peso && l.peso + ' kg', l.nivel, l.onda, l.modelo].filter(Boolean).map(esc).join(' · ')}
+      ${l.mensagem ? `<br/><em>"${esc(l.mensagem)}"</em>` : ''}
+      ${(l.referencias || []).map((r, i) => `<br/>Ref. ${i + 1}: ${esc(r.detalhes || r.modelo || '')}${r.tamanho ? ' · tam. ' + esc(r.tamanho) : ''}${r.pintura ? ' · pintura ' + esc(r.pintura) : ''}${r.quilhas ? ' · quilhas ' + esc(r.quilhas) : ''}${r.obs ? ' · ' + esc(r.obs) : ''}`).join('')}
+    </div>` : '';
+  const m = document.getElementById('modal');
+  m.className = 'fixed inset-0 z-50 overflow-y-auto';
+  document.body.style.overflow = 'hidden';
+  m.innerHTML = `
+    <div class="fixed inset-0 bg-black/50" onclick="closeModal()"></div>
+    <div class="relative min-h-full flex items-start justify-center md:p-4 pointer-events-none">
+      <div class="pointer-events-auto bg-white w-full md:max-w-2xl md:my-8 shadow-xl">
+        <div class="flex justify-between items-center px-5 md:px-6 pt-5 pb-4 border-b border-black/10">
+          <h2 class="font-serif italic text-lg md:text-xl">${p ? 'Proposta de ' + esc(p.cliente_nome) : 'Nova proposta'}</h2>
+          <button onclick="closeModal()" class="text-3xl leading-none text-neutral-400 hover:text-black w-10 h-10">×</button>
+        </div>
+        ${p ? `<div class="px-5 md:px-6 pt-4 flex flex-wrap gap-2 items-center">
+            <span class="text-[10px] uppercase tracking-widest px-2 py-1 ${STATUS[p.status][1]}">${STATUS[p.status][0]}</span>
+            ${p.status === 'aceita' ? `<span class="text-xs text-neutral-600">por ${esc(p.aceito_nome || '')} em ${fmtData(p.aceito_em)}</span>` : ''}
+            <a href="${propostaLink(p)}" target="_blank" class="text-[11px] underline ml-auto">Abrir a página</a>
+            <button type="button" onclick="copiarLink('${p.id}')" class="text-[11px] underline">Copiar link</button>
+            ${whatsLink(p) ? `<a href="${whatsLink(p)}" target="_blank" class="bg-black text-white px-3 py-1.5 text-[10px] uppercase tracking-widest">Enviar no WhatsApp</a>` : ''}
+          </div>` : ''}
+        <form id="propForm" class="p-5 md:p-6 grid md:grid-cols-2 gap-4">
+          ${pedidoInfo}
+          ${campo('cliente_nome', 'Cliente *', v.cliente_nome)}
+          ${campo('cliente_contato', 'Contato (WhatsApp ou email)', v.cliente_contato)}
+          ${campo('modelo', 'Modelo *', v.modelo, { wide: true, ph: "ex: Funboard 8'6\"" })}
+          ${campo('tamanho', 'Tamanho *', v.tamanho, { ph: "ex: 8'6\"", hint: 'O preço de tabela sai daqui.' })}
+          ${campo('medidas', 'Medidas / litragem', v.medidas)}
+          ${campo('pintura', 'Pintura / arte', v.pintura)}
+          ${campo('quilhas', 'Quilhas', v.quilhas)}
+          ${campo('observacoes', 'Observações pro cliente', v.observacoes, { area: true, wide: true })}
+          ${campo('nota_shaper', 'Palavra do shaper (aparece em destaque)', v.nota_shaper, { area: true, rows: 3, wide: true })}
+          ${campo('prazo', 'Prazo (opcional)', v.prazo, { ph: 'ex: 30 dias após o pagamento' })}
+          ${campo('imagem', 'Foto (opcional)', v.imagem, { ph: '/images/... ou deixe vazio', hint: 'Vazio mostra o tigre da marca.' })}
+          ${campo('detalhes', 'Detalhe abaixo do modelo (opcional)', v.detalhes, { wide: true })}
+          <div class="md:col-span-2 border-t border-black/10 pt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+            ${campo('preco_tabela', 'Tabela (R$) *', v.preco_tabela, { type: 'number' })}
+            ${campo('cupom', 'Cupom', v.cupom)}
+            ${campo('desconto_pct', 'Desconto %', v.desconto_pct, { type: 'number' })}
+            ${campo('preco_final', 'Final (R$) *', v.preco_final, { type: 'number' })}
+            <p id="precoInfo" class="col-span-2 md:col-span-4 text-[11px] text-neutral-500 -mt-2"></p>
+          </div>
+          <label class="block"><span class="text-[10px] uppercase tracking-widest text-neutral-500">Status</span>
+            <select name="status" class="w-full border border-black/20 px-3 py-2.5 mt-1 text-sm">
+              ${['rascunho', 'enviada', 'aceita', 'cancelada'].map(sv => `<option value="${sv}" ${v.status === sv ? 'selected' : ''}>${STATUS[sv][0]}${sv === 'enviada' ? ' (cliente consegue abrir)' : sv === 'rascunho' ? ' (link ainda não abre)' : ''}</option>`).join('')}
+            </select></label>
+          <input type="hidden" name="lead_pedido" value="${esc(v.lead_pedido || '')}"/>
+          <div class="md:col-span-2 flex gap-3 justify-end pt-2">
+            <button type="button" onclick="closeModal()" class="px-5 py-3 text-xs uppercase tracking-widest">Cancelar</button>
+            <button type="submit" class="bg-black text-white px-6 py-3 text-xs uppercase tracking-widest hover:opacity-80">Salvar proposta</button>
+          </div>
+          <p id="propMsg" class="md:col-span-2 text-sm"></p>
+        </form>
+      </div>
+    </div>`;
+  document.addEventListener('keydown', escClose);
+  const f = document.getElementById('propForm');
+  // preço automático: tamanho -> tabela; cupom/desconto -> final (dá pra editar à mão)
+  const recalc = (origem) => {
+    const info = document.getElementById('precoInfo');
+    if (origem === 'tamanho' || (!f.preco_tabela.value && f.tamanho.value)) {
+      const t = precoPorTamanho(f.tamanho.value);
+      if (t) { f.preco_tabela.value = t.preco; info.textContent = 'Tabela: faixa ' + t.faixa + ' = ' + brl(t.preco) + '.'; }
+      else info.textContent = 'Não entendi o tamanho; preencha o valor de tabela à mão.';
+    }
+    if (origem !== 'final') {
+      const base = Number(f.preco_tabela.value || 0), d = Number(f.desconto_pct.value || 0);
+      if (base) f.preco_final.value = Math.round(base * (100 - d) / 100);
+    }
+  };
+  f.tamanho.addEventListener('input', () => recalc('tamanho'));
+  f.preco_tabela.addEventListener('input', () => recalc('tabela'));
+  f.desconto_pct.addEventListener('input', () => recalc('desconto'));
+  f.preco_final.addEventListener('input', () => recalc('final'));
+  f.cupom.addEventListener('input', () => { if (f.cupom.value.trim() && !Number(f.desconto_pct.value)) { f.desconto_pct.value = 10; recalc('desconto'); } });
+  if (!p) recalc();
+  f.addEventListener('submit', (e) => saveProposta(e, p));
+}
+
+function copiarLink(id) {
+  const p = proposals.find(x => x.id === id); if (!p) return;
+  const url = propostaLink(p);
+  (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(
+    () => { const m = document.getElementById('propMsg'); if (m) { m.style.color = ''; m.textContent = 'Link copiado: ' + url; } },
+    () => window.prompt('Copie o link da proposta:', url));
+}
+
+async function saveProposta(e, existing) {
+  e.preventDefault();
+  const f = e.target, msg = document.getElementById('propMsg');
+  const g = n => (f[n].value || '').trim();
+  const row = {
+    cliente_nome: g('cliente_nome'), cliente_contato: g('cliente_contato') || null, lead_pedido: g('lead_pedido') || null,
+    modelo: g('modelo'), tamanho: g('tamanho') || null, medidas: g('medidas') || null, pintura: g('pintura') || null, quilhas: g('quilhas') || null,
+    observacoes: g('observacoes') || null, nota_shaper: g('nota_shaper') || null, prazo: g('prazo') || null,
+    imagem: g('imagem'), detalhes: g('detalhes'), cupom: g('cupom') || null,
+    preco_tabela: Number(g('preco_tabela')), desconto_pct: Number(g('desconto_pct') || 0), preco_final: Number(g('preco_final')),
+    status: f.status.value,
+  };
+  if (!row.cliente_nome || !row.modelo || !row.tamanho || !row.preco_tabela || !row.preco_final) {
+    msg.style.color = '#b00020'; msg.textContent = 'Preencha cliente, modelo, tamanho e os valores.'; return;
+  }
+  const btn = f.querySelector('button[type=submit]'); btn.disabled = true; btn.textContent = 'Salvando...';
+  const q = existing ? supa.from('proposals').update(row).eq('id', existing.id).select() : supa.from('proposals').insert(row).select();
+  const { data, error } = await q;
+  btn.disabled = false; btn.textContent = 'Salvar proposta';
+  if (error || !data || !data[0]) { msg.style.color = '#b00020'; msg.textContent = 'Erro ao salvar: ' + (error ? error.message : 'sem resposta'); return; }
+  await loadPedidos();
+  openProposta(data[0].id, null);
+  const m2 = document.getElementById('propMsg');
+  if (m2) { m2.style.color = ''; m2.textContent = data[0].status === 'rascunho' ? 'Salva como rascunho: o link só abre pro cliente quando o status for Enviada.' : 'Proposta salva. Mande o link pro cliente pelo botão do WhatsApp ou copie o link.'; }
+  if (tab === 'pedidos') renderApp();
 }
 
 // ============================================================

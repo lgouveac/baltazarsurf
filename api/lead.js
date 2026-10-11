@@ -8,6 +8,20 @@
 //                     (default "Baltazar Customs <pedidos@baltazarcustomssurfboards.com>")
 //                     O domínio do FROM precisa estar verificado no Resend.
 
+const SUPA_URL = 'https://eylnwwerbssfaaaxsccw.supabase.co';
+// chave anônima (pública): a tabela leads só aceita inserção, não leitura
+const SUPA_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5bG53d2VyYnNzZmFhYXhzY2N3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MDU3NjYsImV4cCI6MjA5NzI4MTc2Nn0.XMYTNxGEj5Jjt89Q9GCQasnD9sR9q0lt4wdlXUNrJgc';
+async function saveLead(row) {
+  try {
+    const r = await fetch(SUPA_URL + '/rest/v1/leads', {
+      method: 'POST',
+      headers: { apikey: SUPA_ANON, Authorization: 'Bearer ' + SUPA_ANON, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+      body: JSON.stringify(row),
+    });
+    return r.ok;
+  } catch (e) { return false; }
+}
+
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     res.status(405).json({ ok: false, error: 'method_not_allowed' });
@@ -154,14 +168,23 @@ module.exports = async (req, res) => {
     };
     if (looksEmail) payload.reply_to = contato;
 
-    const r = await fetch('https://api.resend.com/emails', {
+    // Grava o pedido no banco (tabela leads) ao mesmo tempo que manda o email.
+    // Com o pedido salvo, ele aparece no admin pra virar proposta, e não se
+    // perde se o email falhar.
+    const saved = saveLead({
+      pedido: pedidoId, nome: nome, contato: contato, modelo: modelo, altura: altura, peso: peso,
+      nivel: nivel, onda: onda, mensagem: mensagem, cupom: 'CARBON1000', referencias: refs, origem: origem,
+    });
+    const sent = fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
-    });
+    }).catch(() => null);
+    const [okSaved, r] = await Promise.all([saved, sent]);
 
-    if (!r.ok) {
-      const detail = await r.text().catch(() => '');
+    if (!r || !r.ok) {
+      const detail = r ? await r.text().catch(() => '') : 'sem resposta';
+      if (okSaved) { res.status(200).json({ ok: true, pedido: pedidoId, email: false }); return; }
       res.status(502).json({ ok: false, error: 'falha_envio', detail: detail.slice(0, 300) });
       return;
     }
