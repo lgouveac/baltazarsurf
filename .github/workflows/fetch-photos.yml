@@ -24,7 +24,8 @@ jobs:
         run: |
           set -e
           if [ "$ARQS" = "limpar" ]; then
-            git push -q "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git" --delete tmp-fotos && echo "branch tmp-fotos apagado"; exit 0
+            code=$(curl -sS -o /dev/null -w '%{http_code}' -X DELETE -H "Authorization: Bearer $GH_TOKEN" "https://api.github.com/repos/$REPO/git/refs/heads/tmp-fotos")
+            echo "apagar branch tmp-fotos: HTTP $code"; [[ "$code" == 204 || "$code" == 422 ]]; exit $?
           fi
           mkdir fotos && cd fotos
           for f in $ARQS; do
