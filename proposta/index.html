@@ -134,10 +134,18 @@ function ajustaFoto() {
 // Opções de quilha quando o cliente escolhe. A explicação é pra quem não é do
 // meio: o que cada configuração muda na água.
 const QUILHAS = [
+  { v: 'Thruster', t: 'Thruster', rec: true, d: 'Três quilhas do mesmo tamanho. Dá mais pegada e resposta nas manobras, com curvas mais curtas e rápidas, e segura bem em onda mais forte. É o que o César recomenda pra sua prancha.' },
+  { v: 'Single + estabilizadores (2+1)', t: 'Single + estabilizadores (2+1)', d: 'A quilha central com duas pequenas nas laterais. Mantém a estabilidade da single e dá mais firmeza nas curvas.' },
   { v: 'Single fin', t: 'Single fin', d: 'Uma quilha central grande. A prancha fica mais estável e faz curvas longas e suaves. É o jeito clássico de surfar: ótimo pra deslizar e pegar o ritmo da onda.' },
-  { v: 'Single + estabilizadores (2+1)', t: 'Single + estabilizadores (2+1)', d: 'A quilha central com duas pequenas nas laterais. Mantém a estabilidade da single e dá mais firmeza e controle nas curvas. É a mais versátil.' },
-  { v: 'Thruster', t: 'Thruster', d: 'Três quilhas do mesmo tamanho. Mais pegada e resposta nas manobras, com curvas mais curtas e rápidas. Pede um pouco mais de técnica.' },
   { v: 'Sugestão do César', t: 'Quero a sugestão do César', d: 'Ele escolhe a melhor pro seu peso, o seu nível e as ondas que você surfa.' },
+];
+
+// Sistema de caixa das quilhas laterais. Quilha de um sistema não encaixa no
+// outro, então vale perguntar (quem já tem quilhas escolhe o sistema delas).
+const SISTEMAS = [
+  { v: 'FCS II', t: 'FCS II', d: 'Encaixe sem parafuso: a quilha entra por pressão e trava sozinha. Troca rápida, na areia, sem chave. É o sistema mais comum no Brasil, fácil de achar quilha em qualquer surf shop.' },
+  { v: 'Futures', t: 'Futures', d: 'A base da quilha é longa e inteiriça, presa na caixa com parafuso. Fica mais firme e passa melhor a força nas curvas. Pra trocar precisa da chavinha.' },
+  { v: 'Tanto faz', t: 'Tanto faz, o César escolhe', d: 'Se você ainda não tem quilhas, qualquer um dos dois funciona muito bem.' },
 ];
 
 function renderAceite(p) {
@@ -164,7 +172,21 @@ function renderAceite(p) {
           ${QUILHAS.map((q, i) => `
           <label class="quilha-op block border border-black/15 p-4 cursor-pointer hover:border-black has-[:checked]:border-black has-[:checked]:bg-[#f3f1ed]">
             <span class="flex items-start gap-3">
-              <input type="radio" name="quilhas" value="${esc(q.v)}" class="mt-1 accent-black"/>
+              <input type="radio" name="quilhas" value="${esc(q.v)}" ${q.rec ? 'checked' : ''} class="mt-1 accent-black"/>
+              <span><span class="flex flex-wrap items-center gap-2 font-sans text-sm font-medium text-black">${esc(q.t)}${q.rec ? '<span class="font-sans text-[9px] uppercase tracking-widest bg-black text-white px-2 py-0.5">Recomendado</span>' : ''}</span>
+              <span class="block font-sans text-xs text-neutral-600 leading-relaxed mt-1">${esc(q.d)}</span></span>
+            </span>
+          </label>`).join('')}
+        </div>
+      </fieldset>
+      <fieldset id="sistemaBox" class="mt-7">
+        <legend class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Sistema das quilhas: FCS II ou Futures? *</legend>
+        <p class="font-sans text-xs text-neutral-600 leading-relaxed mt-2">É o tipo de caixa onde as quilhas encaixam. Quilha de um sistema não serve no outro: se você já tem quilhas, escolha o sistema delas.</p>
+        <div class="grid md:grid-cols-3 gap-3 mt-3">
+          ${SISTEMAS.map(q => `
+          <label class="block border border-black/15 p-4 cursor-pointer hover:border-black has-[:checked]:border-black has-[:checked]:bg-[#f3f1ed]">
+            <span class="flex items-start gap-3">
+              <input type="radio" name="sistema" value="${esc(q.v)}" class="mt-1 accent-black"/>
               <span><span class="block font-sans text-sm font-medium text-black">${esc(q.t)}</span>
               <span class="block font-sans text-xs text-neutral-600 leading-relaxed mt-1">${esc(q.d)}</span></span>
             </span>
@@ -188,14 +210,25 @@ function renderAceite(p) {
       <button type="submit" class="mt-6 w-full md:w-auto bg-black text-white px-10 py-4 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Estou de acordo</button>
       <p id="aceiteMsg" class="font-sans text-xs mt-3 min-h-[1em]"></p>
     </form>`;
+  const sisBox = document.getElementById('sistemaBox');
+  if (sisBox) {
+    // Single fin usa caixa central própria: a pergunta do sistema só vale com laterais.
+    const syncSis = () => { const q = (document.querySelector('#aceiteForm input[name=quilhas]:checked') || {}).value; sisBox.hidden = q === 'Single fin'; };
+    document.querySelectorAll('#aceiteForm input[name=quilhas]').forEach(r => r.addEventListener('change', syncSis));
+    syncSis();
+  }
   document.getElementById('aceiteForm').addEventListener('submit', async function (e) {
     e.preventDefault();
     const f = e.target, msg = document.getElementById('aceiteMsg'), btn = f.querySelector('button');
     const nome = f.nome.value.trim();
     if (!nome) { msg.style.color = '#b00020'; msg.textContent = 'Escreva o seu nome.'; return; }
-    const quilhas = p.escolhe_quilhas ? ((f.querySelector('input[name=quilhas]:checked') || {}).value || '') : '';
+    const quilha = p.escolhe_quilhas ? ((f.querySelector('input[name=quilhas]:checked') || {}).value || '') : '';
+    const sistema = (f.querySelector('input[name=sistema]:checked') || {}).value || '';
+    const precisaSistema = p.escolhe_quilhas && quilha !== 'Single fin';
     const cores = p.escolhe_cores && f.cores ? f.cores.value.trim() : '';
-    if (p.escolhe_quilhas && !quilhas) { msg.style.color = '#b00020'; msg.textContent = 'Escolha as quilhas (se preferir, marque a sugestão do César).'; return; }
+    if (p.escolhe_quilhas && !quilha) { msg.style.color = '#b00020'; msg.textContent = 'Escolha as quilhas (se preferir, marque a sugestão do César).'; return; }
+    if (precisaSistema && !sistema) { msg.style.color = '#b00020'; msg.textContent = 'Escolha o sistema das quilhas: FCS II, Futures ou tanto faz.'; return; }
+    const quilhas = quilha && precisaSistema ? quilha + ' · ' + (sistema === 'Tanto faz' ? 'sistema: César escolhe' : sistema) : quilha;
     if (!f.ok.checked) { msg.style.color = '#b00020'; msg.textContent = 'Marque a caixa confirmando que está de acordo.'; return; }
     btn.disabled = true; btn.textContent = 'Enviando...'; msg.textContent = '';
     try {

@@ -465,7 +465,7 @@ function openProposta(id, pedido) {
   f.cupom.addEventListener('input', () => { if (f.cupom.value.trim() && !Number(f.desconto_pct.value)) { f.desconto_pct.value = 10; recalc('desconto'); } });
   if (!p) recalc();
   const generico = t => !t.trim() || /^a combinar/i.test(t.trim());
-  f.escolhe_quilhas.addEventListener('change', () => { if (f.escolhe_quilhas.checked && generico(f.quilhas.value)) f.quilhas.value = 'Você escolhe (logo abaixo, com a diferença entre elas)'; });
+  f.escolhe_quilhas.addEventListener('change', () => { if (f.escolhe_quilhas.checked && generico(f.quilhas.value)) f.quilhas.value = 'Thruster recomendado. Você confirma logo abaixo e escolhe FCS II ou Futures'; });
   f.escolhe_cores.addEventListener('change', () => { if (f.escolhe_cores.checked && generico(f.pintura.value)) f.pintura.value = 'Você escolhe as cores (logo abaixo)'; });
   f.addEventListener('submit', (e) => saveProposta(e, p));
 }
