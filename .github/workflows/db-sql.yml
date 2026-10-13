@@ -30,5 +30,5 @@ jobs:
           code=$(curl -sS -o resp.json -w '%{http_code}' -X POST \
             "https://api.supabase.com/v1/projects/eylnwwerbssfaaaxsccw/database/query" \
             -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" --data @body.json)
-          echo "HTTP $code"; head -c 2000 resp.json; echo
+          echo "HTTP $code"; head -c 8000 resp.json; echo
           [[ "$code" == 2* ]] || exit 1
