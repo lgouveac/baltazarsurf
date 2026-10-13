@@ -67,30 +67,44 @@ function spec(label, value) {
     <dd class="font-sans text-sm md:text-base text-neutral-800 leading-relaxed">${esc(value)}</dd></div>`;
 }
 
-function render(p) {
-  document.title = 'Proposta de ' + first(p.cliente_nome) + ' | Baltazar Customs';
-  const foto = img(p.imagem);
-  const temDesconto = p.desconto_pct > 0 && p.preco_tabela > p.preco_final;
-  const aceita = p.status === 'aceita';
-  app.innerHTML = `
-    <span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500">Sua proposta${p.lead_pedido ? ' · Pedido ' + esc(p.lead_pedido) : ''}</span>
-    <h1 class="font-serif text-4xl md:text-6xl leading-[1.05] mt-3">Olá, ${esc(first(p.cliente_nome))}. Sua prancha está pronta pra sair do papel.</h1>
-    <p class="font-sans text-base md:text-lg text-neutral-600 leading-relaxed mt-5 max-w-xl">O shaper revisou o seu pedido. Confira abaixo como ela vai ficar e o valor final. Estando tudo certo, é só dar o seu de acordo.</p>
+// Proposta de uma prancha usa os campos da própria proposta; de várias, a lista itens.
+function pranchas(p) {
+  return Array.isArray(p.itens) && p.itens.length ? p.itens : [p];
+}
 
-    <section id="propCard" class="mt-12 md:mt-16 bg-white border border-black/10 grid md:grid-cols-[16rem_1fr]">
-      <div id="propFoto" class="bg-[#f3f1ed] flex items-center justify-center p-4 md:p-5 ${foto ? '' : 'min-h-[14rem]'}">
-        ${foto ? `<img src="${esc(foto)}" alt="${esc(p.modelo)}" class="block w-auto max-w-full h-auto max-h-[30rem] md:max-h-[34rem] object-contain"/>`
+function cartao(it, i, total) {
+  const foto = img(it.imagem);
+  return `
+    <section data-card class="bg-white border border-black/10 grid md:grid-cols-[16rem_1fr] ${i ? 'mt-6 md:mt-8' : ''}">
+      <div data-foto class="bg-[#f3f1ed] flex items-center justify-center p-4 md:p-5 ${foto ? '' : 'min-h-[14rem]'}">
+        ${foto ? `<img src="${esc(foto)}" alt="${esc(it.modelo)}" class="block w-auto max-w-full h-auto max-h-[30rem] md:max-h-[34rem] object-contain"/>`
                : `<img src="/images/brand/motif-tiger.png" alt="" class="w-40 opacity-90"/>`}
       </div>
       <div class="p-6 md:p-8">
-        <span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500">Modelo</span>
-        <h2 class="font-serif text-3xl md:text-4xl leading-tight mt-1">${esc(p.modelo)}</h2>
-        ${p.detalhes ? `<p class="font-sans text-sm text-neutral-600 mt-2">${esc(p.detalhes)}</p>` : ''}
+        <span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500">${total > 1 ? 'Prancha ' + (i + 1) + ' de ' + total : 'Modelo'}</span>
+        <h2 class="font-serif text-3xl md:text-4xl leading-tight mt-1">${esc(it.modelo)}</h2>
+        ${it.detalhes ? `<p class="font-sans text-sm text-neutral-600 mt-2">${esc(it.detalhes)}</p>` : ''}
         <dl class="mt-6">
-          ${spec('Tamanho', p.tamanho)}${spec('Medidas', p.medidas)}${spec('Pintura', p.pintura)}${spec('Quilhas', p.quilhas)}${spec('Observações', p.observacoes)}${spec('Prazo', p.prazo)}
+          ${spec('Tamanho', it.tamanho)}${spec('Medidas', it.medidas)}${spec('Pintura', it.pintura)}${spec('Quilhas', it.quilhas)}${spec('Observações', it.observacoes)}${total > 1 ? '' : spec('Prazo', it.prazo)}
         </dl>
       </div>
-    </section>
+    </section>`;
+}
+
+function render(p) {
+  document.title = 'Proposta de ' + first(p.cliente_nome) + ' | Baltazar Customs';
+  const its = pranchas(p), n = its.length, multi = n > 1;
+  const frete = Number(p.frete || 0);
+  const semFrete = p.preco_final - frete;
+  const temDesconto = p.desconto_pct > 0 && p.preco_tabela > semFrete;
+  const linha = (k, v, cls) => `<div class="flex justify-between gap-4 font-sans text-sm text-white/70 mt-2 ${cls || ''}"><span>${k}</span><span class="shrink-0">${v}</span></div>`;
+  app.innerHTML = `
+    <span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500">Sua proposta${p.lead_pedido ? ' · Pedido ' + esc(p.lead_pedido) : ''}</span>
+    <h1 class="font-serif text-4xl md:text-6xl leading-[1.05] mt-3">Olá, ${esc(first(p.cliente_nome))}. ${multi ? 'Suas ' + n + ' pranchas estão prontas pra sair do papel.' : 'Sua prancha está pronta pra sair do papel.'}</h1>
+    <p class="font-sans text-base md:text-lg text-neutral-600 leading-relaxed mt-5 max-w-xl">O shaper revisou o seu pedido. Confira abaixo como ${multi ? 'elas vão ficar' : 'ela vai ficar'} e o valor final. Estando tudo certo, é só dar o seu de acordo.</p>
+
+    <div class="mt-12 md:mt-16">${its.map((it, i) => cartao(it, i, n)).join('')}</div>
+    ${multi && (p.observacoes || p.prazo) ? `<dl class="mt-8">${spec('Observações', p.observacoes)}${spec('Prazo', p.prazo)}</dl>` : ''}
 
     ${p.nota_shaper ? `
     <section class="mt-10 md:mt-14">
@@ -101,11 +115,15 @@ function render(p) {
 
     <section class="mt-10 md:mt-14 bg-black text-white p-6 md:p-8">
       <span class="font-sans uppercase text-[10px] tracking-[0.2em] text-white/60">Valor</span>
-      ${temDesconto ? `
-        <div class="flex justify-between font-sans text-sm text-white/70 mt-4"><span>Valor de tabela (${esc(p.tamanho || p.modelo)})</span><span class="line-through">${brl(p.preco_tabela)}</span></div>
-        <div class="flex justify-between font-sans text-sm text-white/70 mt-2"><span>Desconto ${p.desconto_pct}%${p.cupom ? ' · cupom ' + esc(p.cupom) : ''}</span><span>− ${brl(p.preco_tabela - p.preco_final)}</span></div>` : ''}
+      <div class="mt-2">
+      ${multi ? its.map((it, i) => linha('Prancha ' + (i + 1) + ' · ' + esc(it.tamanho || it.modelo), it.preco_tabela ? (temDesconto ? '<span class="line-through">' + brl(it.preco_tabela) + '</span>' : brl(it.preco_tabela)) : '')).join('') : ''}
+      ${temDesconto ? (multi ? '' : linha('Valor de tabela (' + esc(p.tamanho || p.modelo) + ')', '<span class="line-through">' + brl(p.preco_tabela) + '</span>'))
+        + linha('Desconto ' + p.desconto_pct + '%' + (p.cupom ? ' · cupom ' + esc(p.cupom) : ''), '− ' + brl(p.preco_tabela - semFrete)) : ''}
+      ${frete ? (multi || temDesconto ? linha(multi ? (n + ' pranchas') : 'Prancha', brl(semFrete), 'pt-3 mt-3 border-t border-white/10 text-white') : '')
+        + linha('Frete' + (p.frete_desc ? '<span class="block text-[11px] text-white/50 mt-0.5 leading-relaxed">' + esc(p.frete_desc) + '</span>' : ''), brl(frete)) : ''}
+      </div>
       <div class="flex justify-between items-end mt-5 pt-5 border-t border-white/20">
-        <span class="font-sans text-sm uppercase tracking-widest">Total</span>
+        <span class="font-sans text-sm uppercase tracking-widest">Total${frete ? ' com frete' : ''}</span>
         <span class="font-serif text-4xl md:text-5xl">${brl(p.preco_final)}</span>
       </div>
       <p class="font-sans text-xs text-white/60 mt-4 leading-relaxed">O link de pagamento é enviado depois do seu de acordo.</p>
@@ -119,16 +137,17 @@ function render(p) {
 // A foto nunca é cortada. Vertical (o normal de prancha): coluna ao lado,
 // inteira. Horizontal: vai pra cima, na largura do cartão.
 function ajustaFoto() {
-  const card = document.getElementById('propCard'), box = document.getElementById('propFoto');
-  const im = box && box.querySelector('img'); if (!im) return;
-  const aplica = () => {
-    if (!im.naturalWidth) return;
-    const horizontal = im.naturalWidth > im.naturalHeight * 1.15;
-    card.style.gridTemplateColumns = horizontal ? '1fr' : '';
-    card.dataset.foto = horizontal ? 'horizontal' : 'vertical';
-    im.style.maxHeight = horizontal ? '26rem' : '';
-  };
-  if (im.complete) aplica(); else im.addEventListener('load', aplica);
+  document.querySelectorAll('[data-card]').forEach(card => {
+    const im = card.querySelector('[data-foto] img'); if (!im) return;
+    const aplica = () => {
+      if (!im.naturalWidth) return;
+      const horizontal = im.naturalWidth > im.naturalHeight * 1.15;
+      card.style.gridTemplateColumns = horizontal ? '1fr' : '';
+      card.dataset.foto = horizontal ? 'horizontal' : 'vertical';
+      im.style.maxHeight = horizontal ? '26rem' : '';
+    };
+    if (im.complete) aplica(); else im.addEventListener('load', aplica);
+  });
 }
 
 // Opções de quilha quando o cliente escolhe. A explicação é pra quem não é do
@@ -148,88 +167,114 @@ const SISTEMAS = [
   { v: 'Tanto faz', t: 'Tanto faz, o César escolhe', d: 'Se você ainda não tem quilhas, qualquer um dos dois funciona muito bem.' },
 ];
 
+function opcao(name, q, marcado, compacto) {
+  return `
+          <label class="block border border-black/15 ${compacto ? 'p-3' : 'p-4'} cursor-pointer hover:border-black has-[:checked]:border-black has-[:checked]:bg-[#f3f1ed]">
+            <span class="flex items-start gap-3">
+              <input type="radio" name="${name}" value="${esc(q.v)}" ${marcado ? 'checked' : ''} class="mt-1 accent-black"/>
+              <span><span class="flex flex-wrap items-center gap-2 font-sans text-sm font-medium text-black">${esc(q.t)}${q.rec ? '<span class="font-sans text-[9px] uppercase tracking-widest bg-black text-white px-2 py-0.5">Recomendado</span>' : ''}</span>
+              ${compacto ? '' : `<span class="block font-sans text-xs text-neutral-600 leading-relaxed mt-1">${esc(q.d)}</span>`}</span>
+            </span>
+          </label>`;
+}
+
+// Bloco de escolhas de uma prancha. Com várias pranchas, a explicação das
+// opções aparece só na primeira; nas outras, só os nomes.
+function escolhas(p, it, i, n) {
+  const multi = n > 1, compacto = multi && i > 0;
+  const preQ = it.pre_quilha || 'Thruster';
+  const preS = it.pre_sistema || '';
+  const rotulo = (t) => `<legend class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">${t}</legend>`;
+  return `
+      <div data-escolha="${i}" class="${multi ? 'mt-8 pt-6 border-t border-black/10' : ''}">
+      ${multi ? `<p class="font-serif text-2xl leading-tight">Prancha ${i + 1}<span class="font-sans text-sm text-neutral-500"> · ${esc(it.modelo)}</span></p>` : ''}
+      ${p.escolhe_quilhas ? `
+      <fieldset class="mt-5">
+        ${rotulo('Quilhas: escolha a sua *')}
+        <div class="grid md:grid-cols-2 gap-3 mt-3">
+          ${QUILHAS.map(q => opcao('quilhas' + i, q, q.v === preQ, compacto)).join('')}
+        </div>
+        ${compacto ? '<p class="font-sans text-[11px] text-neutral-500 mt-2">A diferença entre elas está explicada na prancha 1.</p>' : ''}
+      </fieldset>
+      <fieldset data-sistema class="mt-6">
+        ${rotulo('Sistema das quilhas: FCS II ou Futures? *')}
+        ${compacto ? '' : '<p class="font-sans text-xs text-neutral-600 leading-relaxed mt-2">É o tipo de caixa onde as quilhas encaixam. Quilha de um sistema não serve no outro: se você já tem quilhas, escolha o sistema delas.</p>'}
+        <div class="grid md:grid-cols-3 gap-3 mt-3">
+          ${SISTEMAS.map(q => opcao('sistema' + i, q, q.v === preS, compacto)).join('')}
+        </div>
+      </fieldset>` : ''}
+      ${p.escolhe_cores ? `
+      <label class="block mt-6">
+        <span class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Cores${multi ? ' da prancha ' + (i + 1) : ''}: como você quer a sua?</span>
+        <textarea name="cores${i}" rows="3" class="w-full border border-black/20 focus:border-black bg-transparent p-3 mt-2 text-sm focus:outline-none resize-none" placeholder="Ex.: amarela com raios pretos, igual à da foto. Ou toda branca. Ou azul-clara com as bordas brancas.">${esc(it.pre_cores || '')}</textarea>
+        ${i === n - 1 ? '<span class="block font-sans text-[11px] text-neutral-500 mt-1">Se ainda não decidiu, pode deixar em branco e combinar com o César depois.</span>' : ''}
+      </label>` : ''}
+      </div>`;
+}
+
 function renderAceite(p) {
   const box = document.getElementById('aceite');
+  const its = pranchas(p), n = its.length;
+  const linhas = (v) => String(v || '').split(' | ').map(esc).join('<br/>');
   if (p.status === 'aceita') {
+    const item = (k, v) => v ? `<div class="py-4 border-t border-black/10 grid grid-cols-[8rem_1fr] md:grid-cols-[10rem_1fr] gap-4"><dt class="font-sans uppercase text-[10px] tracking-widest text-neutral-500 pt-0.5">${k}</dt><dd class="font-sans text-sm md:text-base text-neutral-800 leading-relaxed">${linhas(v)}</dd></div>` : '';
     box.innerHTML = `
       <div class="border border-black/15 bg-white p-6 md:p-8">
         <span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500">De acordo</span>
         <h2 class="font-serif text-3xl md:text-4xl leading-tight mt-2">Tudo certo, ${esc(first(p.aceito_nome || p.cliente_nome))}.</h2>
-        <p class="font-sans text-sm md:text-base text-neutral-600 leading-relaxed mt-3">Você deu o seu de acordo${p.aceito_em ? ' em ' + data(p.aceito_em) : ''}. Em breve a gente te envia o link de pagamento, e a sua prancha entra na fila do shaper.</p>
-        ${(p.escolha_quilhas || p.escolha_cores) ? `<dl class="mt-5">${spec('Suas quilhas', p.escolha_quilhas)}${spec('Suas cores', p.escolha_cores)}</dl>` : ''}
+        <p class="font-sans text-sm md:text-base text-neutral-600 leading-relaxed mt-3">Você deu o seu de acordo${p.aceito_em ? ' em ' + data(p.aceito_em) : ''}. Em breve a gente te envia o link de pagamento, e ${n > 1 ? 'as suas pranchas entram' : 'a sua prancha entra'} na fila do shaper.</p>
+        ${(p.escolha_quilhas || p.escolha_cores) ? `<dl class="mt-5">${item('Suas quilhas', p.escolha_quilhas)}${item('Suas cores', p.escolha_cores)}</dl>` : ''}
       </div>`;
     return;
   }
+  const escolhe = p.escolhe_cores || p.escolhe_quilhas;
   box.innerHTML = `
     <form id="aceiteForm" class="border border-black/15 bg-white p-6 md:p-8" novalidate>
       <span class="font-sans uppercase text-[10px] tracking-[0.2em] text-neutral-500">De acordo</span>
       <h2 class="font-serif text-3xl md:text-4xl leading-tight mt-2">Está tudo como você quer?</h2>
       <p class="font-sans text-sm text-neutral-600 leading-relaxed mt-3">Se quiser mudar alguma coisa, é só responder a mensagem em que recebeu este link. Se estiver tudo certo, confirme abaixo.</p>
-      ${p.escolhe_quilhas ? `
-      <fieldset class="mt-7">
-        <legend class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Quilhas: escolha a sua *</legend>
-        <div class="grid md:grid-cols-2 gap-3 mt-3">
-          ${QUILHAS.map((q, i) => `
-          <label class="quilha-op block border border-black/15 p-4 cursor-pointer hover:border-black has-[:checked]:border-black has-[:checked]:bg-[#f3f1ed]">
-            <span class="flex items-start gap-3">
-              <input type="radio" name="quilhas" value="${esc(q.v)}" ${q.rec ? 'checked' : ''} class="mt-1 accent-black"/>
-              <span><span class="flex flex-wrap items-center gap-2 font-sans text-sm font-medium text-black">${esc(q.t)}${q.rec ? '<span class="font-sans text-[9px] uppercase tracking-widest bg-black text-white px-2 py-0.5">Recomendado</span>' : ''}</span>
-              <span class="block font-sans text-xs text-neutral-600 leading-relaxed mt-1">${esc(q.d)}</span></span>
-            </span>
-          </label>`).join('')}
-        </div>
-      </fieldset>
-      <fieldset id="sistemaBox" class="mt-7">
-        <legend class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Sistema das quilhas: FCS II ou Futures? *</legend>
-        <p class="font-sans text-xs text-neutral-600 leading-relaxed mt-2">É o tipo de caixa onde as quilhas encaixam. Quilha de um sistema não serve no outro: se você já tem quilhas, escolha o sistema delas.</p>
-        <div class="grid md:grid-cols-3 gap-3 mt-3">
-          ${SISTEMAS.map(q => `
-          <label class="block border border-black/15 p-4 cursor-pointer hover:border-black has-[:checked]:border-black has-[:checked]:bg-[#f3f1ed]">
-            <span class="flex items-start gap-3">
-              <input type="radio" name="sistema" value="${esc(q.v)}" class="mt-1 accent-black"/>
-              <span><span class="block font-sans text-sm font-medium text-black">${esc(q.t)}</span>
-              <span class="block font-sans text-xs text-neutral-600 leading-relaxed mt-1">${esc(q.d)}</span></span>
-            </span>
-          </label>`).join('')}
-        </div>
-      </fieldset>` : ''}
-      ${p.escolhe_cores ? `
-      <label class="block mt-7">
-        <span class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Cores: como você quer a sua?</span>
-        <textarea name="cores" rows="3" class="w-full border border-black/20 focus:border-black bg-transparent p-3 mt-2 text-sm focus:outline-none resize-none" placeholder="Ex.: amarela com raios pretos, igual à da foto. Ou toda branca. Ou azul-clara com as bordas brancas."></textarea>
-        <span class="block font-sans text-[11px] text-neutral-500 mt-1">Se ainda não decidiu, pode deixar em branco e combinar com o César depois.</span>
-      </label>` : ''}
-      <label class="block mt-6">
+      ${escolhe ? its.map((it, i) => escolhas(p, it, i, n)).join('') : ''}
+      <label class="block mt-8">
         <span class="font-sans text-[10px] uppercase tracking-widest text-neutral-500">Seu nome</span>
         <input name="nome" value="${esc(p.cliente_nome)}" autocomplete="name" class="w-full border-b border-black/30 focus:border-black bg-transparent py-2 text-base focus:outline-none"/>
       </label>
       <label class="flex gap-3 items-start mt-5 cursor-pointer">
         <input type="checkbox" name="ok" class="mt-1 w-4 h-4 accent-black"/>
-        <span class="font-sans text-sm text-neutral-700 leading-relaxed">Li a proposta e estou de acordo com o modelo, as especificações${(p.escolhe_cores || p.escolhe_quilhas) ? ', as minhas escolhas acima' : ''} e o valor de ${brl(p.preco_final)}.</span>
+        <span class="font-sans text-sm text-neutral-700 leading-relaxed">Li a proposta e estou de acordo com ${n > 1 ? 'os modelos' : 'o modelo'}, as especificações${escolhe ? ', as minhas escolhas acima' : ''} e o valor de ${brl(p.preco_final)}.</span>
       </label>
       <button type="submit" class="mt-6 w-full md:w-auto bg-black text-white px-10 py-4 font-sans uppercase tracking-widest text-[10px] hover:opacity-80 transition-opacity">Estou de acordo</button>
       <p id="aceiteMsg" class="font-sans text-xs mt-3 min-h-[1em]"></p>
     </form>`;
-  const sisBox = document.getElementById('sistemaBox');
-  if (sisBox) {
-    // Single fin usa caixa central própria: a pergunta do sistema só vale com laterais.
-    const syncSis = () => { const q = (document.querySelector('#aceiteForm input[name=quilhas]:checked') || {}).value; sisBox.hidden = q === 'Single fin'; };
-    document.querySelectorAll('#aceiteForm input[name=quilhas]').forEach(r => r.addEventListener('change', syncSis));
-    syncSis();
-  }
-  document.getElementById('aceiteForm').addEventListener('submit', async function (e) {
+  const form = document.getElementById('aceiteForm');
+  const marcado = (name) => (form.querySelector('input[name="' + name + '"]:checked') || {}).value || '';
+  // Single fin usa caixa central própria: a pergunta do sistema só vale com laterais.
+  form.querySelectorAll('[data-escolha]').forEach(bl => {
+    const i = bl.dataset.escolha, sis = bl.querySelector('[data-sistema]'); if (!sis) return;
+    const sync = () => { sis.hidden = marcado('quilhas' + i) === 'Single fin'; };
+    bl.querySelectorAll('input[name="quilhas' + i + '"]').forEach(r => r.addEventListener('change', sync));
+    sync();
+  });
+  form.addEventListener('submit', async function (e) {
     e.preventDefault();
     const f = e.target, msg = document.getElementById('aceiteMsg'), btn = f.querySelector('button');
+    const erro = (t) => { msg.style.color = '#b00020'; msg.textContent = t; };
     const nome = f.nome.value.trim();
-    if (!nome) { msg.style.color = '#b00020'; msg.textContent = 'Escreva o seu nome.'; return; }
-    const quilha = p.escolhe_quilhas ? ((f.querySelector('input[name=quilhas]:checked') || {}).value || '') : '';
-    const sistema = (f.querySelector('input[name=sistema]:checked') || {}).value || '';
-    const precisaSistema = p.escolhe_quilhas && quilha !== 'Single fin';
-    const cores = p.escolhe_cores && f.cores ? f.cores.value.trim() : '';
-    if (p.escolhe_quilhas && !quilha) { msg.style.color = '#b00020'; msg.textContent = 'Escolha as quilhas (se preferir, marque a sugestão do César).'; return; }
-    if (precisaSistema && !sistema) { msg.style.color = '#b00020'; msg.textContent = 'Escolha o sistema das quilhas: FCS II, Futures ou tanto faz.'; return; }
-    const quilhas = quilha && precisaSistema ? quilha + ' · ' + (sistema === 'Tanto faz' ? 'sistema: César escolhe' : sistema) : quilha;
-    if (!f.ok.checked) { msg.style.color = '#b00020'; msg.textContent = 'Marque a caixa confirmando que está de acordo.'; return; }
+    if (!nome) return erro('Escreva o seu nome.');
+    const pre = (i) => n > 1 ? 'Prancha ' + (i + 1) + ': ' : '';
+    const qs = [], cs = [];
+    for (let i = 0; i < n; i++) {
+      const qual = n > 1 ? ' da prancha ' + (i + 1) : '';
+      if (p.escolhe_quilhas) {
+        const quilha = marcado('quilhas' + i), sistema = marcado('sistema' + i);
+        if (!quilha) return erro('Escolha as quilhas' + qual + ' (se preferir, marque a sugestão do César).');
+        const precisa = quilha !== 'Single fin';
+        if (precisa && !sistema) return erro('Escolha o sistema das quilhas' + qual + ': FCS II, Futures ou tanto faz.');
+        qs.push(pre(i) + (precisa ? quilha + ' · ' + (sistema === 'Tanto faz' ? 'sistema: César escolhe' : sistema) : quilha));
+      }
+      if (p.escolhe_cores) { const c = (f['cores' + i].value || '').trim(); if (c) cs.push(pre(i) + c.replace(/\s*\n+\s*/g, ' ')); }
+    }
+    if (!f.ok.checked) return erro('Marque a caixa confirmando que está de acordo.');
+    const quilhas = qs.join(' | '), cores = cs.join(' | ');
     btn.disabled = true; btn.textContent = 'Enviando...'; msg.textContent = '';
     try {
       const r = await fetch('/api/proposta', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ t: p.id, nome: nome, cores: cores, quilhas: quilhas }) });
@@ -239,7 +284,7 @@ function renderAceite(p) {
       document.getElementById('aceite').scrollIntoView({ behavior: 'smooth', block: 'center' });
     } catch (err) {
       btn.disabled = false; btn.textContent = 'Estou de acordo';
-      msg.style.color = '#b00020'; msg.textContent = 'Não conseguimos registrar agora. Tente de novo em instantes.';
+      erro('Não conseguimos registrar agora. Tente de novo em instantes.');
     }
   });
 }

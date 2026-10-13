@@ -20,8 +20,8 @@ module.exports = async (req, res) => {
     body = body || {};
     const t = String(body.t || '').trim();
     const nome = String(body.nome || '').trim().slice(0, 120);
-    const cores = String(body.cores || '').trim().slice(0, 500);
-    const quilhas = String(body.quilhas || '').trim().slice(0, 120);
+    const cores = String(body.cores || '').trim().slice(0, 1500);
+    const quilhas = String(body.quilhas || '').trim().slice(0, 400);
     if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(t)) { res.status(400).json({ ok: false, error: 'token_invalido' }); return; }
     if (!nome) { res.status(400).json({ ok: false, error: 'nome_obrigatorio' }); return; }
 
@@ -40,6 +40,7 @@ module.exports = async (req, res) => {
     if (KEY) {
       const TO = (process.env.LEAD_TO || 'lucas.carmo@flowcode.cc, baltazarferro4@gmail.com').split(',').map((x) => x.trim()).filter(Boolean);
       const FROM = process.env.LEAD_FROM || 'Baltazar Customs <pedidos@baltazarcustomssurfboards.com>';
+      const itens = Array.isArray(p.itens) ? p.itens : [];
       const quando = new Date(p.aceito_em || Date.now()).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'short' }) + ' (Rio)';
       const row = (k, v) => v ? `<tr><td style="padding:5px 14px 5px 0;color:#777;font:13px sans-serif;vertical-align:top;white-space:nowrap">${k}</td><td style="padding:5px 0;font:13px sans-serif;color:#111"><strong>${esc(v)}</strong></td></tr>` : '';
       const html = `
@@ -52,7 +53,9 @@ module.exports = async (req, res) => {
             ${row('Modelo', p.modelo)}${row('Tamanho', p.tamanho)}${row('Medidas', p.medidas)}
             ${row(p.escolhe_cores ? 'Cores (escolha do cliente)' : 'Pintura', p.escolhe_cores ? (p.escolha_cores || 'não informou') : p.pintura)}
             ${row(p.escolhe_quilhas ? 'Quilhas (escolha do cliente)' : 'Quilhas', p.escolhe_quilhas ? (p.escolha_quilhas || 'não informou') : p.quilhas)}
+            ${itens.map((it, i) => row('Prancha ' + (i + 1), [it.modelo, it.tamanho, it.medidas].filter(Boolean).join(' · '))).join('')}
             ${row('Valor de tabela', brl(p.preco_tabela))}${row('Desconto', p.desconto_pct ? p.desconto_pct + '%' + (p.cupom ? ' (' + p.cupom + ')' : '') : '')}
+            ${row('Frete', p.frete ? brl(p.frete) + (p.frete_desc ? ' · ' + p.frete_desc : '') : '')}
             ${row('Valor final', brl(p.preco_final))}
           </table>
           <p style="margin:20px 0 0;font:13px sans-serif"><a href="${SITE}/proposta?t=${p.id}">Ver a proposta</a></p>
@@ -64,6 +67,8 @@ module.exports = async (req, res) => {
         '', 'Contato: ' + (p.cliente_contato || ''), 'Modelo: ' + p.modelo, 'Tamanho: ' + (p.tamanho || ''),
         p.escolhe_cores ? 'Cores escolhidas: ' + (p.escolha_cores || 'não informou') : '',
         p.escolhe_quilhas ? 'Quilhas escolhidas: ' + (p.escolha_quilhas || 'não informou') : '',
+        ...itens.map((it, i) => 'Prancha ' + (i + 1) + ': ' + [it.modelo, it.tamanho, it.medidas].filter(Boolean).join(' · ')),
+        p.frete ? 'Frete: ' + brl(p.frete) : '',
         'Valor final: ' + brl(p.preco_final), '', SITE + '/proposta?t=' + p.id,
       ].join('\n');
       await fetch('https://api.resend.com/emails', {

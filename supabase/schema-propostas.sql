@@ -67,6 +67,13 @@ alter table public.proposals add column if not exists escolhe_cores   boolean no
 alter table public.proposals add column if not exists escolhe_quilhas boolean not null default false;
 alter table public.proposals add column if not exists escolha_cores   text;
 alter table public.proposals add column if not exists escolha_quilhas text;
+-- Mais de uma prancha na mesma proposta: cada uma em itens (modelo, imagem,
+-- detalhes, tamanho, medidas, pintura, quilhas, observacoes, preco_tabela e as
+-- pré-escolhas pre_quilha/pre_sistema/pre_cores). Vazio = proposta de uma prancha.
+alter table public.proposals add column if not exists itens jsonb not null default '[]'::jsonb;
+-- Frete (já somado no preco_final) e a descrição dele pro cliente.
+alter table public.proposals add column if not exists frete integer;
+alter table public.proposals add column if not exists frete_desc text;
 
 alter table public.proposals enable row level security;
 
@@ -95,8 +102,8 @@ returns setof public.proposals language sql security definer set search_path = p
      set status = 'aceita',
          aceito_em = coalesce(aceito_em, now()),
          aceito_nome = coalesce(aceito_nome, left(nullif(trim(nome), ''), 120)),
-         escolha_cores = case when escolhe_cores then coalesce(escolha_cores, left(nullif(trim(cores), ''), 500)) else escolha_cores end,
-         escolha_quilhas = case when escolhe_quilhas then coalesce(escolha_quilhas, left(nullif(trim(quilhas), ''), 120)) else escolha_quilhas end
+         escolha_cores = case when escolhe_cores then coalesce(escolha_cores, left(nullif(trim(cores), ''), 1500)) else escolha_cores end,
+         escolha_quilhas = case when escolhe_quilhas then coalesce(escolha_quilhas, left(nullif(trim(quilhas), ''), 400)) else escolha_quilhas end
    where id = t and status in ('enviada','aceita')
   returning *;
 $$;

@@ -285,7 +285,8 @@ const TABELA = [            // até (polegadas) -> preço
   { ate: 999, preco: 3600, faixa: "8'6\" – 9'6\"" },
 ];
 function polegadas(t) {
-  const m = String(t || '').match(/(\d{1,2})\s*['′’]\s*(\d{1,2})?/);
+  const m = String(t || '').match(/(\d{1,2})\s*['′’]\s*(\d{1,2})?/)
+    || String(t || '').trim().match(/^([4-9]|10)\s*[,.]\s*(\d{1,2})\b/);   // cliente escreve 5,8 ou 5.8
   return m ? Number(m[1]) * 12 + Number(m[2] || 0) : null;
 }
 function precoPorTamanho(t) {
@@ -361,7 +362,14 @@ function openProposta(id, pedido) {
     tamanho: ref0 ? ref0.tamanho : '', medidas: ref0 ? ref0.medidas : '', pintura: ref0 ? ref0.pintura : '', quilhas: ref0 ? ref0.quilhas : '',
     observacoes: '', nota_shaper: '', prazo: '', cupom: l && l.cupom ? l.cupom : '', desconto_pct: l && l.cupom ? 10 : 0,
     preco_tabela: '', preco_final: '', status: 'enviada', escolhe_cores: false, escolhe_quilhas: false,
+    frete: '', frete_desc: '',
+    itens: l && Array.isArray(l.referencias) && l.referencias.length > 1 ? l.referencias.map(r => ({
+      modelo: r.modelo || '', imagem: r.imagem || '', detalhes: r.detalhes || '', tamanho: r.tamanho || '', medidas: r.medidas || '',
+      pintura: r.pintura || '', quilhas: r.quilhas || '', observacoes: r.obs || '' })) : [],
   };
+  // Cada prancha da proposta. Uma só = campos da própria proposta.
+  propItens = (Array.isArray(v.itens) && v.itens.length ? v.itens : [{ modelo: v.modelo, imagem: v.imagem, detalhes: v.detalhes,
+    tamanho: v.tamanho, medidas: v.medidas, pintura: v.pintura, quilhas: v.quilhas, preco_tabela: v.preco_tabela }]).map(x => Object.assign({}, x));
   const campo = (name, label, val, opts) => {
     opts = opts || {};
     const input = opts.area
@@ -398,11 +406,7 @@ function openProposta(id, pedido) {
           ${pedidoInfo}
           ${campo('cliente_nome', 'Cliente *', v.cliente_nome)}
           ${campo('cliente_contato', 'Contato (WhatsApp ou email)', v.cliente_contato)}
-          ${campo('modelo', 'Modelo *', v.modelo, { wide: true, ph: "ex: Funboard 8'6\"" })}
-          ${campo('tamanho', 'Tamanho *', v.tamanho, { ph: "ex: 8'6\"", hint: 'O preço de tabela sai daqui.' })}
-          ${campo('medidas', 'Medidas / litragem', v.medidas)}
-          ${campo('pintura', 'Pintura / arte', v.pintura)}
-          ${campo('quilhas', 'Quilhas', v.quilhas)}
+          <div id="propItens" class="md:col-span-2"></div>
           <div class="md:col-span-2 flex flex-wrap gap-x-6 gap-y-2 bg-neutral-50 border border-black/10 p-3">
             <span class="text-[10px] uppercase tracking-widest text-neutral-500 basis-full">Na página, o cliente escolhe:</span>
             <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="escolhe_quilhas" ${v.escolhe_quilhas ? 'checked' : ''} class="w-4 h-4 accent-black"/> Quilhas (com a explicação de cada uma)</label>
@@ -411,23 +415,13 @@ function openProposta(id, pedido) {
           ${campo('observacoes', 'Observações pro cliente', v.observacoes, { area: true, wide: true })}
           ${campo('nota_shaper', 'Palavra do shaper (aparece em destaque)', v.nota_shaper, { area: true, rows: 3, wide: true })}
           ${campo('prazo', 'Prazo (opcional)', v.prazo, { ph: 'ex: 30 dias após o pagamento' })}
-          <div class="md:col-span-2">
-            <div class="flex gap-3 items-end">
-              <div id="propFotoPrev" class="w-16 h-20 bg-neutral-100 shrink-0 bg-cover bg-center" style="${v.imagem ? `background-image:url('${esc(boardImg(v.imagem))}')` : ''}"></div>
-              <div class="flex-1">${campo('imagem', 'Foto da prancha (opcional)', v.imagem, { ph: 'escolha da coleção ou deixe vazio', hint: 'Vazio mostra o tigre da marca.' })}</div>
-              <button type="button" onclick="toggleFotoPicker()" class="border border-black px-3 py-2.5 text-[10px] uppercase tracking-widest shrink-0">Escolher da coleção</button>
-            </div>
-            <div id="fotoPicker" class="hidden mt-3 border border-black/10 p-3">
-              <input id="fotoBusca" placeholder="Filtrar por tamanho ou modelo (ex: 8'6, fun board)" class="w-full border border-black/20 px-3 py-2 text-sm mb-3"/>
-              <div id="fotoGrid" class="grid grid-cols-4 md:grid-cols-6 gap-2 max-h-80 overflow-y-auto"></div>
-            </div>
-          </div>
-          ${campo('detalhes', 'Detalhe abaixo do modelo (opcional)', v.detalhes, { wide: true })}
           <div class="md:col-span-2 border-t border-black/10 pt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
             ${campo('preco_tabela', 'Tabela (R$) *', v.preco_tabela, { type: 'number' })}
             ${campo('cupom', 'Cupom', v.cupom)}
             ${campo('desconto_pct', 'Desconto %', v.desconto_pct, { type: 'number' })}
+            ${campo('frete', 'Frete (R$)', v.frete, { type: 'number', hint: 'Somado no final.' })}
             ${campo('preco_final', 'Final (R$) *', v.preco_final, { type: 'number' })}
+            <div class="col-span-2 md:col-span-4">${campo('frete_desc', 'Sobre o frete (aparece pro cliente)', v.frete_desc, { ph: 'ex: Entrega em São Paulo, porta a porta. Valor estimado.' })}</div>
             <p id="precoInfo" class="col-span-2 md:col-span-4 text-[11px] text-neutral-500 -mt-2"></p>
           </div>
           <label class="block"><span class="text-[10px] uppercase tracking-widest text-neutral-500">Status</span>
@@ -445,52 +439,101 @@ function openProposta(id, pedido) {
     </div>`;
   document.addEventListener('keydown', escClose);
   const f = document.getElementById('propForm');
-  // preço automático: tamanho -> tabela; cupom/desconto -> final (dá pra editar à mão)
+  // preço automático: tamanho de cada prancha -> tabela (soma); cupom/desconto/frete -> final (dá pra editar à mão)
   const recalc = (origem) => {
     const info = document.getElementById('precoInfo');
-    if (origem === 'tamanho' || (!f.preco_tabela.value && f.tamanho.value)) {
-      const t = precoPorTamanho(f.tamanho.value);
-      if (t) { f.preco_tabela.value = t.preco; info.textContent = 'Tabela: faixa ' + t.faixa + ' = ' + brl(t.preco) + '.'; }
-      else info.textContent = 'Não entendi o tamanho; preencha o valor de tabela à mão.';
+    if (origem === 'tamanho' || (!f.preco_tabela.value && propItens.some(x => x.tamanho))) {
+      const ts = propItens.map(x => precoPorTamanho(x.tamanho || ''));
+      if (ts.every(Boolean)) {
+        ts.forEach((t, i) => { propItens[i].preco_tabela = t.preco; });
+        f.preco_tabela.value = ts.reduce((a, t) => a + t.preco, 0);
+        info.textContent = ts.map((t, i) => (ts.length > 1 ? 'Prancha ' + (i + 1) + ': ' : 'Tabela: ') + 'faixa ' + t.faixa + ' = ' + brl(t.preco)).join(' · ') + '.';
+      } else info.textContent = 'Não entendi algum tamanho; preencha o valor de tabela à mão.';
     }
     if (origem !== 'final') {
-      const base = Number(f.preco_tabela.value || 0), d = Number(f.desconto_pct.value || 0);
-      if (base) f.preco_final.value = Math.round(base * (100 - d) / 100);
+      const base = Number(f.preco_tabela.value || 0), d = Number(f.desconto_pct.value || 0), fr = Number(f.frete.value || 0);
+      if (base) f.preco_final.value = Math.round(base * (100 - d) / 100) + fr;
     }
   };
-  f.tamanho.addEventListener('input', () => recalc('tamanho'));
+  propRecalc = recalc;
+  drawItens();
   f.preco_tabela.addEventListener('input', () => recalc('tabela'));
   f.desconto_pct.addEventListener('input', () => recalc('desconto'));
+  f.frete.addEventListener('input', () => recalc('frete'));
   f.preco_final.addEventListener('input', () => recalc('final'));
   f.cupom.addEventListener('input', () => { if (f.cupom.value.trim() && !Number(f.desconto_pct.value)) { f.desconto_pct.value = 10; recalc('desconto'); } });
   if (!p) recalc();
   const generico = t => !t.trim() || /^a combinar/i.test(t.trim());
-  f.escolhe_quilhas.addEventListener('change', () => { if (f.escolhe_quilhas.checked && generico(f.quilhas.value)) f.quilhas.value = 'Thruster recomendado. Você confirma logo abaixo e escolhe FCS II ou Futures'; });
-  f.escolhe_cores.addEventListener('change', () => { if (f.escolhe_cores.checked && generico(f.pintura.value)) f.pintura.value = 'Você escolhe as cores (logo abaixo)'; });
+  const preenche = (campo, texto) => { propItens.forEach(x => { if (generico(x[campo] || '')) x[campo] = texto; }); drawItens(); };
+  f.escolhe_quilhas.addEventListener('change', () => { if (f.escolhe_quilhas.checked) preenche('quilhas', 'Thruster recomendado. Você confirma logo abaixo e escolhe FCS II ou Futures'); });
+  f.escolhe_cores.addEventListener('change', () => { if (f.escolhe_cores.checked) preenche('pintura', 'Você escolhe as cores (logo abaixo)'); });
   f.addEventListener('submit', (e) => saveProposta(e, p));
 }
 
-function toggleFotoPicker() {
-  const box = document.getElementById('fotoPicker'); if (!box) return;
+let propItens = [], propRecalc = () => {};
+const ITEM_CAMPOS = [
+  ['modelo', 'Modelo *', { wide: true, ph: "ex: Funboard 8'6\"" }],
+  ['tamanho', 'Tamanho *', { ph: "ex: 8'6\"", hint: 'O preço de tabela sai daqui.' }],
+  ['medidas', 'Medidas / litragem', {}],
+  ['pintura', 'Pintura / arte', {}],
+  ['quilhas', 'Quilhas', {}],
+  ['detalhes', 'Detalhe abaixo do modelo (opcional)', { wide: true }],
+];
+function drawItens() {
+  const box = document.getElementById('propItens'); if (!box) return;
+  const n = propItens.length;
+  const input = (i, k, label, o) => `<label class="block ${o.wide ? 'md:col-span-2' : ''}"><span class="text-[10px] uppercase tracking-widest text-neutral-500">${label}</span>
+      <input data-i="${i}" data-k="${k}" value="${esc(propItens[i][k] || '')}" ${o.ph ? `placeholder="${esc(o.ph)}"` : ''} class="w-full border border-black/20 px-3 py-2.5 mt-1 text-sm"/>${o.hint ? `<span class="block text-[11px] text-neutral-400 mt-1">${o.hint}</span>` : ''}</label>`;
+  box.innerHTML = propItens.map((it, i) => `
+    <div class="${n > 1 ? 'border border-black/10 p-3 md:p-4 mb-4' : ''} grid md:grid-cols-2 gap-4">
+      ${n > 1 ? `<div class="md:col-span-2 flex justify-between items-center"><span class="text-[10px] uppercase tracking-widest text-black">Prancha ${i + 1} de ${n}${it.preco_tabela ? ' · tabela ' + brl(it.preco_tabela) : ''}</span>
+        <button type="button" onclick="removeItem(${i})" class="text-[11px] underline text-neutral-500">Remover</button></div>` : ''}
+      ${ITEM_CAMPOS.map(([k, label, o]) => input(i, k, label, o)).join('')}
+      ${n > 1 ? input(i, 'observacoes', 'Observações desta prancha', { wide: true }) : ''}
+      <div class="md:col-span-2">
+        <div class="flex gap-3 items-end">
+          <div data-prev="${i}" class="w-16 h-20 bg-neutral-100 shrink-0 bg-cover bg-center" style="${it.imagem ? `background-image:url('${esc(boardImg(it.imagem))}')` : ''}"></div>
+          <div class="flex-1">${input(i, 'imagem', 'Foto da prancha (opcional)', { ph: 'escolha da coleção ou deixe vazio', hint: 'Vazio mostra o tigre da marca.' })}</div>
+          <button type="button" onclick="toggleFotoPicker(${i})" class="border border-black px-3 py-2.5 text-[10px] uppercase tracking-widest shrink-0">Escolher da coleção</button>
+        </div>
+        <div data-picker="${i}" class="hidden mt-3 border border-black/10 p-3">
+          <input data-busca placeholder="Filtrar por tamanho ou modelo (ex: 8'6, fun board)" class="w-full border border-black/20 px-3 py-2 text-sm mb-3"/>
+          <div data-grid class="grid grid-cols-4 md:grid-cols-6 gap-2 max-h-80 overflow-y-auto"></div>
+        </div>
+      </div>
+    </div>`).join('') + `<button type="button" onclick="addItem()" class="border border-dashed border-black/40 w-full py-2.5 text-[10px] uppercase tracking-widest hover:border-black">+ Adicionar outra prancha</button>`;
+  box.querySelectorAll('input[data-k]').forEach(el => el.addEventListener('input', () => {
+    propItens[el.dataset.i][el.dataset.k] = el.value;
+    if (el.dataset.k === 'tamanho') propRecalc('tamanho');
+    if (el.dataset.k === 'imagem') box.querySelector('[data-prev="' + el.dataset.i + '"]').style.backgroundImage = el.value ? "url('" + boardImg(el.value) + "')" : '';
+  }));
+}
+function addItem() {
+  const ult = propItens[propItens.length - 1] || {};
+  propItens.push({ modelo: '', tamanho: ult.tamanho || '', medidas: '', pintura: ult.pintura || '', quilhas: ult.quilhas || '', imagem: '', detalhes: '' });
+  drawItens(); propRecalc('tamanho');
+}
+function removeItem(i) { if (propItens.length < 2) return; propItens.splice(i, 1); drawItens(); propRecalc('tamanho'); }
+
+function toggleFotoPicker(i) {
+  const box = document.querySelector('[data-picker="' + i + '"]'); if (!box) return;
   box.classList.toggle('hidden');
   if (box.classList.contains('hidden')) return;
-  const busca = document.getElementById('fotoBusca');
+  const busca = box.querySelector('[data-busca]'), grid = box.querySelector('[data-grid]');
   const nomeCat = slug => (categories.find(c => c.slug === slug) || {}).name || slug || '';
   const desc = b => [b.line, nomeCat(b.category_slug), b.fin_setup].filter(Boolean).join(' · ');
   const draw = () => {
     const q = busca.value.trim().toLowerCase().replace(/[’′]/g, "'");
     const lista = boards.filter(b => !q || desc(b).toLowerCase().replace(/[’′]/g, "'").includes(q));
-    document.getElementById('fotoGrid').innerHTML = lista.map(b => `
+    grid.innerHTML = lista.map(b => `
       <button type="button" data-img="${esc(b.image_path)}" data-desc="${esc(desc(b))}" class="text-left group">
         <img src="${esc(boardImg(b.image_path))}" loading="lazy" class="w-full aspect-[3/4] object-cover bg-neutral-100 group-hover:opacity-80"/>
         <span class="block text-[9px] text-neutral-500 mt-1 truncate">${esc(desc(b))}</span>
       </button>`).join('') || '<p class="col-span-4 text-sm text-neutral-500">Nada com esse filtro.</p>';
-    document.querySelectorAll('#fotoGrid button').forEach(btn => btn.onclick = () => {
-      const f = document.getElementById('propForm');
-      f.imagem.value = btn.dataset.img;
-      if (!f.detalhes.value) f.detalhes.value = 'Na foto: ' + btn.dataset.desc + ', como referência.';
-      document.getElementById('propFotoPrev').style.backgroundImage = "url('" + boardImg(btn.dataset.img) + "')";
-      document.getElementById('fotoPicker').classList.add('hidden');
+    grid.querySelectorAll('button').forEach(btn => btn.onclick = () => {
+      propItens[i].imagem = btn.dataset.img;
+      if (!propItens[i].detalhes) propItens[i].detalhes = 'Na foto: ' + btn.dataset.desc + ', como referência.';
+      drawItens();
     });
   };
   busca.oninput = draw; draw(); busca.focus();
@@ -510,16 +553,26 @@ async function saveProposta(e, existing) {
   const g = n => (f[n].value || '').trim();
   const row = {
     cliente_nome: g('cliente_nome'), cliente_contato: g('cliente_contato') || null, lead_pedido: g('lead_pedido') || null,
-    modelo: g('modelo'), tamanho: g('tamanho') || null, medidas: g('medidas') || null, pintura: g('pintura') || null, quilhas: g('quilhas') || null,
     observacoes: g('observacoes') || null, nota_shaper: g('nota_shaper') || null, prazo: g('prazo') || null,
-    imagem: g('imagem'), detalhes: g('detalhes'), cupom: g('cupom') || null,
+    cupom: g('cupom') || null, frete: Number(g('frete')) || null, frete_desc: g('frete_desc') || null,
     preco_tabela: Number(g('preco_tabela')), desconto_pct: Number(g('desconto_pct') || 0), preco_final: Number(g('preco_final')),
     status: f.status.value,
     escolhe_cores: f.escolhe_cores.checked, escolhe_quilhas: f.escolhe_quilhas.checked,
   };
-  if (!row.cliente_nome || !row.modelo || !row.tamanho || !row.preco_tabela || !row.preco_final) {
-    msg.style.color = '#b00020'; msg.textContent = 'Preencha cliente, modelo, tamanho e os valores.'; return;
+  const its = propItens.map(x => {
+    const o = {}; Object.keys(x).forEach(k => { const val = typeof x[k] === 'string' ? x[k].trim() : x[k]; if (val !== '' && val != null) o[k] = val; }); return o; });
+  if (!row.cliente_nome || its.some(x => !x.modelo || !x.tamanho) || !row.preco_tabela || !row.preco_final) {
+    msg.style.color = '#b00020'; msg.textContent = 'Preencha cliente, modelo e tamanho de cada prancha e os valores.'; return;
   }
+  const it0 = its[0], multi = its.length > 1;
+  const tams = [...new Set(its.map(x => x.tamanho))];
+  Object.assign(row, {
+    itens: multi ? its : [],
+    modelo: multi ? its.length + ' pranchas: ' + its.map(x => x.modelo).join(' + ') : it0.modelo,
+    tamanho: multi ? (tams.length === 1 ? tams[0] + ' (as ' + its.length + ')' : tams.join(' + ')) : it0.tamanho,
+    imagem: it0.imagem || '', detalhes: multi ? '' : (it0.detalhes || ''),
+    medidas: multi ? null : (it0.medidas || null), pintura: multi ? null : (it0.pintura || null), quilhas: multi ? null : (it0.quilhas || null),
+  });
   const btn = f.querySelector('button[type=submit]'); btn.disabled = true; btn.textContent = 'Salvando...';
   const q = existing ? supa.from('proposals').update(row).eq('id', existing.id).select() : supa.from('proposals').insert(row).select();
   const { data, error } = await q;
