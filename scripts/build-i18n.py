@@ -211,6 +211,7 @@ EN = [
  ('>Processo<', '>Process<'),
  ('>Glossário<', '>Glossary<'),
  ('&copy; 2026 BALTAZAR CUSTOMS. FEITO À MÃO NO RIO.', '&copy; 2026 BALTAZAR CUSTOMS. HANDMADE IN RIO.'),
+ ('· Site feito por <a href="https://flowcode.cc"', '· Website by <a href="https://flowcode.cc"'),
  # board modal / chat header
  ('Shaper Baltazar', 'Shaper Baltazar'),
  ('Monte sua prancha', 'Build your board'),
@@ -457,6 +458,7 @@ ES = [
  ('>Processo<', '>Proceso<'),
  ('>Glossário<', '>Glosario<'),
  ('&copy; 2026 BALTAZAR CUSTOMS. FEITO À MÃO NO RIO.', '&copy; 2026 BALTAZAR CUSTOMS. HECHO A MANO EN RÍO.'),
+ ('· Site feito por <a href="https://flowcode.cc"', '· Sitio web hecho por <a href="https://flowcode.cc"'),
  ('Shaper Baltazar', 'Shaper Baltazar'),
  ('Monte sua prancha', 'Arma tu tabla'),
  ('Fala! Sou o assistente do shaper. Que tipo de prancha tem a sua cara?',
