@@ -3,12 +3,13 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>O Espaço do Shaper · Revista Baltazar Customs</title>
-<!-- PROTÓTIPO: fora do sitemap e sem indexação até o conteúdo final ser aprovado -->
-<meta name="robots" content="noindex, follow"/>
+<link rel="canonical" href="https://www.baltazarcustomssurfboards.com/oficina"/>
 <meta name="description" content="Folheie a revista do ateliê Baltazar Customs: o galpão no Recreio, as ferramentas, a Carbon Trash e as pranchas que nascem ali, uma de cada vez."/>
 <meta property="og:title" content="O Espaço do Shaper · Revista Baltazar Customs"/>
 <meta property="og:description" content="Onde nasce uma prancha que não se repete. Folheie a edição nº 01."/>
-<meta property="og:image" content="https://www.baltazarcustomssurfboards.com/images/og-cover.jpg"/>
+<meta property="og:image" content="https://www.baltazarcustomssurfboards.com/images/oficina/sala-de-shape.jpg"/>
+<meta property="og:type" content="article"/>
+<meta property="og:url" content="https://www.baltazarcustomssurfboards.com/oficina"/>
 <link rel="icon" type="image/png" href="/images/favicon.png"/>
 <meta name="theme-color" content="#e9e7e2"/>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300..700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
@@ -40,11 +41,11 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
 .swipe span { color: #fff; font-size: 10px; letter-spacing: .24em; text-transform: uppercase; text-shadow: 0 1px 8px rgba(0,0,0,.6); }
 @keyframes hand { 0% { transform: translateX(34px); opacity: 0; } 20% { opacity: 1; } 70% { transform: translateX(-34px); opacity: 1; } 100% { transform: translateX(-34px); opacity: 0; } }
 .swipe.off { opacity: 0; }
-/* celular: setinhas discretas nas bordas mostram que dá pra ir e voltar */
-.edge { position: fixed; top: 50%; transform: translateY(-50%); z-index: 4; pointer-events: none; display: none; width: 30px; height: 30px; align-items: center; justify-content: center;
-  color: #fff; background: rgba(26,28,28,.45); font-size: 20px; line-height: 1; transition: opacity .3s; }
-.edge.prev { left: calc(8px + env(safe-area-inset-left, 0px)); }
-.edge.next { right: calc(8px + env(safe-area-inset-right, 0px)); }
+/* celular: abinhas coladas na borda mostram que dá pra ir e voltar, sem cobrir o texto */
+.edge { position: fixed; top: 50%; transform: translateY(-50%); z-index: 4; pointer-events: none; display: none; width: 18px; height: 52px; align-items: center; justify-content: center;
+  color: #fff; background: rgba(26,28,28,.32); font-size: 17px; line-height: 1; transition: opacity .3s; }
+.edge.prev { left: env(safe-area-inset-left, 0px); }
+.edge.next { right: env(safe-area-inset-right, 0px); }
 .toque .edge { display: flex; }
 .edge.off { opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .curl, .swipe svg { animation: none; } .stf__parent { transition: none; } }
@@ -53,6 +54,7 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
 .page { background: var(--paper); overflow: hidden; container-type: size; }
 /* 1 unidade = 1% da largura, mas encolhe se a página for mais baixa que 3:4 */
 .page * { --u: min(1cqw, 0.75cqh); }
+
 .page-in { position: absolute; inset: 0; padding: calc(9 * var(--u)) calc(8 * var(--u)); display: flex; flex-direction: column; }
 .page .folio { position: absolute; bottom: calc(4.5 * var(--u)); left: calc(8 * var(--u)); right: calc(8 * var(--u)); display: flex; justify-content: space-between; font-size: calc(2.3 * var(--u)); letter-spacing: .2em; text-transform: uppercase; color: var(--mute); }
 .page.even-shadow::after, .page.odd-shadow::after { content: ''; position: absolute; top: 0; bottom: 0; width: 12%; pointer-events: none; }
@@ -123,6 +125,24 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
 .steps li::before { content: '0' counter(s); font-family: 'Newsreader', serif; font-size: calc(5 * var(--u)); line-height: 1; }
 .cta { margin-top: auto; display: inline-block; background: var(--ink); color: #fff; text-decoration: none; padding: calc(3.6 * var(--u)) calc(6 * var(--u)); font-size: calc(2.6 * var(--u)); letter-spacing: .24em; text-transform: uppercase; align-self: flex-start; }
 
+/* página alta (celular em pé): letra maior, conteúdo no meio da página e
+   tamanhos mínimos de leitura */
+@container (max-aspect-ratio: 7/10) {
+  .page * { --u: min(1.2cqw, 0.75cqh); }
+  .page-in { justify-content: center; padding-left: calc(8.5 * var(--u)); padding-right: calc(8.5 * var(--u)); }
+  .page p { font-size: max(15px, calc(3.6 * var(--u))); }
+  .page p.lede { font-size: max(18px, calc(5.2 * var(--u))); }
+  .tools span, .steps li { font-size: max(14px, calc(3.4 * var(--u))); }
+  .page .eyebrow, .page .folio, .quote cite { font-size: max(10px, calc(2.4 * var(--u))); }
+  .page .caption, .grid4-cap { font-size: max(13px, calc(3.1 * var(--u))); }
+  .toc li span:last-child { font-size: max(19px, calc(5.4 * var(--u))); }
+  .tools { gap: calc(3.6 * var(--u)); margin-top: calc(4 * var(--u)); }
+  .page .tools b { font-size: calc(5.2 * var(--u)); }
+  .page .tools span { font-size: max(13.5px, calc(3.3 * var(--u))); line-height: 1.4; }
+  .tools div { grid-template-columns: 1fr; gap: calc(1 * var(--u)); }
+  .grid4, .stack2 { bottom: calc(27 * var(--u)); }
+  .grid4-cap { bottom: calc(10 * var(--u)); }
+}
 </style>
 </head>
 <body>
