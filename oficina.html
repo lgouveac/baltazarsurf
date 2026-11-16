@@ -21,7 +21,7 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
 .label { font-size: 10px; text-transform: uppercase; letter-spacing: .22em; }
 
 /* revista em tela cheia: sem botões; a página ocupa a tela toda */
-.stage { position: fixed; inset: 0; padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px); }
+.stage { position: fixed; inset: 0; touch-action: none; -webkit-user-select: none; user-select: none; padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px); }
 .book-wrap { width: 100%; height: 100%; }
 .book { width: 100%; height: 100%; }
 /* fechada (capa/contracapa) a revista fica no centro; aberta, ocupa a tela */
@@ -40,6 +40,13 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
 .swipe span { color: #fff; font-size: 10px; letter-spacing: .24em; text-transform: uppercase; text-shadow: 0 1px 8px rgba(0,0,0,.6); }
 @keyframes hand { 0% { transform: translateX(34px); opacity: 0; } 20% { opacity: 1; } 70% { transform: translateX(-34px); opacity: 1; } 100% { transform: translateX(-34px); opacity: 0; } }
 .swipe.off { opacity: 0; }
+/* celular: setinhas discretas nas bordas mostram que dá pra ir e voltar */
+.edge { position: fixed; top: 50%; transform: translateY(-50%); z-index: 4; pointer-events: none; display: none; width: 30px; height: 30px; align-items: center; justify-content: center;
+  color: #fff; background: rgba(26,28,28,.45); font-size: 20px; line-height: 1; transition: opacity .3s; }
+.edge.prev { left: calc(8px + env(safe-area-inset-left, 0px)); }
+.edge.next { right: calc(8px + env(safe-area-inset-right, 0px)); }
+.toque .edge { display: flex; }
+.edge.off { opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .curl, .swipe svg { animation: none; } .stf__parent { transition: none; } }
 
 /* páginas: tudo em cqw pra escalar junto com o tamanho da página */
@@ -272,6 +279,8 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
 </main>
 
 <div id="curl" class="curl" aria-hidden="true"></div>
+<div id="edgePrev" class="edge prev off" aria-hidden="true">&#8249;</div>
+<div id="edgeNext" class="edge next" aria-hidden="true">&#8250;</div>
 <div id="swipe" class="swipe" aria-hidden="true">
   <svg viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 26V10a3 3 0 0 1 6 0v12"/><path d="M24 21v-3a3 3 0 0 1 6 0v5"/><path d="M30 21a3 3 0 0 1 6 0v8c0 8-5 13-12 13h-1c-5 0-8-3-11-7l-5-7a3 3 0 0 1 4.6-3.8L18 30"/></svg>
   <span>Arraste para virar</span>
@@ -288,11 +297,16 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
   // no computador, as duas páginas abertas ocupam a tela toda.
   const vw = window.innerWidth, vh = window.innerHeight;
   const umaPagina = vw < 768 || vw < vh;
+  // tela de toque: a gente cuida dos gestos (swipe em qualquer velocidade e toque nas bordas)
+  const toque = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+  document.body.classList.toggle('toque', toque);
+  if (toque) document.querySelector('#swipe span').textContent = 'Deslize ou toque nas bordas';
   const flip = new St.PageFlip(el, {
     width: Math.round(umaPagina ? vw : vw / 2), height: Math.round(vh),
     size: 'stretch', minWidth: 200, maxWidth: 4000, minHeight: 200, maxHeight: 4000,
     showCover: true, usePortrait: umaPagina, autoSize: true,
-    maxShadowOpacity: 0.4, mobileScrollSupport: false, flippingTime: 750, swipeDistance: 20,
+    maxShadowOpacity: 0.4, mobileScrollSupport: false, flippingTime: 650, swipeDistance: 20,
+    useMouseEvents: !toque,
   });
   flip.loadFromHTML(pages);
   // girar o celular ou redimensionar muito a janela: refaz no novo formato
@@ -325,7 +339,10 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
     const deitada = flip.getOrientation() === 'landscape';
     document.body.classList.toggle('closed-front', deitada && i === 0);
     document.body.classList.toggle('closed-back', deitada && i >= total - 1);
-    curl.classList.toggle('off', i >= total - (deitada ? 2 : 1));
+    const fim = i >= total - (deitada ? 2 : 1);
+    curl.classList.toggle('off', fim);
+    document.getElementById('edgePrev').classList.toggle('off', i === 0);
+    document.getElementById('edgeNext').classList.toggle('off', fim);
   }
   flip.on('flip', () => { swipe.classList.add('off'); sync(); });
   flip.on('changeOrientation', sync); flip.on('init', sync);
@@ -336,11 +353,34 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
   });
   // sumário clicável
   el.querySelectorAll('[data-go]').forEach(li => li.addEventListener('click', (e) => { e.stopPropagation(); flip.flip(Number(li.dataset.go)); }));
-  // no computador, um clique na página também vira (sem precisar achar o canto)
-  el.addEventListener('click', (e) => {
-    if (e.target.closest('a, [data-go]') || flip.getState && flip.getState() !== 'read') return;
-    const r = el.getBoundingClientRect(); (e.clientX - r.left > r.width / 2) ? flip.flipNext() : flip.flipPrev();
-  });
+  // vira pra frente/trás; se ainda estiver virando, guarda o pedido e vira logo depois
+  let virando = false, pendente = 0;
+  flip.on('changeState', (e) => { virando = e.data !== 'read'; if (!virando && pendente) { const d = pendente; pendente = 0; vira(d); } });
+  function vira(d) { if (virando) { pendente = d; return; } d > 0 ? flip.flipNext('bottom') : flip.flipPrev('bottom'); }
+
+  if (!toque) {
+    // computador: um clique na página também vira (sem precisar achar o canto)
+    el.addEventListener('click', (e) => {
+      if (e.target.closest('a, [data-go]') || virando) return;
+      const r = el.getBoundingClientRect(); vira(e.clientX - r.left > r.width / 2 ? 1 : -1);
+    });
+  } else {
+    // celular: deslizar pra esquerda avança, pra direita volta (qualquer velocidade);
+    // tocar na metade direita avança, na esquerda volta
+    let x0 = 0, y0 = 0, t0 = 0, ativo = false;
+    const stage = document.querySelector('.stage');
+    stage.addEventListener('touchstart', (e) => { if (e.touches.length !== 1) return; const t = e.touches[0]; x0 = t.clientX; y0 = t.clientY; t0 = Date.now(); ativo = true; }, { passive: true });
+    stage.addEventListener('touchmove', (e) => { if (ativo) e.preventDefault(); }, { passive: false });
+    stage.addEventListener('touchend', (e) => {
+      if (!ativo) return; ativo = false;
+      const t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0;
+      if (Math.abs(dx) > 30 && Math.abs(dx) > Math.abs(dy)) { e.preventDefault(); vira(dx < 0 ? 1 : -1); return; }
+      if (Math.abs(dx) < 12 && Math.abs(dy) < 12 && Date.now() - t0 < 500) {
+        if (e.target.closest('a, [data-go]')) return;   // link e sumário funcionam normal
+        e.preventDefault(); vira(t.clientX > innerWidth / 2 ? 1 : -1);
+      }
+    }, { passive: false });
+  }
   sync();
 })();
 </script>
