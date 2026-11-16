@@ -43,70 +43,78 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
 @media (prefers-reduced-motion: reduce) { .curl, .swipe svg { animation: none; } .stf__parent { transition: none; } }
 
 /* páginas: tudo em cqw pra escalar junto com o tamanho da página */
-.page { background: var(--paper); overflow: hidden; container-type: inline-size; }
-.page-in { position: absolute; inset: 0; padding: 9cqw 8cqw; display: flex; flex-direction: column; }
-.page .folio { position: absolute; bottom: 4.5cqw; left: 8cqw; right: 8cqw; display: flex; justify-content: space-between; font-size: 2.3cqw; letter-spacing: .2em; text-transform: uppercase; color: var(--mute); }
+.page { background: var(--paper); overflow: hidden; container-type: size; }
+/* 1 unidade = 1% da largura, mas encolhe se a página for mais baixa que 3:4 */
+.page * { --u: min(1cqw, 0.75cqh); }
+.page-in { position: absolute; inset: 0; padding: calc(9 * var(--u)) calc(8 * var(--u)); display: flex; flex-direction: column; }
+.page .folio { position: absolute; bottom: calc(4.5 * var(--u)); left: calc(8 * var(--u)); right: calc(8 * var(--u)); display: flex; justify-content: space-between; font-size: calc(2.3 * var(--u)); letter-spacing: .2em; text-transform: uppercase; color: var(--mute); }
 .page.even-shadow::after, .page.odd-shadow::after { content: ''; position: absolute; top: 0; bottom: 0; width: 12%; pointer-events: none; }
 .page.even-shadow::after { right: 0; background: linear-gradient(to left, rgba(0,0,0,.10), transparent); }
 .page.odd-shadow::after { left: 0; background: linear-gradient(to right, rgba(0,0,0,.10), transparent); }
-.page .eyebrow { font-size: 2.4cqw; letter-spacing: .24em; text-transform: uppercase; color: var(--mute); }
-.page h1 { font-size: 13cqw; line-height: .95; font-weight: 400; }
-.page h2 { font-size: 10cqw; line-height: 1; font-weight: 400; margin-top: 3cqw; }
-.page p { font-size: 3.5cqw; line-height: 1.55; color: #3a3c3c; margin-top: 3.5cqw; text-wrap: pretty; }
-.page p.lede { font-family: 'Newsreader', serif; font-size: 5.2cqw; line-height: 1.3; color: var(--ink); }
+.page .eyebrow { font-size: calc(2.4 * var(--u)); letter-spacing: .24em; text-transform: uppercase; color: var(--mute); }
+.page h1 { font-size: calc(13 * var(--u)); line-height: .95; font-weight: 400; }
+.page h2 { font-size: calc(10 * var(--u)); line-height: 1; font-weight: 400; margin-top: calc(3 * var(--u)); }
+.page p { font-size: calc(3.5 * var(--u)); line-height: 1.55; color: #3a3c3c; margin-top: calc(3.5 * var(--u)); text-wrap: pretty; }
+.page p.lede { font-family: 'Newsreader', serif; font-size: calc(5.2 * var(--u)); line-height: 1.3; color: var(--ink); }
 .page .photo { position: absolute; inset: 0; }
 .page .photo img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(1) contrast(1.08); }
 .page .photo.color img { filter: none; }
-.page .caption { position: absolute; left: 8cqw; right: 8cqw; bottom: 7cqw; color: #fff; font-size: 3cqw; line-height: 1.45; text-shadow: 0 1px 12px rgba(0,0,0,.5); }
-.dropcap::first-letter { font-family: 'Newsreader', serif; float: left; font-size: 15cqw; line-height: .8; padding: 1.2cqw 2cqw 0 0; color: var(--ink); }
+.page .photo + .caption, .page .photo.color + .caption { z-index: 1; }
+.page .photo::before { content: ''; position: absolute; inset: 55% 0 0 0; background: linear-gradient(to top, rgba(0,0,0,.6), transparent); z-index: 1; pointer-events: none; }
+.cover .photo::before { display: none; }
+.page .caption { position: absolute; left: calc(8 * var(--u)); right: calc(8 * var(--u)); bottom: calc(7 * var(--u)); color: #fff; font-size: calc(3 * var(--u)); line-height: 1.45; text-shadow: 0 1px 12px rgba(0,0,0,.5); }
+.dropcap::first-letter { font-family: 'Newsreader', serif; float: left; font-size: calc(15 * var(--u)); line-height: .8; padding: calc(1.2 * var(--u)) calc(2 * var(--u)) 0 0; color: var(--ink); }
 
 /* foto que ainda falta: o que fotografar */
-.todo { position: absolute; inset: 6cqw; border: 1.5px dashed rgba(26,28,28,.35); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 8cqw; gap: 2.5cqw;
-  background: repeating-linear-gradient(135deg, rgba(26,28,28,.035) 0 2cqw, transparent 2cqw 4cqw); }
-.todo b { font-size: 2.6cqw; letter-spacing: .24em; text-transform: uppercase; }
-.todo span { font-family: 'Newsreader', serif; font-size: 5cqw; line-height: 1.2; }
-.todo small { font-size: 2.8cqw; color: var(--mute); line-height: 1.5; }
+.todo { position: absolute; inset: calc(6 * var(--u)); border: 1.5px dashed rgba(26,28,28,.35); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: calc(8 * var(--u)); gap: calc(2.5 * var(--u));
+  background: repeating-linear-gradient(135deg, rgba(26,28,28,.035) 0 calc(2 * var(--u)), transparent calc(2 * var(--u)) calc(4 * var(--u))); }
+.todo b { font-size: calc(2.6 * var(--u)); letter-spacing: .24em; text-transform: uppercase; }
+.todo span { font-family: 'Newsreader', serif; font-size: calc(5 * var(--u)); line-height: 1.2; }
+.todo small { font-size: calc(2.8 * var(--u)); color: var(--mute); line-height: 1.5; }
 
 /* capa e contracapa */
 .cover { background: var(--ink); color: #fff; }
 .cover .photo img { opacity: .78; }
 .cover .photo::after { content: ''; position: absolute; inset: 45% 0 0 0; background: linear-gradient(to top, rgba(0,0,0,.55), transparent); }
-.cover .mast { position: absolute; top: 7cqw; left: 7cqw; right: 7cqw; display: flex; justify-content: space-between; align-items: flex-start; }
-.cover .mast img { width: 30cqw; height: auto; }
-.cover .mast .label { font-size: 2.3cqw; text-align: right; line-height: 1.7; color: rgba(255,255,255,.85); }
-.cover .head { position: absolute; left: 7cqw; right: 7cqw; bottom: 9cqw; }
-.cover .head .label { font-size: 2.5cqw; color: rgba(255,255,255,.8); }
-.cover .head h1 { font-size: 15cqw; color: #fff; margin-top: 2cqw; }
-.cover .head p { color: rgba(255,255,255,.85); font-family: 'Newsreader', serif; font-size: 4.6cqw; line-height: 1.3; max-width: 80%; }
+.cover .mast { position: absolute; top: calc(7 * var(--u)); left: calc(7 * var(--u)); right: calc(7 * var(--u)); display: flex; justify-content: space-between; align-items: flex-start; }
+.cover .mast img { width: calc(30 * var(--u)); height: auto; }
+.cover .mast .label { font-size: calc(2.3 * var(--u)); text-align: right; line-height: 1.7; color: rgba(255,255,255,.85); }
+.cover .head { position: absolute; left: calc(7 * var(--u)); right: calc(7 * var(--u)); bottom: calc(9 * var(--u)); }
+.cover .head .label { font-size: calc(2.5 * var(--u)); color: rgba(255,255,255,.8); }
+.cover .head h1 { font-size: calc(15 * var(--u)); color: #fff; margin-top: calc(2 * var(--u)); }
+.cover .head p { color: rgba(255,255,255,.85); font-family: 'Newsreader', serif; font-size: calc(4.6 * var(--u)); line-height: 1.3; max-width: 80%; }
 .back { background: var(--ink); color: #fff; }
 .back .page-in { align-items: center; justify-content: center; text-align: center; }
-.back img { width: 52cqw; height: auto; }
-.back p { color: rgba(255,255,255,.7); font-size: 3cqw; }
+.back img { width: calc(52 * var(--u)); height: auto; }
+.back p { color: rgba(255,255,255,.7); font-size: calc(3 * var(--u)); }
 .back a { color: #fff; }
 
-.toc { list-style: none; margin-top: 6cqw; }
-.toc li { display: flex; gap: 4cqw; align-items: baseline; padding: 2.6cqw 0; border-top: 1px solid rgba(26,28,28,.12); cursor: pointer; }
-.toc li span:first-child { font-size: 2.6cqw; color: var(--mute); letter-spacing: .15em; width: 7cqw; }
-.toc li span:last-child { font-family: 'Newsreader', serif; font-size: 5.4cqw; }
+.toc { list-style: none; margin-top: calc(6 * var(--u)); }
+.toc li { display: flex; gap: calc(4 * var(--u)); align-items: baseline; padding: calc(2.6 * var(--u)) 0; border-top: 1px solid rgba(26,28,28,.12); cursor: pointer; }
+.toc li span:first-child { font-size: calc(2.6 * var(--u)); color: var(--mute); letter-spacing: .15em; width: calc(7 * var(--u)); }
+.toc li span:last-child { font-family: 'Newsreader', serif; font-size: calc(5.4 * var(--u)); }
 
-.tools { margin-top: 5cqw; display: grid; gap: 4.5cqw; }
-.tools div { display: grid; grid-template-columns: 22cqw 1fr; gap: 3cqw; align-items: baseline; }
-.tools b { font-family: 'Newsreader', serif; font-weight: 400; font-size: 6cqw; }
-.tools span { font-size: 3.2cqw; line-height: 1.5; color: #3a3c3c; }
+.tools { margin-top: calc(5 * var(--u)); display: grid; gap: calc(4.5 * var(--u)); }
+.tools div { display: grid; grid-template-columns: calc(22 * var(--u)) 1fr; gap: calc(3 * var(--u)); align-items: baseline; }
+.tools b { font-family: 'Newsreader', serif; font-weight: 400; font-size: calc(6 * var(--u)); }
+.tools span { font-size: calc(3.2 * var(--u)); line-height: 1.5; color: #3a3c3c; }
 
-.grid4 { position: absolute; inset: 6cqw 6cqw 15cqw; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 2.5cqw; }
-.grid4 img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.05); }
-.grid4-cap { position: absolute; left: 6cqw; right: 6cqw; bottom: 6cqw; font-size: 3cqw; line-height: 1.45; color: #3a3c3c; }
+.grid4 { position: absolute; inset: calc(6 * var(--u)) calc(6 * var(--u)) calc(19 * var(--u)); display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); grid-template-rows: minmax(0,1fr) minmax(0,1fr); gap: calc(2.5 * var(--u)); }
+.grid4 img { width: 100%; height: 100%; min-height: 0; object-fit: cover; filter: grayscale(1) contrast(1.05); }
+.grid4 img.cor, .stack2 img { filter: none; }
+.stack2 { position: absolute; inset: calc(6 * var(--u)) calc(6 * var(--u)) calc(23 * var(--u)); display: grid; grid-template-rows: minmax(0,1fr) minmax(0,1fr); gap: calc(2.5 * var(--u)); }
+.stack2 img { width: 100%; height: 100%; object-fit: cover; }
+.grid4-cap { position: absolute; left: calc(6 * var(--u)); right: calc(6 * var(--u)); bottom: calc(10 * var(--u)); font-size: calc(3 * var(--u)); line-height: 1.45; color: #3a3c3c; }
 
 .quote { justify-content: center; }
-.quote blockquote { font-family: 'Newsreader', serif; font-size: 8.4cqw; line-height: 1.12; }
-.quote cite { margin-top: 6cqw; font-style: normal; font-size: 2.6cqw; letter-spacing: .22em; text-transform: uppercase; color: var(--mute); }
-.motif { width: 40cqw; height: auto; margin-top: auto; align-self: flex-end; opacity: .9; }
+.quote blockquote { font-family: 'Newsreader', serif; font-size: calc(8.4 * var(--u)); line-height: 1.12; }
+.quote cite { margin-top: calc(6 * var(--u)); font-style: normal; font-size: calc(2.6 * var(--u)); letter-spacing: .22em; text-transform: uppercase; color: var(--mute); }
+.motif { width: calc(40 * var(--u)); height: auto; margin-top: auto; align-self: flex-end; opacity: .9; }
 
-.steps { margin-top: 5cqw; counter-reset: s; list-style: none; }
-.steps li { counter-increment: s; display: grid; grid-template-columns: 9cqw 1fr; padding: 3cqw 0; border-top: 1px solid rgba(26,28,28,.12); font-size: 3.4cqw; line-height: 1.45; }
-.steps li::before { content: '0' counter(s); font-family: 'Newsreader', serif; font-size: 5cqw; line-height: 1; }
-.cta { margin-top: auto; display: inline-block; background: var(--ink); color: #fff; text-decoration: none; padding: 3.6cqw 6cqw; font-size: 2.6cqw; letter-spacing: .24em; text-transform: uppercase; align-self: flex-start; }
+.steps { margin-top: calc(5 * var(--u)); counter-reset: s; list-style: none; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: calc(9 * var(--u)) 1fr; padding: calc(3 * var(--u)) 0; border-top: 1px solid rgba(26,28,28,.12); font-size: calc(3.4 * var(--u)); line-height: 1.45; }
+.steps li::before { content: '0' counter(s); font-family: 'Newsreader', serif; font-size: calc(5 * var(--u)); line-height: 1; }
+.cta { margin-top: auto; display: inline-block; background: var(--ink); color: #fff; text-decoration: none; padding: calc(3.6 * var(--u)) calc(6 * var(--u)); font-size: calc(2.6 * var(--u)); letter-spacing: .24em; text-transform: uppercase; align-self: flex-start; }
 
 </style>
 </head>
@@ -120,7 +128,7 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
 
       <!-- 1 · CAPA -->
       <div class="page cover" data-density="hard">
-        <div class="photo"><img src="/images/baltazar/baltz-021.jpeg" alt="Prancha saindo do ateliê, no muro de concreto"/></div>
+        <div class="photo color"><img src="/images/oficina/sala-de-shape.jpg" alt="A sala de shape do ateliê, com cavaletes e paredes verdes"/></div>
         <div class="mast">
           <img src="/images/brand/logo-oval-white.png" alt="Baltazar Customs"/>
           <span class="label">Edição nº 01<br/>Recreio · Rio de Janeiro</span>
@@ -156,10 +164,10 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
         <div class="folio"><span>O espaço do shaper</span><span>03</span></div>
       </div></div>
 
-      <!-- 4 · FOTO QUE FALTA -->
+      <!-- 4 · A SALA DE SHAPE -->
       <div class="page even-shadow">
-        <div class="todo"><b>Foto a fazer</b><span>A sala de shape</span><small>Bancada no centro, bloco de espuma, luz lateral marcando o pó no ar. Vertical, sem pessoas ou com o César de costas.</small></div>
-        <div class="folio"><span>Baltazar Customs</span><span>04</span></div>
+        <div class="photo color"><img src="/images/oficina/cavaletes.jpg" alt="Bloco de espuma nos cavaletes da sala de shape" loading="lazy"/></div>
+        <p class="caption">A sala de shape. O bloco no cavalete, o chão marcado pelo pó de tantas pranchas.</p>
       </div>
 
       <!-- 5 · AS FERRAMENTAS -->
@@ -167,36 +175,47 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
         <span class="eyebrow">02 · As ferramentas</span>
         <h2 class="serif">Do planer à resina.</h2>
         <div class="tools">
+          <div><b>Moldes</b><span>Os outlines ficam pendurados na parede. Cada curva começa num deles.</span></div>
           <div><b>Planer</b><span>Tira a espuma em camadas finas até o outline e o rocker aparecerem.</span></div>
+          <div><b>Régua</b><span>Comprimento, largura e espessura conferidos a cada passada.</span></div>
           <div><b>Lixa</b><span>Acerta as bordas na mão, no tato. É aqui que a prancha ganha a cara dela.</span></div>
-          <div><b>Fibra</b><span>Vidro ou carbono, cortado e assentado sobre o shape.</span></div>
           <div><b>Resina</b><span>A laminação que fecha tudo: parte ferramenta, parte obra de arte.</span></div>
         </div>
         <div class="folio"><span>O espaço do shaper</span><span>05</span></div>
       </div></div>
 
-      <!-- 6 · FOTO QUE FALTA -->
+      <!-- 6 · FERRAMENTAS (grade) -->
       <div class="page even-shadow">
-        <div class="todo"><b>Foto a fazer</b><span>As mãos do César no planer</span><small>Close, de lado, com o pó saindo. Pode ser a prancha de um cliente em produção.</small></div>
+        <div class="grid4">
+          <img class="cor" src="/images/oficina/moldes.jpg" alt="Moldes de outline sobre a bancada" loading="lazy"/>
+          <img class="cor" src="/images/oficina/regua.jpg" alt="Régua de acrílico com as medidas" loading="lazy"/>
+          <img class="cor" src="/images/oficina/lixas.jpg" alt="Pilha de lixas e blocos de lixar" loading="lazy"/>
+          <img class="cor" src="/images/oficina/moldes-detalhe.jpg" alt="Moldes de madeira e acrílico pendurados" loading="lazy"/>
+        </div>
+        <p class="grid4-cap">Moldes, régua, lixas gastas. Nada aqui é de prateleira.</p>
         <div class="folio"><span>Baltazar Customs</span><span>06</span></div>
       </div>
 
-      <!-- 7 · A PAREDE (grade) -->
+      <!-- 7 · A PAREDE (traços) -->
       <div class="page odd-shadow">
+        <div class="stack2">
+          <img src="/images/oficina/outline-parede-2.jpg" alt="Outline de prancha desenhado a lápis na parede" loading="lazy"/>
+          <img src="/images/oficina/outline-parede-1.jpg" alt="Rabiscos e outlines a lápis na parede do ateliê" loading="lazy"/>
+        </div>
+        <p class="grid4-cap"><b>03 · A parede.</b> Antes do molde, o traço. Outlines a lápis, direto na parede do ateliê.</p>
+        <div class="folio"><span>O espaço do shaper</span><span>07</span></div>
+      </div>
+
+      <!-- 8 · AS QUE JÁ SAÍRAM (grade) -->
+      <div class="page even-shadow">
         <div class="grid4">
           <img src="/images/baltazar/baltz-001.jpeg" alt="Prancha Baltazar no muro de concreto" loading="lazy"/>
           <img src="/images/baltazar/baltz-004.jpeg" alt="Prancha com arte azul no muro de concreto" loading="lazy"/>
           <img src="/images/IMG_6883.jpeg" alt="Prancha verde-petróleo no muro de concreto" loading="lazy"/>
           <img src="/images/baltazar/baltz-009.jpeg" alt="Prancha preta no muro de concreto" loading="lazy"/>
         </div>
-        <p class="grid4-cap"><b>03 · A parede.</b> O muro de concreto onde as pranchas posam antes de ir embora. Nenhuma se repete.</p>
-        <div class="folio"><span>O espaço do shaper</span><span>07</span></div>
-      </div>
-
-      <!-- 8 · FOTO CHEIA -->
-      <div class="page even-shadow">
-        <div class="photo"><img src="/images/IMG_6884.jpeg" alt="Prancha verde-petróleo saindo do ateliê" loading="lazy"/></div>
-        <p class="caption">Pronta pra água. Cada prancha sai do galpão com o nome de quem vai remar nela.</p>
+        <p class="grid4-cap">Algumas que já saíram daqui. Nenhuma se repete.</p>
+        <div class="folio"><span>Baltazar Customs</span><span>08</span></div>
       </div>
 
       <!-- 9 · CARBON TRASH -->
@@ -208,10 +227,10 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
         <div class="folio"><span>O espaço do shaper</span><span>09</span></div>
       </div></div>
 
-      <!-- 10 · FOTO QUE FALTA -->
+      <!-- 10 · A ARTE -->
       <div class="page even-shadow">
-        <div class="todo"><b>Foto a fazer</b><span>Textura da Carbon Trash</span><small>Close da laminação com os fios de carbono aparentes, luz rasante. Uma imagem sem prancha inteira, só a textura.</small></div>
-        <div class="folio"><span>Baltazar Customs</span><span>10</span></div>
+        <div class="photo color"><img src="/images/oficina/arte-no-bloco.jpg" alt="Arte sendo posicionada no bloco antes da laminação" loading="lazy"/></div>
+        <p class="caption">A arte entra antes da laminação. Cada uma é escolhida pra prancha de alguém.</p>
       </div>
 
       <!-- 11 · PAI E FILHO -->
