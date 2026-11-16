@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>O Espaço do Shaper · Revista Baltazar Customs</title>
+<!-- PROTÓTIPO: fora do sitemap e sem indexação até o conteúdo final ser aprovado -->
+<meta name="robots" content="noindex, follow"/>
+<meta name="description" content="Folheie a revista do ateliê Baltazar Customs: o galpão no Recreio, as ferramentas, a Carbon Trash e as pranchas que nascem ali, uma de cada vez."/>
+<meta property="og:title" content="O Espaço do Shaper · Revista Baltazar Customs"/>
+<meta property="og:description" content="Onde nasce uma prancha que não se repete. Folheie a edição nº 01."/>
+<meta property="og:image" content="https://www.baltazarcustomssurfboards.com/images/og-cover.jpg"/>
+<link rel="icon" type="image/png" href="/images/favicon.png"/>
+<meta name="theme-color" content="#e9e7e2"/>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300..700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root { --ink: #1a1c1c; --paper: #f7f5f0; --desk: #e9e7e2; --mute: #6b6b6b; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', sans-serif; -webkit-font-smoothing: antialiased; overflow: hidden; }
+.serif { font-family: 'Newsreader', serif; font-optical-sizing: auto; letter-spacing: -0.02em; }
+.label { font-size: 10px; text-transform: uppercase; letter-spacing: .22em; }
+
+/* topo e controles */
+.top { position: fixed; inset: 0 0 auto 0; height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 5; }
+.top img { height: 30px; width: auto; display: block; }
+.top a { color: var(--ink); text-decoration: none; }
+.bar { position: fixed; inset: auto 0 0 0; height: 72px; display: flex; align-items: center; justify-content: center; gap: 18px; z-index: 5; padding-bottom: env(safe-area-inset-bottom); }
+.bar button { width: 44px; height: 44px; border: 0; background: var(--ink); color: #fff; font-size: 20px; cursor: pointer; }
+.bar button:disabled { opacity: .2; cursor: default; }
+.bar .count { min-width: 92px; text-align: center; font-variant-numeric: tabular-nums; }
+
+/* palco: a revista cabe na tela (spread 3:2 no desktop, página 3:4 no celular) */
+.stage { position: fixed; inset: 64px 0 72px 0; display: flex; align-items: center; justify-content: center; padding: 8px 12px; }
+.book-wrap { width: min(94vw, calc((100svh - 160px) * 1.5)); }
+@media (max-width: 767px) { .book-wrap { width: min(92vw, calc((100svh - 160px) * 0.75)); } }
+.book { margin: 0 auto; filter: drop-shadow(0 18px 30px rgba(26,28,28,.18)); }
+
+/* páginas: tudo em cqw pra escalar junto com o tamanho da página */
+.page { background: var(--paper); overflow: hidden; container-type: inline-size; }
+.page-in { position: absolute; inset: 0; padding: 9cqw 8cqw; display: flex; flex-direction: column; }
+.page .folio { position: absolute; bottom: 4.5cqw; left: 8cqw; right: 8cqw; display: flex; justify-content: space-between; font-size: 2.3cqw; letter-spacing: .2em; text-transform: uppercase; color: var(--mute); }
+.page.even-shadow::after, .page.odd-shadow::after { content: ''; position: absolute; top: 0; bottom: 0; width: 12%; pointer-events: none; }
+.page.even-shadow::after { right: 0; background: linear-gradient(to left, rgba(0,0,0,.10), transparent); }
+.page.odd-shadow::after { left: 0; background: linear-gradient(to right, rgba(0,0,0,.10), transparent); }
+.page .eyebrow { font-size: 2.4cqw; letter-spacing: .24em; text-transform: uppercase; color: var(--mute); }
+.page h1 { font-size: 13cqw; line-height: .95; font-weight: 400; }
+.page h2 { font-size: 10cqw; line-height: 1; font-weight: 400; margin-top: 3cqw; }
+.page p { font-size: 3.5cqw; line-height: 1.55; color: #3a3c3c; margin-top: 3.5cqw; text-wrap: pretty; }
+.page p.lede { font-family: 'Newsreader', serif; font-size: 5.2cqw; line-height: 1.3; color: var(--ink); }
+.page .photo { position: absolute; inset: 0; }
+.page .photo img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(1) contrast(1.08); }
+.page .photo.color img { filter: none; }
+.page .caption { position: absolute; left: 8cqw; right: 8cqw; bottom: 7cqw; color: #fff; font-size: 3cqw; line-height: 1.45; text-shadow: 0 1px 12px rgba(0,0,0,.5); }
+.dropcap::first-letter { font-family: 'Newsreader', serif; float: left; font-size: 15cqw; line-height: .8; padding: 1.2cqw 2cqw 0 0; color: var(--ink); }
+
+/* foto que ainda falta: o que fotografar */
+.todo { position: absolute; inset: 6cqw; border: 1.5px dashed rgba(26,28,28,.35); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 8cqw; gap: 2.5cqw;
+  background: repeating-linear-gradient(135deg, rgba(26,28,28,.035) 0 2cqw, transparent 2cqw 4cqw); }
+.todo b { font-size: 2.6cqw; letter-spacing: .24em; text-transform: uppercase; }
+.todo span { font-family: 'Newsreader', serif; font-size: 5cqw; line-height: 1.2; }
+.todo small { font-size: 2.8cqw; color: var(--mute); line-height: 1.5; }
+
+/* capa e contracapa */
+.cover { background: var(--ink); color: #fff; }
+.cover .photo img { opacity: .78; }
+.cover .photo::after { content: ''; position: absolute; inset: 45% 0 0 0; background: linear-gradient(to top, rgba(0,0,0,.55), transparent); }
+.cover .mast { position: absolute; top: 7cqw; left: 7cqw; right: 7cqw; display: flex; justify-content: space-between; align-items: flex-start; }
+.cover .mast img { width: 30cqw; height: auto; }
+.cover .mast .label { font-size: 2.3cqw; text-align: right; line-height: 1.7; color: rgba(255,255,255,.85); }
+.cover .head { position: absolute; left: 7cqw; right: 7cqw; bottom: 9cqw; }
+.cover .head .label { font-size: 2.5cqw; color: rgba(255,255,255,.8); }
+.cover .head h1 { font-size: 15cqw; color: #fff; margin-top: 2cqw; }
+.cover .head p { color: rgba(255,255,255,.85); font-family: 'Newsreader', serif; font-size: 4.6cqw; line-height: 1.3; max-width: 80%; }
+.back { background: var(--ink); color: #fff; }
+.back .page-in { align-items: center; justify-content: center; text-align: center; }
+.back img { width: 52cqw; height: auto; }
+.back p { color: rgba(255,255,255,.7); font-size: 3cqw; }
+.back a { color: #fff; }
+
+.toc { list-style: none; margin-top: 6cqw; }
+.toc li { display: flex; gap: 4cqw; align-items: baseline; padding: 2.6cqw 0; border-top: 1px solid rgba(26,28,28,.12); cursor: pointer; }
+.toc li span:first-child { font-size: 2.6cqw; color: var(--mute); letter-spacing: .15em; width: 7cqw; }
+.toc li span:last-child { font-family: 'Newsreader', serif; font-size: 5.4cqw; }
+
+.tools { margin-top: 5cqw; display: grid; gap: 4.5cqw; }
+.tools div { display: grid; grid-template-columns: 22cqw 1fr; gap: 3cqw; align-items: baseline; }
+.tools b { font-family: 'Newsreader', serif; font-weight: 400; font-size: 6cqw; }
+.tools span { font-size: 3.2cqw; line-height: 1.5; color: #3a3c3c; }
+
+.grid4 { position: absolute; inset: 6cqw 6cqw 15cqw; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 2.5cqw; }
+.grid4 img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.05); }
+.grid4-cap { position: absolute; left: 6cqw; right: 6cqw; bottom: 6cqw; font-size: 3cqw; line-height: 1.45; color: #3a3c3c; }
+
+.quote { justify-content: center; }
+.quote blockquote { font-family: 'Newsreader', serif; font-size: 8.4cqw; line-height: 1.12; }
+.quote cite { margin-top: 6cqw; font-style: normal; font-size: 2.6cqw; letter-spacing: .22em; text-transform: uppercase; color: var(--mute); }
+.motif { width: 40cqw; height: auto; margin-top: auto; align-self: flex-end; opacity: .9; }
+
+.steps { margin-top: 5cqw; counter-reset: s; list-style: none; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 9cqw 1fr; padding: 3cqw 0; border-top: 1px solid rgba(26,28,28,.12); font-size: 3.4cqw; line-height: 1.45; }
+.steps li::before { content: '0' counter(s); font-family: 'Newsreader', serif; font-size: 5cqw; line-height: 1; }
+.cta { margin-top: auto; display: inline-block; background: var(--ink); color: #fff; text-decoration: none; padding: 3.6cqw 6cqw; font-size: 2.6cqw; letter-spacing: .24em; text-transform: uppercase; align-self: flex-start; }
+
+/* dica de "arraste pra folhear" */
+.hint { position: fixed; left: 50%; top: 70px; transform: translateX(-50%); white-space: nowrap; background: var(--ink); color: #fff; padding: 9px 14px; z-index: 6; transition: opacity .5s; pointer-events: none; }
+.hint.off { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .hint { transition: none; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a href="/" aria-label="Voltar ao site Baltazar Customs"><img src="/images/brand/logo-oval-black.png" alt="Baltazar Customs" width="200" height="86"/></a>
+  <a href="/#oficina" class="label">Voltar ao site</a>
+</header>
+
+<main class="stage">
+  <div class="book-wrap">
+    <div id="book" class="book">
+
+      <!-- 1 · CAPA -->
+      <div class="page cover" data-density="hard">
+        <div class="photo"><img src="/images/baltazar/baltz-021.jpeg" alt="Prancha saindo do ateliê, no muro de concreto"/></div>
+        <div class="mast">
+          <img src="/images/brand/logo-oval-white.png" alt="Baltazar Customs"/>
+          <span class="label">Edição nº 01<br/>Recreio · Rio de Janeiro</span>
+        </div>
+        <div class="head">
+          <span class="label">A revista do ateliê</span>
+          <h1 class="serif">O espaço do shaper</h1>
+          <p>Onde nasce uma prancha que não se repete.</p>
+        </div>
+      </div>
+
+      <!-- 2 · SUMÁRIO -->
+      <div class="page even-shadow"><div class="page-in">
+        <span class="eyebrow">Nesta edição</span>
+        <h2 class="serif">Um galpão, um shaper e nenhuma linha de produção.</h2>
+        <ul class="toc">
+          <li data-go="2"><span>01</span><span>O galpão</span></li>
+          <li data-go="4"><span>02</span><span>As ferramentas</span></li>
+          <li data-go="6"><span>03</span><span>A parede</span></li>
+          <li data-go="8"><span>04</span><span>Carbon Trash</span></li>
+          <li data-go="10"><span>05</span><span>Pai e filho</span></li>
+          <li data-go="12"><span>06</span><span>A sua prancha</span></li>
+        </ul>
+        <div class="folio"><span>Baltazar Customs</span><span>02</span></div>
+      </div></div>
+
+      <!-- 3 · O GALPÃO (texto) -->
+      <div class="page odd-shadow"><div class="page-in">
+        <span class="eyebrow">01 · O galpão</span>
+        <h2 class="serif">Antes de ser shaper, surfista.</h2>
+        <p class="lede">Foi lendo o mar do Rio que o César entrou na oficina pela primeira vez, atrás da prancha exata que a onda pedia.</p>
+        <p class="dropcap">Desde então, transforma blocos de espuma em pranchas, uma de cada vez, à mão, do shape à laminação. No galpão do Recreio não existe linha de produção: cada prancha é pensada pro corpo, o nível e o surfe de quem vai remar nela.</p>
+        <div class="folio"><span>O espaço do shaper</span><span>03</span></div>
+      </div></div>
+
+      <!-- 4 · FOTO QUE FALTA -->
+      <div class="page even-shadow">
+        <div class="todo"><b>Foto a fazer</b><span>A sala de shape</span><small>Bancada no centro, bloco de espuma, luz lateral marcando o pó no ar. Vertical, sem pessoas ou com o César de costas.</small></div>
+        <div class="folio"><span>Baltazar Customs</span><span>04</span></div>
+      </div>
+
+      <!-- 5 · AS FERRAMENTAS -->
+      <div class="page odd-shadow"><div class="page-in">
+        <span class="eyebrow">02 · As ferramentas</span>
+        <h2 class="serif">Do planer à resina.</h2>
+        <div class="tools">
+          <div><b>Planer</b><span>Tira a espuma em camadas finas até o outline e o rocker aparecerem.</span></div>
+          <div><b>Lixa</b><span>Acerta as bordas na mão, no tato. É aqui que a prancha ganha a cara dela.</span></div>
+          <div><b>Fibra</b><span>Vidro ou carbono, cortado e assentado sobre o shape.</span></div>
+          <div><b>Resina</b><span>A laminação que fecha tudo: parte ferramenta, parte obra de arte.</span></div>
+        </div>
+        <div class="folio"><span>O espaço do shaper</span><span>05</span></div>
+      </div></div>
+
+      <!-- 6 · FOTO QUE FALTA -->
+      <div class="page even-shadow">
+        <div class="todo"><b>Foto a fazer</b><span>As mãos do César no planer</span><small>Close, de lado, com o pó saindo. Pode ser a prancha de um cliente em produção.</small></div>
+        <div class="folio"><span>Baltazar Customs</span><span>06</span></div>
+      </div>
+
+      <!-- 7 · A PAREDE (grade) -->
+      <div class="page odd-shadow">
+        <div class="grid4">
+          <img src="/images/baltazar/baltz-001.jpeg" alt="Prancha Baltazar no muro de concreto" loading="lazy"/>
+          <img src="/images/baltazar/baltz-004.jpeg" alt="Prancha com arte azul no muro de concreto" loading="lazy"/>
+          <img src="/images/IMG_6883.jpeg" alt="Prancha verde-petróleo no muro de concreto" loading="lazy"/>
+          <img src="/images/baltazar/baltz-009.jpeg" alt="Prancha preta no muro de concreto" loading="lazy"/>
+        </div>
+        <p class="grid4-cap"><b>03 · A parede.</b> O muro de concreto onde as pranchas posam antes de ir embora. Nenhuma se repete.</p>
+        <div class="folio"><span>O espaço do shaper</span><span>07</span></div>
+      </div>
+
+      <!-- 8 · FOTO CHEIA -->
+      <div class="page even-shadow">
+        <div class="photo"><img src="/images/IMG_6884.jpeg" alt="Prancha verde-petróleo saindo do ateliê" loading="lazy"/></div>
+        <p class="caption">Pronta pra água. Cada prancha sai do galpão com o nome de quem vai remar nela.</p>
+      </div>
+
+      <!-- 9 · CARBON TRASH -->
+      <div class="page odd-shadow"><div class="page-in">
+        <span class="eyebrow">04 · Carbon Trash</span>
+        <h2 class="serif">O que sobrava virou a prancha mais rápida da casa.</h2>
+        <p>Retalhos de carbono que iriam pro lixo, o trash, são espalhados à mão na resina. Cada padrão é impossível de repetir.</p>
+        <p>Performance, flexibilidade e resistência únicas.</p>
+        <div class="folio"><span>O espaço do shaper</span><span>09</span></div>
+      </div></div>
+
+      <!-- 10 · FOTO QUE FALTA -->
+      <div class="page even-shadow">
+        <div class="todo"><b>Foto a fazer</b><span>Textura da Carbon Trash</span><small>Close da laminação com os fios de carbono aparentes, luz rasante. Uma imagem sem prancha inteira, só a textura.</small></div>
+        <div class="folio"><span>Baltazar Customs</span><span>10</span></div>
+      </div>
+
+      <!-- 11 · PAI E FILHO -->
+      <div class="page odd-shadow">
+        <div class="photo"><img src="/images/IMG_6888.jpeg" alt="Filho de César Baltazar surfando" loading="lazy"/></div>
+        <p class="caption"><b>05 · Pai e filho.</b> O filho seguiu a linhagem: a cara do pai dentro d'água, surfando as pranchas que saem do mesmo galpão.</p>
+      </div>
+
+      <!-- 12 · CITAÇÃO -->
+      <div class="page even-shadow"><div class="page-in quote">
+        <blockquote>“Uma prancha deve ser tanto uma obra de arte na parede quanto uma ferramenta na água.”</blockquote>
+        <cite>César Baltazar</cite>
+        <img class="motif" src="/images/brand/motif-surfer.png" alt=""/>
+        <div class="folio"><span>Baltazar Customs</span><span>12</span></div>
+      </div></div>
+
+      <!-- 13 · A SUA PRANCHA -->
+      <div class="page odd-shadow"><div class="page-in">
+        <span class="eyebrow">06 · A sua prancha</span>
+        <h2 class="serif">A próxima a sair do galpão pode ser a sua.</h2>
+        <ol class="steps">
+          <li>Escolha na coleção um modelo que te inspire.</li>
+          <li>Passe altura, peso, nível e a onda que você surfa.</li>
+          <li>O César shapeia a sua, à mão, sob medida.</li>
+        </ol>
+        <a class="cta" href="/#pedido">Fazer meu pedido</a>
+        <div class="folio"><span>O espaço do shaper</span><span>13</span></div>
+      </div></div>
+
+      <!-- 14 · CONTRACAPA -->
+      <div class="page back" data-density="hard"><div class="page-in">
+        <img src="/images/brand/logo-oval-white.png" alt="Baltazar Customs"/>
+        <p style="margin-top:6cqw">Recreio dos Bandeirantes, Rio de Janeiro<br/>Entrega em todo o Brasil e exterior</p>
+        <p><a href="/">baltazarcustomssurfboards.com</a></p>
+      </div></div>
+
+    </div>
+  </div>
+</main>
+
+<div id="hint" class="hint label">Arraste o canto ou use as setas</div>
+
+<nav class="bar" aria-label="Folhear">
+  <button id="prev" aria-label="Página anterior">&#8249;</button>
+  <span id="count" class="count label">Capa</span>
+  <button id="next" aria-label="Próxima página">&#8250;</button>
+</nav>
+
+<script src="/vendor/page-flip.browser.js"></script>
+<script>
+(function () {
+  const el = document.getElementById('book');
+  const pages = el.querySelectorAll('.page');
+  const total = pages.length;
+  const flip = new St.PageFlip(el, {
+    width: 600, height: 800,           // proporção 3:4 de cada página
+    size: 'stretch', minWidth: 240, maxWidth: 900, minHeight: 320, maxHeight: 1200,
+    showCover: true, usePortrait: true, // celular: uma página por vez
+    maxShadowOpacity: 0.35, mobileScrollSupport: false, flippingTime: 800,
+    swipeDistance: 20,
+  });
+  flip.loadFromHTML(pages);
+
+  const count = document.getElementById('count');
+  const prev = document.getElementById('prev'), next = document.getElementById('next');
+  function sync() {
+    const i = flip.getCurrentPageIndex();
+    const spread = flip.getOrientation() === 'landscape' && i > 0 && i < total - 1;
+    count.textContent = i === 0 ? 'Capa' : i === total - 1 ? 'Contracapa'
+      : spread ? (i + 1) + '–' + Math.min(i + 2, total) + ' / ' + total : (i + 1) + ' / ' + total;
+    prev.disabled = i === 0;
+    next.disabled = i >= total - (spread ? 2 : 1);
+  }
+  flip.on('flip', sync); flip.on('changeOrientation', sync); flip.on('init', sync);
+  prev.onclick = () => flip.flipPrev();
+  next.onclick = () => flip.flipNext();
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') flip.flipNext();
+    if (e.key === 'ArrowLeft') flip.flipPrev();
+  });
+  // sumário clicável
+  el.querySelectorAll('[data-go]').forEach(li => li.addEventListener('click', (e) => { e.stopPropagation(); flip.flip(Number(li.dataset.go)); }));
+  // a dica some no primeiro movimento (ou depois de 5s)
+  const hint = document.getElementById('hint');
+  const off = () => hint.classList.add('off');
+  flip.on('flip', off); setTimeout(off, 5000);
+  sync();
+})();
+</script>
+</body></html>
