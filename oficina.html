@@ -20,20 +20,27 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
 .serif { font-family: 'Newsreader', serif; font-optical-sizing: auto; letter-spacing: -0.02em; }
 .label { font-size: 10px; text-transform: uppercase; letter-spacing: .22em; }
 
-/* topo e controles */
-.top { position: fixed; inset: 0 0 auto 0; height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 5; }
-.top img { height: 30px; width: auto; display: block; }
-.top a { color: var(--ink); text-decoration: none; }
-.bar { position: fixed; inset: auto 0 0 0; height: 72px; display: flex; align-items: center; justify-content: center; gap: 18px; z-index: 5; padding-bottom: env(safe-area-inset-bottom); }
-.bar button { width: 44px; height: 44px; border: 0; background: var(--ink); color: #fff; font-size: 20px; cursor: pointer; }
-.bar button:disabled { opacity: .2; cursor: default; }
-.bar .count { min-width: 92px; text-align: center; font-variant-numeric: tabular-nums; }
+/* revista em tela cheia: sem botões; a página ocupa a tela toda */
+.stage { position: fixed; inset: 0; padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px); }
+.book-wrap { width: 100%; height: 100%; }
+.book { width: 100%; height: 100%; }
+/* fechada (capa/contracapa) a revista fica no centro; aberta, ocupa a tela */
+.stf__parent { transition: transform .7s cubic-bezier(.3,.7,.2,1); }
+.closed-front .stf__parent { transform: translateX(-25%); }
+.closed-back .stf__parent { transform: translateX(25%); }
 
-/* palco: a revista cabe na tela (spread 3:2 no desktop, página 3:4 no celular) */
-.stage { position: fixed; inset: 64px 0 72px 0; display: flex; align-items: center; justify-content: center; padding: 8px 12px; }
-.book-wrap { width: min(94vw, calc((100svh - 160px) * 1.5)); }
-@media (max-width: 767px) { .book-wrap { width: min(92vw, calc((100svh - 160px) * 0.75)); } }
-.book { margin: 0 auto; filter: drop-shadow(0 18px 30px rgba(26,28,28,.18)); }
+/* indicação visual: canto dobrado que respira + mãozinha arrastando no começo */
+.curl { position: fixed; right: env(safe-area-inset-right, 0px); bottom: env(safe-area-inset-bottom, 0px); width: 54px; height: 54px; z-index: 4; pointer-events: none;
+  background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,.18) 50%, #fff 58%, #e4e1da 100%);
+  box-shadow: -3px -3px 10px rgba(0,0,0,.12); transform-origin: 100% 100%; animation: curl 2.4s ease-in-out infinite; transition: opacity .4s; }
+@keyframes curl { 0%, 100% { transform: scale(.75); } 50% { transform: scale(1.15); } }
+.curl.off { opacity: 0; }
+.swipe { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 6; pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 10px; transition: opacity .6s; }
+.swipe svg { width: 46px; height: 46px; animation: hand 1.8s ease-in-out infinite; filter: drop-shadow(0 2px 6px rgba(0,0,0,.35)); }
+.swipe span { color: #fff; font-size: 10px; letter-spacing: .24em; text-transform: uppercase; text-shadow: 0 1px 8px rgba(0,0,0,.6); }
+@keyframes hand { 0% { transform: translateX(34px); opacity: 0; } 20% { opacity: 1; } 70% { transform: translateX(-34px); opacity: 1; } 100% { transform: translateX(-34px); opacity: 0; } }
+.swipe.off { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .curl, .swipe svg { animation: none; } .stf__parent { transition: none; } }
 
 /* páginas: tudo em cqw pra escalar junto com o tamanho da página */
 .page { background: var(--paper); overflow: hidden; container-type: inline-size; }
@@ -101,18 +108,11 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
 .steps li::before { content: '0' counter(s); font-family: 'Newsreader', serif; font-size: 5cqw; line-height: 1; }
 .cta { margin-top: auto; display: inline-block; background: var(--ink); color: #fff; text-decoration: none; padding: 3.6cqw 6cqw; font-size: 2.6cqw; letter-spacing: .24em; text-transform: uppercase; align-self: flex-start; }
 
-/* dica de "arraste pra folhear" */
-.hint { position: fixed; left: 50%; top: 70px; transform: translateX(-50%); white-space: nowrap; background: var(--ink); color: #fff; padding: 9px 14px; z-index: 6; transition: opacity .5s; pointer-events: none; }
-.hint.off { opacity: 0; }
-@media (prefers-reduced-motion: reduce) { .hint { transition: none; } }
 </style>
 </head>
 <body>
 
-<header class="top">
-  <a href="/" aria-label="Voltar ao site Baltazar Customs"><img src="/images/brand/logo-oval-black.png" alt="Baltazar Customs" width="200" height="86"/></a>
-  <a href="/#oficina" class="label">Voltar ao site</a>
-</header>
+
 
 <main class="stage">
   <div class="book-wrap">
@@ -252,13 +252,11 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
   </div>
 </main>
 
-<div id="hint" class="hint label">Arraste o canto ou use as setas</div>
-
-<nav class="bar" aria-label="Folhear">
-  <button id="prev" aria-label="Página anterior">&#8249;</button>
-  <span id="count" class="count label">Capa</span>
-  <button id="next" aria-label="Próxima página">&#8250;</button>
-</nav>
+<div id="curl" class="curl" aria-hidden="true"></div>
+<div id="swipe" class="swipe" aria-hidden="true">
+  <svg viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 26V10a3 3 0 0 1 6 0v12"/><path d="M24 21v-3a3 3 0 0 1 6 0v5"/><path d="M30 21a3 3 0 0 1 6 0v8c0 8-5 13-12 13h-1c-5 0-8-3-11-7l-5-7a3 3 0 0 1 4.6-3.8L18 30"/></svg>
+  <span>Arraste para virar</span>
+</div>
 
 <script src="/vendor/page-flip.browser.js"></script>
 <script>
@@ -266,38 +264,64 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
   const el = document.getElementById('book');
   const pages = el.querySelectorAll('.page');
   const total = pages.length;
+
+  // Tela cheia: no celular (ou tela em pé) uma página ocupa a tela toda;
+  // no computador, as duas páginas abertas ocupam a tela toda.
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const umaPagina = vw < 768 || vw < vh;
   const flip = new St.PageFlip(el, {
-    width: 600, height: 800,           // proporção 3:4 de cada página
-    size: 'stretch', minWidth: 240, maxWidth: 900, minHeight: 320, maxHeight: 1200,
-    showCover: true, usePortrait: true, // celular: uma página por vez
-    maxShadowOpacity: 0.35, mobileScrollSupport: false, flippingTime: 800,
-    swipeDistance: 20,
+    width: Math.round(umaPagina ? vw : vw / 2), height: Math.round(vh),
+    size: 'stretch', minWidth: 200, maxWidth: 4000, minHeight: 200, maxHeight: 4000,
+    showCover: true, usePortrait: umaPagina, autoSize: true,
+    maxShadowOpacity: 0.4, mobileScrollSupport: false, flippingTime: 750, swipeDistance: 20,
   });
   flip.loadFromHTML(pages);
+  // girar o celular ou redimensionar muito a janela: refaz no novo formato
+  let tm; addEventListener('resize', () => { clearTimeout(tm); tm = setTimeout(() => {
+    const novo = innerWidth < 768 || innerWidth < innerHeight; if (novo !== umaPagina) location.reload(); }, 300); });
 
-  const count = document.getElementById('count');
-  const prev = document.getElementById('prev'), next = document.getElementById('next');
+  // Som de folha virando, gerado na hora (ruído de papel com filtro que varre)
+  let ac = null;
+  const liga = () => { try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === 'suspended') ac.resume(); } catch (e) {} };
+  ['pointerdown', 'touchstart', 'keydown'].forEach(t => addEventListener(t, liga, { passive: true }));
+  function somFolha() {
+    if (!ac) return;
+    const t = ac.currentTime, dur = 0.42;
+    const buf = ac.createBuffer(1, Math.ceil(ac.sampleRate * dur), ac.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) { const x = i / d.length; d[i] = (Math.random() * 2 - 1) * (x < 0.1 ? x / 0.1 : Math.pow(1 - x, 1.6)) * (0.6 + 0.4 * Math.random()); }
+    const src = ac.createBufferSource(); src.buffer = buf;
+    const bp = ac.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 0.8;
+    bp.frequency.setValueAtTime(2600, t); bp.frequency.exponentialRampToValueAtTime(700, t + dur);
+    const hp = ac.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 300;
+    const g = ac.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.55, t + 0.03); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    src.connect(bp).connect(hp).connect(g).connect(ac.destination); src.start(t); src.stop(t + dur);
+  }
+  let ultimo = '';
+  flip.on('changeState', (e) => { if (e.data === 'flipping' && ultimo !== 'flipping') somFolha(); ultimo = e.data; });
+
+  // revista fechada fica no centro; indicações somem quando faz sentido
+  const curl = document.getElementById('curl'), swipe = document.getElementById('swipe');
   function sync() {
     const i = flip.getCurrentPageIndex();
-    const spread = flip.getOrientation() === 'landscape' && i > 0 && i < total - 1;
-    count.textContent = i === 0 ? 'Capa' : i === total - 1 ? 'Contracapa'
-      : spread ? (i + 1) + '–' + Math.min(i + 2, total) + ' / ' + total : (i + 1) + ' / ' + total;
-    prev.disabled = i === 0;
-    next.disabled = i >= total - (spread ? 2 : 1);
+    const deitada = flip.getOrientation() === 'landscape';
+    document.body.classList.toggle('closed-front', deitada && i === 0);
+    document.body.classList.toggle('closed-back', deitada && i >= total - 1);
+    curl.classList.toggle('off', i >= total - (deitada ? 2 : 1));
   }
-  flip.on('flip', sync); flip.on('changeOrientation', sync); flip.on('init', sync);
-  prev.onclick = () => flip.flipPrev();
-  next.onclick = () => flip.flipNext();
+  flip.on('flip', () => { swipe.classList.add('off'); sync(); });
+  flip.on('changeOrientation', sync); flip.on('init', sync);
+  setTimeout(() => swipe.classList.add('off'), 6000);
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') flip.flipNext();
     if (e.key === 'ArrowLeft') flip.flipPrev();
   });
   // sumário clicável
   el.querySelectorAll('[data-go]').forEach(li => li.addEventListener('click', (e) => { e.stopPropagation(); flip.flip(Number(li.dataset.go)); }));
-  // a dica some no primeiro movimento (ou depois de 5s)
-  const hint = document.getElementById('hint');
-  const off = () => hint.classList.add('off');
-  flip.on('flip', off); setTimeout(off, 5000);
+  // no computador, um clique na página também vira (sem precisar achar o canto)
+  el.addEventListener('click', (e) => {
+    if (e.target.closest('a, [data-go]') || flip.getState && flip.getState() !== 'read') return;
+    const r = el.getBoundingClientRect(); (e.clientX - r.left > r.width / 2) ? flip.flipNext() : flip.flipPrev();
+  });
   sync();
 })();
 </script>
