@@ -1,0 +1,45 @@
+name: Baixar álbum do Google Fotos (temporário)
+
+# Baixa as fotos de um álbum compartilhado do Google Fotos em tamanho grande e
+# publica num branch temporário (tmp-album), pra escolher o que entra no site.
+# Apagar o branch depois de usar (input "limpar").
+on:
+  workflow_dispatch:
+    inputs:
+      album:
+        description: 'Link do álbum (https://photos.app.goo.gl/...) ou "limpar" pra apagar o branch tmp-album'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  baixar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar e publicar
+        env:
+          ALBUM: ${{ inputs.album }}
+          REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          if [ "$ALBUM" = "limpar" ]; then
+            code=$(curl -sS -o /dev/null -w '%{http_code}' -X DELETE -H "Authorization: Bearer $GH_TOKEN" "https://api.github.com/repos/$REPO/git/refs/heads/tmp-album")
+            echo "apagar branch tmp-album: HTTP $code"; [[ "$code" == 204 || "$code" == 422 ]]; exit $?
+          fi
+          [[ "$ALBUM" =~ ^https://(photos\.app\.goo\.gl|photos\.google\.com/share)/[A-Za-z0-9_?=/-]+$ ]] || { echo "link inválido"; exit 1; }
+          curl -sSL -A "Mozilla/5.0" -o album.html "$ALBUM"
+          grep -oE 'https://lh3\.googleusercontent\.com/pw/[A-Za-z0-9_-]+' album.html | awk '!v[$0]++' > urls.txt
+          echo "fotos encontradas: $(wc -l < urls.txt)"
+          mkdir fotos && i=0
+          while read -r u; do
+            i=$((i+1)); n=$(printf 'foto-%02d.jpg' "$i")
+            curl -sSfL -o "fotos/$n" "${u}=w2400-h2400" || { echo "falhou $n"; continue; }
+            echo "$n: $(file -b "fotos/$n" | cut -c1-60)"
+          done < urls.txt
+          cd fotos
+          git init -q && git checkout -q -b tmp-album
+          git config user.name github-actions && git config user.email actions@github.com
+          git add . && git commit -qm "álbum temporário"
+          git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git" tmp-album
