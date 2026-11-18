@@ -108,12 +108,14 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
 .tools b { font-family: 'Newsreader', serif; font-weight: 400; font-size: calc(6 * var(--u)); }
 .tools span { font-size: calc(3.2 * var(--u)); line-height: 1.5; color: #3a3c3c; }
 
-.grid4 { position: absolute; inset: calc(6 * var(--u)) calc(6 * var(--u)) calc(19 * var(--u)); display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); grid-template-rows: minmax(0,1fr) minmax(0,1fr); gap: calc(2.5 * var(--u)); }
+.gal { position: absolute; inset: calc(6 * var(--u)) calc(6 * var(--u)) calc(11 * var(--u)); display: flex; flex-direction: column; gap: calc(3 * var(--u)); }
+.gal > .grid4, .gal > .stack2 { flex: 1 1 auto; min-height: 0; }
+.grid4 { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); grid-template-rows: minmax(0,1fr) minmax(0,1fr); gap: calc(2.5 * var(--u)); }
 .grid4 img { width: 100%; height: 100%; min-height: 0; object-fit: cover; filter: grayscale(1) contrast(1.05); }
 .grid4 img.cor, .stack2 img { filter: none; }
-.stack2 { position: absolute; inset: calc(6 * var(--u)) calc(6 * var(--u)) calc(23 * var(--u)); display: grid; grid-template-rows: minmax(0,1fr) minmax(0,1fr); gap: calc(2.5 * var(--u)); }
+.stack2 { display: grid; grid-template-rows: minmax(0,1fr) minmax(0,1fr); gap: calc(2.5 * var(--u)); }
 .stack2 img { width: 100%; height: 100%; object-fit: cover; }
-.grid4-cap { position: absolute; left: calc(6 * var(--u)); right: calc(6 * var(--u)); bottom: calc(10 * var(--u)); font-size: calc(3 * var(--u)); line-height: 1.45; color: #3a3c3c; }
+.page .grid4-cap { flex: none; margin: 0; font-size: max(13px, calc(3.2 * var(--u))); line-height: 1.45; color: var(--ink); }
 
 .quote { justify-content: center; }
 .quote blockquote { font-family: 'Newsreader', serif; font-size: calc(8.4 * var(--u)); line-height: 1.12; }
@@ -129,19 +131,17 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
    tamanhos mínimos de leitura */
 @container (max-aspect-ratio: 7/10) {
   .page * { --u: min(1.2cqw, 0.75cqh); }
-  .page-in { justify-content: center; padding-left: calc(8.5 * var(--u)); padding-right: calc(8.5 * var(--u)); }
+  .page-in { justify-content: safe center; padding-left: calc(8.5 * var(--u)); padding-right: calc(8.5 * var(--u)); }
   .page p { font-size: max(15px, calc(3.6 * var(--u))); }
   .page p.lede { font-size: max(18px, calc(5.2 * var(--u))); }
   .tools span, .steps li { font-size: max(14px, calc(3.4 * var(--u))); }
   .page .eyebrow, .page .folio, .quote cite { font-size: max(10px, calc(2.4 * var(--u))); }
-  .page .caption, .grid4-cap { font-size: max(13px, calc(3.1 * var(--u))); }
+  .page .caption, .page .grid4-cap { font-size: max(13px, calc(3.1 * var(--u))); }
   .toc li span:last-child { font-size: max(19px, calc(5.4 * var(--u))); }
   .tools { gap: calc(3.6 * var(--u)); margin-top: calc(4 * var(--u)); }
   .page .tools b { font-size: calc(5.2 * var(--u)); }
   .page .tools span { font-size: max(13.5px, calc(3.3 * var(--u))); line-height: 1.4; }
   .tools div { grid-template-columns: 1fr; gap: calc(1 * var(--u)); }
-  .grid4, .stack2 { bottom: calc(27 * var(--u)); }
-  .grid4-cap { bottom: calc(10 * var(--u)); }
 }
 </style>
 </head>
@@ -213,35 +213,41 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
 
       <!-- 6 · FERRAMENTAS (grade) -->
       <div class="page even-shadow">
-        <div class="grid4">
-          <img class="cor" src="/images/oficina/moldes.jpg" alt="Moldes de outline sobre a bancada" loading="lazy"/>
-          <img class="cor" src="/images/oficina/regua.jpg" alt="Régua de acrílico com as medidas" loading="lazy"/>
-          <img class="cor" src="/images/oficina/lixas.jpg" alt="Pilha de lixas e blocos de lixar" loading="lazy"/>
-          <img class="cor" src="/images/oficina/moldes-detalhe.jpg" alt="Moldes de madeira e acrílico pendurados" loading="lazy"/>
+        <div class="gal">
+          <div class="grid4">
+            <img class="cor" src="/images/oficina/moldes.jpg" alt="Moldes de outline sobre a bancada" loading="lazy"/>
+            <img class="cor" src="/images/oficina/regua.jpg" alt="Régua de acrílico com as medidas" loading="lazy"/>
+            <img class="cor" src="/images/oficina/lixas.jpg" alt="Pilha de lixas e blocos de lixar" loading="lazy"/>
+            <img class="cor" src="/images/oficina/moldes-detalhe.jpg" alt="Moldes de madeira e acrílico pendurados" loading="lazy"/>
+          </div>
+          <p class="grid4-cap">Moldes, régua, lixas gastas. Nada aqui é de prateleira.</p>
         </div>
-        <p class="grid4-cap">Moldes, régua, lixas gastas. Nada aqui é de prateleira.</p>
         <div class="folio"><span>Baltazar Customs</span><span>06</span></div>
       </div>
 
       <!-- 7 · A PAREDE (traços) -->
       <div class="page odd-shadow">
-        <div class="stack2">
-          <img src="/images/oficina/outline-parede-2.jpg" alt="Outline de prancha desenhado a lápis na parede" loading="lazy"/>
-          <img src="/images/oficina/outline-parede-1.jpg" alt="Rabiscos e outlines a lápis na parede do ateliê" loading="lazy"/>
+        <div class="gal">
+          <div class="stack2">
+            <img src="/images/oficina/outline-parede-2.jpg" alt="Outline de prancha desenhado a lápis na parede" loading="lazy"/>
+            <img src="/images/oficina/outline-parede-1.jpg" alt="Rabiscos e outlines a lápis na parede do ateliê" loading="lazy"/>
+          </div>
+          <p class="grid4-cap"><b>03 · A parede.</b> Antes do molde, o traço. Outlines a lápis, direto na parede do ateliê.</p>
         </div>
-        <p class="grid4-cap"><b>03 · A parede.</b> Antes do molde, o traço. Outlines a lápis, direto na parede do ateliê.</p>
         <div class="folio"><span>O espaço do shaper</span><span>07</span></div>
       </div>
 
       <!-- 8 · AS QUE JÁ SAÍRAM (grade) -->
       <div class="page even-shadow">
-        <div class="grid4">
-          <img src="/images/baltazar/baltz-001.jpeg" alt="Prancha Baltazar no muro de concreto" loading="lazy"/>
-          <img src="/images/baltazar/baltz-004.jpeg" alt="Prancha com arte azul no muro de concreto" loading="lazy"/>
-          <img src="/images/IMG_6883.jpeg" alt="Prancha verde-petróleo no muro de concreto" loading="lazy"/>
-          <img src="/images/baltazar/baltz-009.jpeg" alt="Prancha preta no muro de concreto" loading="lazy"/>
+        <div class="gal">
+          <div class="grid4">
+            <img src="/images/baltazar/baltz-001.jpeg" alt="Prancha Baltazar no muro de concreto" loading="lazy"/>
+            <img src="/images/baltazar/baltz-004.jpeg" alt="Prancha com arte azul no muro de concreto" loading="lazy"/>
+            <img src="/images/IMG_6883.jpeg" alt="Prancha verde-petróleo no muro de concreto" loading="lazy"/>
+            <img src="/images/baltazar/baltz-009.jpeg" alt="Prancha preta no muro de concreto" loading="lazy"/>
+          </div>
+          <p class="grid4-cap">Algumas que já saíram daqui. Nenhuma se repete.</p>
         </div>
-        <p class="grid4-cap">Algumas que já saíram daqui. Nenhuma se repete.</p>
         <div class="folio"><span>Baltazar Customs</span><span>08</span></div>
       </div>
 
@@ -277,7 +283,7 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
       <!-- 13 · A SUA PRANCHA -->
       <div class="page odd-shadow"><div class="page-in">
         <span class="eyebrow">06 · A sua prancha</span>
-        <h2 class="serif">A próxima a sair do galpão pode ser a sua.</h2>
+        <h2 class="serif">A próxima a sair da fábrica pode ser a sua.</h2>
         <ol class="steps">
           <li>Escolha na coleção um modelo que te inspire.</li>
           <li>Passe altura, peso, nível e a onda que você surfa.</li>
@@ -323,7 +329,9 @@ body { background: var(--desk); color: var(--ink); font-family: 'Work Sans', san
   if (toque) document.querySelector('#swipe span').textContent = 'Deslize ou toque nas bordas';
   const flip = new St.PageFlip(el, {
     width: Math.round(umaPagina ? vw : vw / 2), height: Math.round(vh),
-    size: 'stretch', minWidth: 200, maxWidth: 4000, minHeight: 200, maxHeight: 4000,
+    // a biblioteca abre em página dupla sempre que a tela tem 2× minWidth;
+    // no celular minWidth passa de meia tela, então fica sempre uma página
+    size: 'stretch', minWidth: umaPagina ? Math.floor(vw / 2) + 1 : 200, maxWidth: 4000, minHeight: 200, maxHeight: 4000,
     showCover: true, usePortrait: umaPagina, autoSize: true,
     maxShadowOpacity: 0.4, mobileScrollSupport: false, flippingTime: 650, swipeDistance: 20,
     useMouseEvents: !toque,
